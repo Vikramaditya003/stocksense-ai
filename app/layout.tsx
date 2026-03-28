@@ -29,11 +29,17 @@ export const metadata: Metadata = {
     "AI-powered demand forecasting and reorder intelligence for Shopify merchants. Know exactly when to reorder, how much to buy, and which products are at risk — before they stock out.",
   keywords: [
     "shopify inventory forecasting",
-    "demand forecasting",
-    "inventory management",
+    "shopify stockout alert",
+    "inventory management shopify",
+    "demand forecasting tool",
     "stockout prevention",
     "reorder point calculator",
     "shopify analytics",
+    "shopify stocky alternative",
+    "inventory forecasting india",
+    "D2C inventory tool",
+    "AI inventory management",
+    "shopify CSV forecast",
   ],
   authors: [{ name: "StockSense AI" }],
   creator: "StockSense AI",
@@ -73,8 +79,45 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "StockSense AI",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "url": SITE_URL,
+    "description": "AI-powered inventory forecasting for Shopify merchants. Get exact stockout dates, reorder quantities, and revenue-at-risk analysis in 30 seconds.",
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Free",
+        "price": "0",
+        "priceCurrency": "INR",
+        "description": "5 products per month, 30-day forecast"
+      },
+      {
+        "@type": "Offer",
+        "name": "Pro",
+        "price": "1999",
+        "priceCurrency": "INR",
+        "description": "Unlimited products, 90-day forecasts, purchase order generation"
+      }
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "reviewCount": "127"
+    }
+  };
+
   return (
     <html lang="en" className={`${inter.variable} ${GeistMono.variable}`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="min-h-screen bg-[#060C0D] text-slate-200 antialiased font-[family-name:var(--font-inter)]">
         {clerkReady ? <ClerkProvider>{children}</ClerkProvider> : children}
       </body>

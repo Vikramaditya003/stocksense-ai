@@ -61,9 +61,143 @@ function countUniqueProducts(csv: string): number {
   return names.size;
 }
 
+// ─── Sample CSV download ───────────────────────────────────────────────────
+function downloadSampleCSV() {
+  const sample = [
+    "product,sku,date,units_sold,current_stock",
+    "Premium Yoga Mat,YM-001,2024-03-01,8,45",
+    "Premium Yoga Mat,YM-001,2024-03-02,11,34",
+    "Premium Yoga Mat,YM-001,2024-03-03,6,28",
+    "Premium Yoga Mat,YM-001,2024-03-04,9,19",
+    "Water Bottle XL,WB-004,2024-03-01,18,120",
+    "Water Bottle XL,WB-004,2024-03-02,22,98",
+    "Water Bottle XL,WB-004,2024-03-03,25,73",
+    "Water Bottle XL,WB-004,2024-03-04,20,53",
+    "Resistance Bands Set,RB-002,2024-03-01,3,87",
+    "Resistance Bands Set,RB-002,2024-03-02,4,83",
+    "Resistance Bands Set,RB-002,2024-03-03,2,81",
+    "Resistance Bands Set,RB-002,2024-03-04,3,78",
+    "Foam Roller Pro,FR-003,2024-03-01,2,203",
+    "Foam Roller Pro,FR-003,2024-03-02,3,200",
+    "Foam Roller Pro,FR-003,2024-03-03,1,199",
+    "Foam Roller Pro,FR-003,2024-03-04,2,197",
+  ].join("\n");
+  const blob = new Blob([sample], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "stocksense-sample.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ─── Row-level CSV validation ──────────────────────────────────────────────
+const CSV_ALIASES: Record<string, string[]> = {
+  product:       ["product", "product_name", "name", "item", "item_name", "title"],
+  units_sold:    ["units_sold", "sold", "sales", "quantity_sold", "qty_sold", "quantity"],
+  current_stock: ["current_stock", "stock", "inventory", "qty", "on_hand", "stock_quantity"],
+};
+
+function validateCsv(csv: string): string[] {
+  const errors: string[] = [];
+  const lines = csv.trim().split("\n").filter(l => l.trim());
+  if (lines.length < 2) {
+    return ["CSV needs at least a header row and one data row. Download the sample CSV to see the correct format."];
+  }
+
+  const raw = lines[0].split(",").map(h => h.trim().replace(/^"|"$/g, "").toLowerCase());
+
+  const idx: Record<string, number> = {};
+  for (const [key, aliases] of Object.entries(CSV_ALIASES)) {
+    const found = raw.findIndex(h => aliases.includes(h));
+    if (found === -1) {
+      errors.push(`Column "${key}" not found. Accepted names: ${aliases.join(", ")}. See sample CSV ↓`);
+    } else {
+      idx[key] = found;
+    }
+  }
+  if (errors.length) return errors; // header errors block row-level check
+
+  for (let i = 1; i < Math.min(lines.length, 300); i++) {
+    const cols = lines[i].split(",").map(c => c.trim().replace(/^"|"$/g, ""));
+
+    if (!cols[idx.product]) {
+      errors.push(`Row ${i + 1}: Product name is empty — every row needs a product name.`);
+    }
+    const sold = cols[idx.units_sold] ?? "";
+    if (sold !== "" && isNaN(Number(sold))) {
+      errors.push(`Row ${i + 1}: "units_sold" value "${sold}" must be a number, not text.`);
+    }
+    const stock = cols[idx.current_stock] ?? "";
+    if (stock !== "" && isNaN(Number(stock))) {
+      errors.push(`Row ${i + 1}: "current_stock" value "${stock}" must be a number, not text.`);
+    }
+    if (errors.length >= 4) {
+      errors.push("Fix these errors first, then re-upload. Need help? Download the sample CSV below.");
+      break;
+    }
+  }
+  return errors;
+}
+
 // ─── Upgrade Modal ────────────────────────────────────────────────────────────
 
+async function startRazorpayCheckout(plan: string, onSuccess: () => void, onError: () => void) {
+  try {
+    const res = await fetch("/api/payment/create-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ plan }),
+    });
+    const data = await res.json();
+    if (!data.success) { onError(); return; }
+
+    // Dynamically load Razorpay script
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const rzp = new (window as any).Razorpay({
+        key: data.keyId,
+        amount: data.amount,
+        currency: data.currency,
+        name: "StockSense AI",
+        description: data.planName,
+        order_id: data.orderId,
+        theme: { color: "#2DD4BF" },
+        handler: async (response: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) => {
+          const verify = await fetch("/api/payment/verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...response, plan }),
+          });
+          const vData = await verify.json();
+          if (vData.success) onSuccess();
+          else onError();
+        },
+      });
+      rzp.open();
+    };
+    document.body.appendChild(script);
+  } catch {
+    onError();
+  }
+}
+
 function UpgradeModal({ feature, onClose }: { feature: string; onClose: () => void }) {
+  const [paying, setPaying] = useState(false);
+  const [paySuccess, setPaySuccess] = useState(false);
+  const [payError, setPayError] = useState(false);
+
+  const handleUpgrade = () => {
+    setPaying(true); setPayError(false);
+    startRazorpayCheckout(
+      "pro",
+      () => { setPaying(false); setPaySuccess(true); },
+      () => { setPaying(false); setPayError(true); }
+    );
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={onClose}>
       <motion.div
@@ -116,15 +250,30 @@ function UpgradeModal({ feature, onClose }: { feature: string; onClose: () => vo
             <span className="text-[28px] font-semibold text-white tracking-tight">₹1,499</span>
             <span className="text-slate-500 text-sm">/month · cancel anytime</span>
           </div>
-          <Link
-            href="/#pricing"
-            className="block w-full text-center bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] font-bold py-3 rounded-xl transition-all text-sm shadow-lg shadow-[#2DD4BF]/20 hover:-translate-y-0.5"
-          >
-            Upgrade to Pro →
-          </Link>
-          <button onClick={onClose} className="block w-full text-center text-slate-600 hover:text-slate-400 text-xs mt-3 transition-colors">
-            Continue with free plan
-          </button>
+          {paySuccess ? (
+            <div className="flex flex-col items-center gap-2 py-2">
+              <div className="w-10 h-10 rounded-full bg-[#2DD4BF]/10 border border-[#2DD4BF]/20 flex items-center justify-center">
+                <svg className="w-5 h-5 text-[#2DD4BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <p className="text-sm font-semibold text-[#2DD4BF]">Payment successful! Refreshing your access...</p>
+            </div>
+          ) : (
+            <>
+              <button
+                onClick={handleUpgrade}
+                disabled={paying}
+                className="block w-full text-center bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] font-bold py-3 rounded-xl transition-all text-sm shadow-lg shadow-[#2DD4BF]/20 hover:-translate-y-0.5 disabled:opacity-60"
+              >
+                {paying ? "Opening payment..." : "Upgrade to Pro — ₹1,999/mo"}
+              </button>
+              {payError && <p className="text-xs text-red-400 text-center mt-2">Payment failed. Try again or <Link href="/#pricing" className="underline">pay on pricing page</Link>.</p>}
+              <button onClick={onClose} className="block w-full text-center text-slate-600 hover:text-slate-400 text-xs mt-3 transition-colors">
+                Continue with free plan
+              </button>
+            </>
+          )}
         </div>
       </motion.div>
     </div>
@@ -511,6 +660,8 @@ export default function ForecastClient() {
   const [sortKey, setSortKey] = useState<SortKey>("stockoutRisk");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
   const [upgradeModal, setUpgradeModal] = useState<string | null>(null);
+  const [alertEmail, setAlertEmail] = useState("");
+  const [alertStatus, setAlertStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
   const fileRef = useRef<HTMLInputElement>(null);
   const demoRan = useRef(false);
@@ -544,9 +695,29 @@ export default function ForecastClient() {
     if (file) handleFile(file);
   }, [handleFile]);
 
+  const handleEmailAlert = async () => {
+    if (!alertEmail.trim() || !alertEmail.includes("@")) return;
+    setAlertStatus("sending");
+    try {
+      const res = await fetch("/api/alert", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: alertEmail, analysis }),
+      });
+      setAlertStatus(res.ok ? "sent" : "error");
+    } catch {
+      setAlertStatus("error");
+    }
+  };
+
   const runForecast = async (overrideData?: string) => {
     const data = (overrideData ?? csvText).trim();
     if (!data || data.length < 20) { setError("Please upload a CSV or paste your sales data first."); return; }
+
+    // Client-side validation before hitting the API
+    const validationErrors = validateCsv(data);
+    if (validationErrors.length) { setError(validationErrors[0]); return; }
+
     setError(null); setAnalysis(null);
     setStep("parsing"); await new Promise((r) => setTimeout(r, 600));
     setStep("analyzing"); await new Promise((r) => setTimeout(r, 800));
@@ -729,12 +900,28 @@ export default function ForecastClient() {
                   </div>
                 </div>
 
+                {/* Sample CSV download */}
+                <div className="mt-3 flex items-center gap-1.5">
+                  <svg className="w-3.5 h-3.5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m.75 12l3 3m0 0l3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                  </svg>
+                  <span className="text-xs text-slate-600">Not sure of the format?</span>
+                  <button onClick={downloadSampleCSV} className="text-xs text-[#2DD4BF] hover:underline font-medium">
+                    Download sample CSV
+                  </button>
+                </div>
+
                 {error && (
-                  <div className="mt-4 flex items-center gap-2 text-red-400 text-sm bg-red-500/5 border border-red-500/15 rounded-lg px-4 py-3">
-                    <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-                    </svg>
-                    {error}
+                  <div className="mt-4 bg-red-500/[0.06] border border-red-500/15 rounded-xl px-4 py-3.5">
+                    <div className="flex items-start gap-2 text-red-400 text-sm mb-2">
+                      <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                      </svg>
+                      <span className="font-medium">{error}</span>
+                    </div>
+                    <button onClick={downloadSampleCSV} className="text-xs text-[#2DD4BF] hover:underline font-medium ml-6">
+                      ↓ Download sample CSV template
+                    </button>
                   </div>
                 )}
               </div>
@@ -988,10 +1175,63 @@ export default function ForecastClient() {
                 <div className="px-5 py-4 border-b border-white/[0.06] flex items-center justify-between">
                   <div>
                     <h2 className="text-sm font-semibold text-white">Product Forecasts</h2>
-                    <p className="text-xs text-slate-600 mt-0.5">Click any row to expand details, reorder dates, and revenue impact</p>
+                    <p className="text-xs text-slate-600 mt-0.5 hidden sm:block">Click any row to expand details, reorder dates, and revenue impact</p>
+                    <p className="text-xs text-slate-600 mt-0.5 sm:hidden">Tap a product to see reorder details</p>
                   </div>
                 </div>
-                <div className="overflow-x-auto">
+
+                {/* Mobile card list — shown only on small screens */}
+                <div className="sm:hidden divide-y divide-white/[0.04]">
+                  {sortedProducts.slice(0, FREE_PRODUCT_LIMIT).map((product, i) => {
+                    const riskColors: Record<string, string> = {
+                      critical: "text-red-400 bg-red-500/[0.08] border-red-500/20",
+                      high:     "text-orange-400 bg-orange-500/[0.08] border-orange-500/20",
+                      medium:   "text-yellow-400 bg-yellow-500/[0.08] border-yellow-500/20",
+                      low:      "text-[#2DD4BF] bg-[#2DD4BF]/[0.08] border-[#2DD4BF]/20",
+                    };
+                    return (
+                      <div key={product.sku || product.productName} className="px-4 py-4">
+                        <div className="flex items-start justify-between gap-3 mb-2">
+                          <div className="min-w-0">
+                            <p className="text-sm font-semibold text-slate-100 leading-tight">{product.productName}</p>
+                            {product.sku && <p className="text-xs text-slate-600 font-mono mt-0.5">{product.sku}</p>}
+                          </div>
+                          <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-lg border flex-shrink-0 ${riskColors[product.stockoutRisk] ?? riskColors.low}`}>
+                            {product.stockoutRisk.charAt(0).toUpperCase() + product.stockoutRisk.slice(1)}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-4 flex-wrap">
+                          <div>
+                            <p className="text-[10px] text-slate-600 uppercase tracking-wider">Days Left</p>
+                            <p className={`text-lg font-bold tabular-nums ${product.daysOfStockRemaining <= 7 ? "text-red-400" : product.daysOfStockRemaining <= 14 ? "text-amber-400" : "text-slate-200"}`}>
+                              {product.daysOfStockRemaining <= 0 ? "OUT" : `${product.daysOfStockRemaining}d`}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] text-slate-600 uppercase tracking-wider">Stock</p>
+                            <p className="text-sm font-medium text-slate-300 tabular-nums">{product.currentStock.toLocaleString()} units</p>
+                          </div>
+                          {product.estimatedRevenueLoss && (
+                            <div>
+                              <p className="text-[10px] text-slate-600 uppercase tracking-wider">Rev. at Risk</p>
+                              <p className="text-sm font-bold text-red-400">{product.estimatedRevenueLoss}</p>
+                            </div>
+                          )}
+                          {product.reorderByDate && (
+                            <div className="w-full mt-1">
+                              <span className="text-xs font-semibold text-orange-300 bg-orange-500/10 border border-orange-500/15 px-2.5 py-1 rounded-lg">
+                                {product.reorderByDate}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Desktop table — hidden on small screens */}
+                <div className="hidden sm:block overflow-x-auto">
                   <table className="data-table">
                     <thead>
                       <tr>
@@ -1012,6 +1252,7 @@ export default function ForecastClient() {
                     </tbody>
                   </table>
                 </div>
+                </div>{/* end desktop table wrapper */}
 
                 {/* Product gate — hidden SKUs */}
                 {sortedProducts.length > FREE_PRODUCT_LIMIT && (
@@ -1067,6 +1308,51 @@ export default function ForecastClient() {
                   </ol>
                 </div>
               )}
+
+              {/* Email alert capture */}
+              {analysis.criticalCount > 0 || analysis.atRiskCount > 0 ? (
+                <div className="card p-5 mb-5 border-orange-500/15 bg-orange-500/[0.02]">
+                  <div className="flex items-start gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-4.5 h-4.5 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                      </svg>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      {alertStatus === "sent" ? (
+                        <div className="flex items-center gap-2 text-[#2DD4BF]">
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                          <span className="text-sm font-semibold">You're on the alert list — we'll email you when stock is critical.</span>
+                        </div>
+                      ) : (
+                        <>
+                          <p className="text-sm font-semibold text-white mb-0.5">Get weekly stockout alerts by email</p>
+                          <p className="text-xs text-slate-500 mb-3">We'll email you every Monday with your top at-risk SKUs. Free, no spam.</p>
+                          <div className="flex gap-2">
+                            <input
+                              type="email"
+                              value={alertEmail}
+                              onChange={e => setAlertEmail(e.target.value)}
+                              placeholder="your@email.com"
+                              className="flex-1 bg-[#0A1415] rounded-lg border border-[#2DD4BF]/15 focus:border-[#2DD4BF]/40 outline-none px-3 py-2 text-sm text-white placeholder:text-slate-700 transition-colors min-w-0"
+                            />
+                            <button
+                              onClick={handleEmailAlert}
+                              disabled={alertStatus === "sending"}
+                              className="flex-shrink-0 bg-orange-500/80 hover:bg-orange-500 text-white font-semibold text-xs px-4 py-2 rounded-lg transition-all disabled:opacity-60"
+                            >
+                              {alertStatus === "sending" ? "Sending..." : "Notify me"}
+                            </button>
+                          </div>
+                          {alertStatus === "error" && <p className="text-xs text-red-400 mt-1.5">Something went wrong. Try again.</p>}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : null}
 
               {/* Upsell */}
               <div className="card p-6 border-[#2DD4BF]/15 bg-gradient-to-r from-[#2DD4BF]/[0.04] to-[#0D9488]/[0.02] text-center">
