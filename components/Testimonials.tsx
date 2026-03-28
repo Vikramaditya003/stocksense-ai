@@ -36,7 +36,7 @@ export default function Testimonials() {
   return (
     <section className="py-28 bg-[#060C0D] relative overflow-hidden">
       {/* Subtle glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#2DD4BF]/[0.03] blur-[120px] rounded-full pointer-events-none" />
+      <div className="hidden sm:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#2DD4BF]/[0.03] blur-[120px] rounded-full pointer-events-none" />
 
       <div className="max-w-[960px] mx-auto px-4 sm:px-6 relative z-10">
 

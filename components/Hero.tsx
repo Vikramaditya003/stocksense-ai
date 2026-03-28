@@ -23,9 +23,9 @@ export default function Hero() {
     <section className="relative min-h-screen flex flex-col items-center justify-center pt-28 pb-16 overflow-hidden">
       <div className="absolute inset-0 bg-[#060C0D]" />
       <div className="absolute inset-0 dot-grid opacity-50" />
-      {/* Teal glow */}
-      <div className="absolute top-[-15%] left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#2DD4BF]/[0.06] blur-[130px] rounded-full pointer-events-none" />
-      <div className="absolute top-[40%] right-[5%] w-[250px] h-[250px] bg-[#0D9488]/[0.05] blur-[80px] rounded-full pointer-events-none" />
+      {/* Teal glow — hidden on mobile, blur is GPU-expensive on low-end phones */}
+      <div className="hidden sm:block absolute top-[-15%] left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#2DD4BF]/[0.06] blur-[130px] rounded-full pointer-events-none" />
+      <div className="hidden sm:block absolute top-[40%] right-[5%] w-[250px] h-[250px] bg-[#0D9488]/[0.05] blur-[80px] rounded-full pointer-events-none" />
 
       <div className="relative z-10 flex flex-col items-center text-center w-full max-w-[860px] mx-auto px-4 sm:px-6">
 
