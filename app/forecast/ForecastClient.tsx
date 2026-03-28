@@ -30,12 +30,30 @@ function ForecastNavAuth({ onReset, showReset }: { onReset: () => void; showRese
           </Link>
           <UserButton
             appearance={{
+              variables: {
+                colorBackground: "#0A1415",
+                colorText: "#e2f4f4",
+                colorTextSecondary: "#94a3b8",
+                colorPrimary: "#2DD4BF",
+                colorNeutral: "#2DD4BF",
+                colorDanger: "#f87171",
+                borderRadius: "0.75rem",
+                fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
+                fontSize: "14px",
+              },
               elements: {
-                avatarBox: "w-8 h-8",
-                userButtonPopoverCard: "bg-[#0A1415] border border-[#2DD4BF]/15 shadow-2xl shadow-black/60",
-                userButtonPopoverActionButton: "hover:bg-[#2DD4BF]/[0.08] text-slate-300",
-                userButtonPopoverActionButtonText: "text-slate-300",
+                avatarBox: "w-8 h-8 ring-2 ring-[#2DD4BF]/20",
+                userButtonPopoverCard: "bg-[#0A1415] border border-[#2DD4BF]/15 shadow-2xl shadow-black/70 !rounded-xl",
+                userButtonPopoverMain: "bg-[#0A1415]",
+                userButtonPopoverHeader: "border-b border-white/[0.06] pb-3",
+                userButtonPopoverActions: "bg-[#0A1415]",
+                userButtonPopoverActionButton: "hover:bg-[#2DD4BF]/[0.07] rounded-lg transition-colors",
+                userButtonPopoverActionButtonText: "text-slate-300 font-medium",
+                userButtonPopoverActionButtonIconBox: "text-slate-500",
                 userButtonPopoverFooter: "hidden",
+                userPreviewMainIdentifier: "text-white font-semibold",
+                userPreviewSecondaryIdentifier: "text-slate-500 text-xs",
+                userPreviewAvatarContainer: "mr-3",
               },
             }}
           />
