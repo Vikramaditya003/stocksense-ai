@@ -23,12 +23,29 @@ function AuthButtons() {
         </Button>
         <UserButton
           appearance={{
+            variables: {
+              colorBackground: "#0D1B1D",
+              colorText: "#e2f4f4",
+              colorTextSecondary: "#94a3b8",
+              colorPrimary: "#e2f4f4",
+              colorDanger: "#f87171",
+              borderRadius: "0.75rem",
+              fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
+              fontSize: "14px",
+            },
             elements: {
               avatarBox: "w-8 h-8",
-              userButtonPopoverCard: "bg-[#0A1415] border border-[#2DD4BF]/15 shadow-2xl shadow-black/60",
-              userButtonPopoverActionButton: "hover:bg-[#2DD4BF]/[0.08] text-slate-300",
-              userButtonPopoverActionButtonText: "text-slate-300",
-              userButtonPopoverFooter: "hidden",
+              userButtonPopoverCard: "!bg-[#0D1B1D] !border !border-[#2DD4BF]/20 !shadow-2xl !shadow-black/80 !rounded-xl",
+              userButtonPopoverMain: "!bg-[#0D1B1D]",
+              userButtonPopoverHeader: "!bg-[#0D1B1D] !border-b !border-white/[0.05]",
+              userButtonPopoverActions: "!bg-[#0D1B1D]",
+              userButtonPopoverActionButton: "!text-slate-200 hover:!bg-white/[0.05] !rounded-lg",
+              userButtonPopoverActionButtonText: "!text-slate-200 !font-medium",
+              userButtonPopoverActionButtonIconBox: "!text-slate-400",
+              userButtonPopoverFooter: "!hidden",
+              userPreviewMainIdentifier: "!text-white !font-semibold",
+              userPreviewSecondaryIdentifier: "!text-slate-500",
+              userPreviewTextContainer: "!text-white",
             },
           }}
         />
@@ -93,10 +110,10 @@ export default function Navbar() {
         }`}
       >
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-xl bg-[#2DD4BF] flex items-center justify-center shadow-lg shadow-[#2DD4BF]/35">
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="w-9 h-9 rounded-xl bg-[#2DD4BF] flex items-center justify-center shadow-lg shadow-[#2DD4BF]/30 flex-shrink-0">
             <svg className="w-5 h-5 text-[#060C0D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 20V14M9 20V8M14 20V11M19 20V4" />
             </svg>
           </div>
           <span className="text-[16px] font-semibold text-white tracking-tight">
