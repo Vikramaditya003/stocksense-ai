@@ -69,9 +69,9 @@ export default function Hero() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, delay: 0.2 }}
-          className="flex items-center gap-4 mb-20"
+          className="flex flex-col sm:flex-row items-center gap-3 mb-6"
         >
-          <Button asChild size="lg" className="text-[16px] px-7 h-12 gap-2">
+          <Button asChild size="lg" className="text-[16px] px-7 h-12 gap-2 w-full sm:w-auto">
             <Link href="/forecast">
               Analyze free
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -79,10 +79,25 @@ export default function Hero() {
               </svg>
             </Link>
           </Button>
-          <Button asChild variant="outline" size="lg" className="text-[16px] px-7 h-12">
-            <a href="#how-it-works">See how it works</a>
+          <Button asChild variant="outline" size="lg" className="text-[16px] px-7 h-12 gap-2 w-full sm:w-auto border-[#2DD4BF]/20 hover:border-[#2DD4BF]/40 text-slate-300">
+            <Link href="/forecast?demo=true">
+              <svg className="w-4 h-4 text-[#2DD4BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+              </svg>
+              See live demo
+            </Link>
           </Button>
         </motion.div>
+
+        {/* No-friction note */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.28 }}
+          className="text-[13px] text-slate-600 mb-16"
+        >
+          No CSV needed for demo · No credit card · Results in 30 seconds
+        </motion.p>
 
         {/* Stats */}
         <motion.div

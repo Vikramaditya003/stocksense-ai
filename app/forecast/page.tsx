@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
@@ -499,6 +500,7 @@ function StepIndicator({ step }: { step: ForecastStep }) {
 // ─── Main page ────────────────────────────────────────────────────────────
 
 export default function ForecastPage() {
+  const searchParams = useSearchParams();
   const [inputMode, setInputMode] = useState<InputMode>("csv");
   const [step, setStep] = useState<ForecastStep>("idle");
   const [analysis, setAnalysis] = useState<ForecastAnalysis | null>(null);
@@ -513,6 +515,21 @@ export default function ForecastPage() {
   const [upgradeModal, setUpgradeModal] = useState<string | null>(null);
 
   const fileRef = useRef<HTMLInputElement>(null);
+  const demoRan = useRef(false);
+
+  // Auto-run demo if ?demo=true is in the URL
+  useEffect(() => {
+    if (demoRan.current) return;
+    if (searchParams.get("demo") === "true") {
+      demoRan.current = true;
+      setCsvText(DEMO_CSV);
+      setFileName("demo-inventory.csv");
+      setInputMode("csv");
+      setError(null);
+      runForecast(DEMO_CSV);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   const handleFile = useCallback((file: File) => {
     if (!file.name.endsWith(".csv") && file.type !== "text/csv") { setError("Please upload a CSV file."); return; }
