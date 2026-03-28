@@ -364,12 +364,17 @@ function HealthGauge({ score, label }: { score: number; label: string }) {
 
 // ─── Stat Card ────────────────────────────────────────────────────────────
 
-function StatCard({ label, value, sub, color }: { label: string; value: string | number; sub?: string; color?: string }) {
+function StatCard({ label, value, sub, color, icon }: { label: string; value: string | number; sub?: string; color?: string; icon?: React.ReactNode }) {
   return (
-    <div className="card p-5">
-      <p className="text-xs font-medium text-slate-500 mb-2">{label}</p>
-      <p className="text-2xl font-bold tracking-tight" style={{ color: color ?? "#fafafa" }}>{value}</p>
-      {sub && <p className="text-xs text-slate-600 mt-1">{sub}</p>}
+    <div className="card p-4 flex flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{label}</p>
+        {icon && <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: `${color ?? "#2DD4BF"}18` }}>{icon}</div>}
+      </div>
+      <div>
+        <p className="text-2xl font-bold tracking-tight tabular-nums" style={{ color: color ?? "#fafafa" }}>{value}</p>
+        {sub && <p className="text-xs text-slate-500 mt-0.5">{sub}</p>}
+      </div>
     </div>
   );
 }
@@ -381,55 +386,106 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade }: { produ
   const reorderDurationDays = product.avgDailySales > 0 ? Math.round(product.reorderQuantity / product.avgDailySales) : 0;
   const alreadyLate = product.daysOfStockRemaining > 0 && product.daysOfStockRemaining <= leadTime;
 
+  const riskConfig = {
+    critical: { bar: "bg-red-500",    text: "text-red-400",    badge: "text-red-400 bg-red-500/[0.08] border-red-500/20",    dot: "bg-red-400" },
+    high:     { bar: "bg-orange-500", text: "text-orange-400", badge: "text-orange-400 bg-orange-500/[0.08] border-orange-500/20", dot: "bg-orange-400" },
+    medium:   { bar: "bg-yellow-500", text: "text-yellow-400", badge: "text-yellow-400 bg-yellow-500/[0.08] border-yellow-500/20", dot: "bg-yellow-400" },
+    low:      { bar: "bg-green-500",  text: "text-green-400",  badge: "text-[#2DD4BF] bg-[#2DD4BF]/[0.08] border-[#2DD4BF]/20",  dot: "bg-green-400" },
+  };
+  const cfg = riskConfig[product.stockoutRisk] ?? riskConfig.low;
+
   const trendIcon = product.trend === "growing"
     ? <span className="text-green-400 font-medium text-xs">↑ +{product.trendPercent}%</span>
     : product.trend === "declining"
     ? <span className="text-red-400 font-medium text-xs">↓ {product.trendPercent}%</span>
-    : <span className="text-slate-500 text-xs">→ Stable</span>;
+    : <span className="text-slate-500 text-xs">→</span>;
+
+  // Days remaining bar (0-30 day scale, capped)
+  const daysBarPct = Math.min(100, (product.daysOfStockRemaining / 30) * 100);
 
   return (
     <>
       <motion.tr
-        initial={{ opacity: 0, y: 6 }}
+        initial={{ opacity: 0, y: 4 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.25, delay: index * 0.04 }}
+        transition={{ duration: 0.2, delay: index * 0.03 }}
         onClick={() => setOpen(!open)}
-        className="cursor-pointer"
+        className="cursor-pointer group"
       >
-        <td>
-          <div>
-            <p className="font-medium text-slate-100 text-sm">{product.productName}</p>
-            {product.sku && <p className="text-xs text-slate-600 mt-0.5 font-mono">{product.sku}</p>}
+        {/* Color stripe + Product */}
+        <td className="!pl-0">
+          <div className="flex items-center gap-0">
+            <div className={`w-1 self-stretch rounded-l-sm mr-3 flex-shrink-0 ${cfg.bar} opacity-70`} />
+            <div className="min-w-0 py-0.5">
+              <p className="font-semibold text-slate-100 text-sm leading-tight truncate max-w-[160px]">{product.productName}</p>
+              {product.sku && <p className="text-[11px] text-slate-600 mt-0.5 font-mono">{product.sku}</p>}
+              {alreadyLate && (
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-red-400 bg-red-500/10 border border-red-500/20 px-1.5 py-0.5 rounded mt-1">
+                  ⚠ ORDER NOW
+                </span>
+              )}
+            </div>
           </div>
         </td>
+
+        {/* Days left with mini bar */}
         <td>
-          <span className="tabular-nums text-slate-200">{product.currentStock.toLocaleString()}</span>
-          <span className="text-slate-600 text-xs ml-1">units</span>
+          <div className="flex flex-col gap-1.5">
+            <span className={`text-sm font-bold tabular-nums ${product.daysOfStockRemaining <= 0 ? "text-red-400" : cfg.text}`}>
+              {product.daysOfStockRemaining <= 0 ? "OUT" : `${product.daysOfStockRemaining}d`}
+            </span>
+            <div className="w-16 h-1 rounded-full bg-white/[0.06] overflow-hidden">
+              <div className={`h-full rounded-full ${cfg.bar} opacity-70`} style={{ width: `${daysBarPct}%` }} />
+            </div>
+          </div>
         </td>
+
+        {/* Stock */}
         <td>
-          <span className={`tabular-nums font-medium text-sm ${product.daysOfStockRemaining <= 7 ? "text-red-400" : product.daysOfStockRemaining <= 14 ? "text-amber-400" : "text-slate-300"}`}>
-            {product.daysOfStockRemaining <= 0 ? "OUT" : `${product.daysOfStockRemaining}d`}
-          </span>
+          <span className="tabular-nums text-slate-300 text-sm">{product.currentStock.toLocaleString()}</span>
+          <span className="text-slate-600 text-xs ml-1">u</span>
         </td>
-        <td className="text-slate-400 text-sm">{product.stockoutDate}</td>
+
+        {/* Reorder action — inline */}
+        <td>
+          {product.reorderByDate ? (
+            <div>
+              <p className="text-xs font-semibold text-orange-400">{product.reorderByDate}</p>
+              <p className="text-[11px] text-slate-600 mt-0.5">{product.reorderQuantity} units</p>
+            </div>
+          ) : (
+            <span className="text-slate-600 text-xs">—</span>
+          )}
+        </td>
+
+        {/* Trend */}
         <td>{trendIcon}</td>
+
+        {/* Risk badge */}
         <td>
-          <span className={riskBadgeClass(product.stockoutRisk)}>
-            <span className={`w-1.5 h-1.5 rounded-full inline-block ${
-              product.stockoutRisk === "critical" ? "bg-red-400" :
-              product.stockoutRisk === "high" ? "bg-orange-400" :
-              product.stockoutRisk === "medium" ? "bg-yellow-400" : "bg-green-400"
-            }`} />
+          <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-lg border ${cfg.badge}`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
             {product.stockoutRisk.charAt(0).toUpperCase() + product.stockoutRisk.slice(1)}
           </span>
         </td>
+
+        {/* Revenue at risk */}
         <td>
-          {product.estimatedRevenueLoss
-            ? <span className="text-red-400 text-sm font-medium">{product.estimatedRevenueLoss}</span>
-            : <span className="text-slate-600 text-sm">—</span>}
+          {product.estimatedRevenueLoss ? (
+            <div>
+              <span className="text-red-400 text-sm font-bold">{product.estimatedRevenueLoss}</span>
+              {product.price && product.rarAmount && (
+                <p className="text-[10px] text-slate-600 mt-0.5 tabular-nums">{product.avgDailySales.toFixed(1)}/d × {leadTime}d × ₹{product.price.toLocaleString("en-IN")}</p>
+              )}
+            </div>
+          ) : (
+            <span className="text-slate-600 text-sm">—</span>
+          )}
         </td>
+
+        {/* Expand */}
         <td>
-          <svg className={`w-4 h-4 text-slate-600 transition-transform duration-200 ${open ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className={`w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-all duration-200 ${open ? "rotate-180 text-[#2DD4BF]" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
           </svg>
         </td>
@@ -443,44 +499,44 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade }: { produ
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.2 }}
+                transition={{ duration: 0.18 }}
                 className="overflow-hidden"
               >
-                <div className="px-4 py-5 bg-[#0A1415]/80 border-t border-[#2DD4BF]/[0.06] grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="px-4 py-4 bg-[#0A1415]/60 border-t border-white/[0.04] grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {/* Why at risk */}
                   {product.riskReason && (
                     <div className="sm:col-span-2">
-                      <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Why at risk</p>
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Why at risk</p>
                       <p className="text-sm text-slate-300 leading-relaxed">{product.riskReason}</p>
                     </div>
                   )}
 
                   {/* Reorder action */}
-                  <div className="card-sm p-4 bg-[#2DD4BF]/[0.04] border-[#2DD4BF]/15">
-                    <p className="text-xs font-semibold text-[#2DD4BF] uppercase tracking-wider mb-2.5">Reorder Action</p>
+                  <div className="card-sm p-4 bg-[#2DD4BF]/[0.03] border-[#2DD4BF]/15">
+                    <p className="text-[10px] font-bold text-[#2DD4BF] uppercase tracking-wider mb-2.5">Reorder Action</p>
                     <p className="text-sm text-slate-200 mb-0.5 font-medium">
                       Order <span className="font-bold text-white">{product.reorderQuantity} units</span>
                       {reorderDurationDays > 0 && (
                         <span className="text-slate-400 font-normal"> → lasts ~{reorderDurationDays} days</span>
                       )}
                     </p>
-                    <p className="text-xs text-slate-500 mb-2">Reorder point: {product.reorderPoint} units</p>
+                    <p className="text-xs text-slate-500 mb-2">Reorder point: {product.reorderPoint} units · {product.avgDailySales.toFixed(1)} sold/day</p>
                     {product.reorderByDate && (
-                      <p className="text-xs font-semibold text-orange-400 mb-1.5">{product.reorderByDate}</p>
+                      <p className="text-xs font-bold text-orange-400 mb-1.5">{product.reorderByDate}</p>
                     )}
                     {alreadyLate && (
                       <div className="flex items-center gap-1.5 text-xs font-semibold text-red-400 bg-red-500/10 border border-red-500/15 px-2.5 py-1.5 rounded-lg">
                         <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
                         </svg>
-                        Lead time {leadTime}d: you are already late — order immediately
+                        Lead time {leadTime}d — order immediately
                       </div>
                     )}
                   </div>
 
                   {/* Demand forecast */}
                   <div className="sm:col-span-2">
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Demand Forecast</p>
+                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Demand Forecast</p>
                     <div className="grid grid-cols-3 gap-2">
                       {[
                         { label: "30 Days", value: product.forecast30Days, locked: false },
@@ -492,14 +548,12 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade }: { produ
                             <p className="text-base font-bold text-white blur-sm select-none">000</p>
                             <p className="text-xs text-slate-600">{f.label}</p>
                             <div className="absolute inset-0 flex items-center justify-center bg-[#0A1415]/70 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <svg className="w-4 h-4 text-[#2DD4BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                              </svg>
+                              <svg className="w-4 h-4 text-[#2DD4BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
                             </div>
                           </button>
                         ) : (
                           <div key={f.label} className="card-sm p-3 text-center">
-                            <p className="text-base font-bold text-white">{f.value}</p>
+                            <p className="text-lg font-bold text-white tabular-nums">{f.value}</p>
                             <p className="text-xs text-slate-600">{f.label}</p>
                           </div>
                         )
@@ -507,9 +561,7 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade }: { produ
                     </div>
                     {isFreeTier && (
                       <button onClick={() => onUpgrade("60 & 90-day Forecasts")} className="mt-2 flex items-center gap-1.5 text-[11px] text-[#2DD4BF] hover:text-white transition-colors">
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                        </svg>
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
                         Unlock 60 & 90-day forecasts with Pro
                       </button>
                     )}
@@ -517,8 +569,9 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade }: { produ
 
                   {/* Seasonal note */}
                   {product.seasonalNote && (
-                    <div className="sm:col-span-3 border-l-2 border-indigo-500/30 pl-3">
-                      <p className="text-xs text-slate-400 leading-relaxed">{product.seasonalNote}</p>
+                    <div className="sm:col-span-3 flex items-start gap-2 text-xs text-slate-500 bg-white/[0.02] rounded-lg px-3 py-2.5 border border-white/[0.04]">
+                      <svg className="w-3.5 h-3.5 text-[#2DD4BF] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+                      {product.seasonalNote}
                     </div>
                   )}
                 </div>
@@ -1071,14 +1124,94 @@ export default function ForecastClient() {
                 </div>
               )}
 
-              {/* Stat cards */}
+              {/* KPI Cards */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
-                <div className="card p-5 flex flex-col items-center justify-center text-center">
-                  <HealthGauge score={analysis.healthScore} label={analysis.healthLabel} />
+                {/* Revenue at Risk */}
+                <div className={`card p-4 flex flex-col gap-3 ${analysis.totalRarAmount > 0 ? "border-red-500/20 bg-red-500/[0.02]" : ""}`}>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Revenue at Risk</p>
+                    <div className="w-7 h-7 rounded-lg bg-red-500/10 flex items-center justify-center">
+                      <svg className="w-3.5 h-3.5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126z" /></svg>
+                    </div>
+                  </div>
+                  <div>
+                    <p className={`text-2xl font-bold tracking-tight tabular-nums ${analysis.totalRarAmount > 0 ? "text-red-400" : "text-slate-400"}`}>
+                      {analysis.totalRarAmount > 0 ? analysis.revenueAtRisk : "—"}
+                    </p>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      {analysis.totalRarAmount > 0 ? "if critical SKUs stock out" : "No critical risk"}
+                    </p>
+                  </div>
                 </div>
-                <StatCard label="Critical SKUs" value={analysis.criticalCount} sub="need immediate action" color={analysis.criticalCount > 0 ? "#f87171" : "#4ade80"} />
-                <StatCard label="At Risk" value={analysis.atRiskCount} sub="stockout within 14 days" color={analysis.atRiskCount > 0 ? "#fb923c" : "#4ade80"} />
-                <StatCard label="Safe SKUs" value={analysis.safeCount} sub="30+ days of stock" color="#4ade80" />
+
+                {/* Health Score */}
+                <div className="card p-4 flex flex-col gap-3">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Inventory Health</p>
+                    <div className="w-7 h-7 rounded-lg bg-[#2DD4BF]/10 flex items-center justify-center">
+                      <svg className="w-3.5 h-3.5 text-[#2DD4BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-end gap-2">
+                      <p className={`text-2xl font-bold tracking-tight tabular-nums ${
+                        analysis.healthScore >= 66 ? "text-green-400" : analysis.healthScore >= 51 ? "text-yellow-400" : "text-red-400"
+                      }`}>{analysis.healthScore}<span className="text-sm font-normal text-slate-600">/100</span></p>
+                    </div>
+                    <div className="mt-2 h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+                      <div className="h-full rounded-full transition-all duration-500" style={{
+                        width: `${analysis.healthScore}%`,
+                        background: analysis.healthScore >= 66 ? "#4ade80" : analysis.healthScore >= 51 ? "#facc15" : "#f87171"
+                      }} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* First Stockout */}
+                <div className={`card p-4 flex flex-col gap-3 ${analysis.criticalCount > 0 ? "border-orange-500/20 bg-orange-500/[0.02]" : ""}`}>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Next Stockout</p>
+                    <div className="w-7 h-7 rounded-lg bg-orange-500/10 flex items-center justify-center">
+                      <svg className="w-3.5 h-3.5 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    </div>
+                  </div>
+                  <div>
+                    {(() => {
+                      const first = sortedProducts[0];
+                      if (!first || first.stockoutRisk === "low") return (
+                        <>
+                          <p className="text-2xl font-bold tracking-tight text-green-400">Safe</p>
+                          <p className="text-xs text-slate-500 mt-0.5">All products 30+ days</p>
+                        </>
+                      );
+                      return (
+                        <>
+                          <p className="text-2xl font-bold tracking-tight text-orange-400 tabular-nums">{first.daysOfStockRemaining}d</p>
+                          <p className="text-xs text-slate-500 mt-0.5 truncate">{first.productName}</p>
+                        </>
+                      );
+                    })()}
+                  </div>
+                </div>
+
+                {/* Action Required */}
+                <div className={`card p-4 flex flex-col gap-3 ${(analysis.criticalCount + analysis.atRiskCount) > 0 ? "border-yellow-500/15" : ""}`}>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Need Action</p>
+                    <div className="w-7 h-7 rounded-lg bg-yellow-500/10 flex items-center justify-center">
+                      <svg className="w-3.5 h-3.5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zm0 9.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zm9.75-9.75A2.25 2.25 0 0115.75 3.75H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zm0 9.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
+                    </div>
+                  </div>
+                  <div>
+                    <p className={`text-2xl font-bold tracking-tight tabular-nums ${(analysis.criticalCount + analysis.atRiskCount) > 0 ? "text-yellow-400" : "text-green-400"}`}>
+                      {analysis.criticalCount + analysis.atRiskCount}
+                      <span className="text-sm font-normal text-slate-600"> / {analysis.totalSkuCount}</span>
+                    </p>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      {analysis.criticalCount > 0 ? `${analysis.criticalCount} critical · ${analysis.atRiskCount} at-risk` : analysis.atRiskCount > 0 ? `${analysis.atRiskCount} at-risk` : "All SKUs safe"}
+                    </p>
+                  </div>
+                </div>
               </div>
 
               {/* Summary + key insights */}
@@ -1261,13 +1394,13 @@ export default function ForecastClient() {
                   <table className="data-table">
                     <thead>
                       <tr>
-                        <th><button onClick={() => toggleSort("productName")} className="hover:text-slate-300 transition-colors">Product <SortIcon col="productName" /></button></th>
-                        <th><button onClick={() => toggleSort("currentStock")} className="hover:text-slate-300 transition-colors">Stock <SortIcon col="currentStock" /></button></th>
+                        <th className="!pl-4"><button onClick={() => toggleSort("productName")} className="hover:text-slate-300 transition-colors">Product <SortIcon col="productName" /></button></th>
                         <th><button onClick={() => toggleSort("daysOfStockRemaining")} className="hover:text-slate-300 transition-colors">Days Left <SortIcon col="daysOfStockRemaining" /></button></th>
-                        <th>Stockout Date</th>
+                        <th><button onClick={() => toggleSort("currentStock")} className="hover:text-slate-300 transition-colors">Stock <SortIcon col="currentStock" /></button></th>
+                        <th>Reorder By</th>
                         <th><button onClick={() => toggleSort("avgDailySales")} className="hover:text-slate-300 transition-colors">Trend <SortIcon col="avgDailySales" /></button></th>
                         <th><button onClick={() => toggleSort("stockoutRisk")} className="hover:text-slate-300 transition-colors">Risk <SortIcon col="stockoutRisk" /></button></th>
-                        <th>Rev. at Risk</th>
+                        <th><button onClick={() => toggleSort("rarAmount")} className="hover:text-slate-300 transition-colors">Rev. at Risk <SortIcon col="rarAmount" /></button></th>
                         <th />
                       </tr>
                     </thead>
