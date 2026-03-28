@@ -68,8 +68,8 @@ export default function Pricing() {
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
           className="text-center mb-14"
         >
           <p className="section-label mb-4">Pricing</p>
@@ -89,8 +89,8 @@ export default function Pricing() {
               key={plan.name}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.42, delay: i * 0.08 }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{ duration: 0.26, delay: i * 0.05 }}
               className="relative"
             >
               {plan.badge && (
@@ -153,8 +153,8 @@ export default function Pricing() {
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4, delay: 0.2 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.25, delay: 0.12 }}
           className="flex flex-wrap items-center justify-center gap-6 text-[12px] text-slate-500"
         >
           {["No credit card for Free plan", "Cancel anytime", "Instant forecasts", "Shopify CSV compatible"].map(t => (

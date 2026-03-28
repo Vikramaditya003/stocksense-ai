@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
-import { GeistSans } from "geist/font/sans";
+import { Inter } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+  preload: true,
+  weight: ["300", "400", "500", "600", "700"],
+});
 import { ClerkProvider } from "@clerk/nextjs";
 
 const clerkKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ?? "";
@@ -66,8 +74,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
-      <body className="min-h-screen bg-[#060C0D] text-slate-200 antialiased font-[family-name:var(--font-geist-sans)]">
+    <html lang="en" className={`${inter.variable} ${GeistMono.variable}`}>
+      <body className="min-h-screen bg-[#060C0D] text-slate-200 antialiased font-[family-name:var(--font-inter)]">
         {clerkReady ? <ClerkProvider>{children}</ClerkProvider> : children}
       </body>
     </html>

@@ -117,8 +117,8 @@ export default function Features() {
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45 }}
+          viewport={{ once: true, amount: 0.08 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
           className="text-center mb-14"
         >
           <p className="section-label mb-4">Why teams switch</p>
@@ -138,8 +138,8 @@ export default function Features() {
               key={f.title}
               initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.38, delay: i * 0.06 }}
+              viewport={{ once: true, amount: 0.08 }}
+              transition={{ duration: 0.26, delay: i * 0.04 }}
               className="rounded-2xl border border-[#2DD4BF]/10 bg-[#0A1415] p-5 transition-all duration-200 hover:border-[#2DD4BF]/20 hover:bg-[#0F1C1E] hover:-translate-y-0.5"
             >
               <div className="flex items-start justify-between mb-4">
@@ -161,9 +161,9 @@ export default function Features() {
                       <span key={j} className="text-zinc-400 text-xs">→</span>
                     ) : (
                       <span key={j} className={`text-[11px] font-medium px-1.5 py-0.5 rounded-md border ${
-                        j === 0 ? "text-cyan-700 bg-cyan-50 border-cyan-200" :
-                        j === 2 ? "text-blue-700 bg-blue-50 border-blue-200" :
-                        "text-red-700 bg-red-50 border-red-200"
+                        j === 0 ? "text-cyan-400 bg-cyan-500/[0.08] border-cyan-500/20" :
+                        j === 2 ? "text-blue-400 bg-blue-500/[0.08] border-blue-500/20" :
+                        "text-red-400 bg-red-500/[0.08] border-red-500/20"
                       }`}>{part}</span>
                     )
                   ))}
@@ -189,8 +189,8 @@ export default function Features() {
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45, delay: 0.15 }}
+          viewport={{ once: true, amount: 0.08 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
           className="rounded-2xl border border-[#2DD4BF]/10 bg-[#0A1415] overflow-hidden"
         >
           <div className="px-5 py-4 border-b border-white/[0.05] bg-[#07100F]">

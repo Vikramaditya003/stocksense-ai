@@ -31,9 +31,9 @@ export default function Hero() {
 
         {/* Tag */}
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
+          initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
+          transition={{ duration: 0.28, ease: "easeOut" }}
           className="inline-flex items-center gap-2 bg-orange-500/[0.08] border border-orange-500/20 px-4 py-1.5 rounded-full mb-12"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
@@ -44,9 +44,9 @@ export default function Hero() {
 
         {/* Headline — very large, font-light, swap-commerce editorial */}
         <motion.h1
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.06 }}
+          transition={{ duration: 0.38, delay: 0.05, ease: "easeOut" }}
           className="text-[68px] sm:text-[88px] lg:text-[108px] font-light text-white leading-[0.9] tracking-[-0.04em] mb-7"
         >
           Inventory that
@@ -58,7 +58,7 @@ export default function Hero() {
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.14 }}
+          transition={{ duration: 0.32, delay: 0.1, ease: "easeOut" }}
           className="text-[18px] text-slate-400 max-w-xl leading-relaxed mb-12 tracking-tight"
         >
           AI tells you <span className="text-slate-200 font-medium">Stockout in 5 days, order 120 units, you&apos;ll lose ₹18k</span> — not just &ldquo;medium risk&rdquo;. Replace Stocky before August 2026.
@@ -68,7 +68,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, delay: 0.2 }}
+          transition={{ duration: 0.28, delay: 0.14, ease: "easeOut" }}
           className="flex flex-col sm:flex-row items-center gap-3 mb-6"
         >
           <Button asChild size="lg" className="text-[16px] px-7 h-12 gap-2 w-full sm:w-auto">
@@ -93,7 +93,7 @@ export default function Hero() {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.28 }}
+          transition={{ duration: 0.25, delay: 0.18 }}
           className="text-[13px] text-slate-600 mb-16"
         >
           No CSV needed for demo · No credit card · Results in 30 seconds
@@ -103,7 +103,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          transition={{ duration: 0.28, delay: 0.2 }}
           className="flex items-center justify-center gap-12 mb-24"
         >
           {[
@@ -123,7 +123,7 @@ export default function Hero() {
       <motion.div
         initial={{ opacity: 0, y: 28 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.34 }}
+        transition={{ duration: 0.45, delay: 0.22, ease: "easeOut" }}
         className="relative z-10 w-full max-w-[760px] mx-auto px-4 sm:px-6"
       >
         <div className="absolute inset-x-[20%] -top-6 h-6 bg-[#2DD4BF]/15 blur-2xl" />

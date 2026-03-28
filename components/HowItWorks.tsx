@@ -45,8 +45,8 @@ export default function HowItWorks() {
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
           className="text-center mb-16"
         >
           <p className="section-label mb-4">Process</p>
@@ -65,8 +65,8 @@ export default function HowItWorks() {
               key={step.step}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{ duration: 0.28, delay: i * 0.06 }}
               className="rounded-2xl border border-[#2DD4BF]/10 bg-[#0A1415] p-6 hover:border-[#2DD4BF]/20 hover:bg-[#0F1C1E] transition-all duration-200 group"
             >
               <div className="flex items-start justify-between mb-5">
@@ -85,8 +85,8 @@ export default function HowItWorks() {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4, delay: 0.25 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.28, delay: 0.15 }}
           className="mt-4 rounded-2xl border border-[#2DD4BF]/10 bg-[#0A1415] px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4"
         >
           <div>

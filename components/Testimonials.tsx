@@ -44,8 +44,8 @@ export default function Testimonials() {
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
           className="text-center mb-14"
         >
           <p className="section-label mb-4">Results</p>
@@ -62,8 +62,8 @@ export default function Testimonials() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4, delay: 0.1 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.26, delay: 0.08 }}
           className="grid grid-cols-3 gap-4 mb-10"
         >
           {stats.map((s) => (
@@ -81,8 +81,8 @@ export default function Testimonials() {
               key={t.name}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.42, delay: i * 0.09 }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{ duration: 0.26, delay: i * 0.05 }}
               className="rounded-2xl border border-[#2DD4BF]/10 bg-[#0A1415] p-6 flex flex-col gap-5 hover:border-[#2DD4BF]/20 transition-colors duration-200"
             >
               {/* Stars */}
