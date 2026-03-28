@@ -67,6 +67,44 @@ Rules:
 - forecastConfidence: base on data volume (3 days = 50, 30+ days = 90), consistency of patterns, and completeness of data
 - Derive all numbers from the actual CSV data provided — do not invent figures`;
 
+// ── Price extraction ─────────────────────────────────────────────────────────
+// Parses the CSV and returns a map of { sku|productName (lowercase) → price }
+// so we can compute deterministic RAR without relying on AI price guesses.
+function extractPricesFromCsv(csv: string): Map<string, number> {
+  const prices = new Map<string, number>();
+  const lines = csv.trim().split(/\r?\n/);
+  if (lines.length < 2) return prices;
+
+  const headers = lines[0].split(",").map((h) => h.trim().toLowerCase().replace(/[^a-z0-9]/g, ""));
+  const priceIdx = headers.findIndex((h) => h === "price" || h === "unitprice" || h === "avgprice" || h === "sellingprice");
+  if (priceIdx === -1) return prices; // no price column — fall back to AI estimates
+
+  const productIdx = headers.findIndex((h) => h.includes("product") || h.includes("name"));
+  const skuIdx = headers.findIndex((h) => h === "sku" || h === "skucode" || h === "itemcode");
+
+  for (let i = 1; i < lines.length; i++) {
+    const cols = lines[i].split(",").map((c) => c.trim());
+    const rawPrice = cols[priceIdx]?.replace(/[₹,\s]/g, "");
+    const price = parseFloat(rawPrice);
+    if (!price || isNaN(price) || price <= 0) continue;
+
+    const sku = skuIdx >= 0 ? cols[skuIdx]?.toLowerCase() : "";
+    const name = productIdx >= 0 ? cols[productIdx]?.toLowerCase() : "";
+    if (sku) prices.set(sku, price);
+    if (name) prices.set(name, price);
+  }
+  return prices;
+}
+
+// ── Deterministic RAR formula ────────────────────────────────────────────────
+// RAR = avgDailySales × leadTime × price
+// leadTime is capped at a minimum of 7 days so even fast suppliers show impact.
+function formatInr(amount: number): string {
+  if (amount >= 100000) return `₹${(amount / 100000).toFixed(1)}L`;
+  if (amount >= 1000) return `₹${Math.round(amount / 100) * 100}`.replace(/(\d)(?=(\d{3})+$)/g, "$1,");
+  return `₹${Math.round(amount)}`;
+}
+
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
   if (isRateLimited(ip)) {
@@ -96,7 +134,12 @@ export async function POST(req: NextRequest) {
     }
 
     const leadTime = typeof leadTimeDays === "number" ? leadTimeDays : 14;
+    const effectiveLeadTime = Math.max(leadTime, 7); // minimum 7 days for RAR calc
     const today = new Date().toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+
+    // Pre-parse prices from CSV so we can override AI-estimated RAR with deterministic values
+    const csvPrices = extractPricesFromCsv(trimmed);
+    const hasPriceData = csvPrices.size > 0;
 
     const userMessage = `Today's date: ${today}
 Lead time for restocking: ${leadTime} days
@@ -122,6 +165,49 @@ ${trimmed.substring(0, 40000)}`;
     if (!jsonMatch) throw new Error("Could not parse forecast results. Please try again.");
 
     const analysis = JSON.parse(jsonMatch[0]);
+
+    // ── Override RAR with deterministic formula when price data is present ──
+    // Formula: RAR = avgDailySales × effectiveLeadTime × price
+    let totalRarAmount = 0;
+    if (hasPriceData && Array.isArray(analysis.products)) {
+      for (const product of analysis.products) {
+        const sku = (product.sku ?? "").toLowerCase();
+        const name = (product.productName ?? "").toLowerCase();
+        const price = csvPrices.get(sku) ?? csvPrices.get(name) ?? null;
+
+        if (price && product.avgDailySales > 0) {
+          const rarAmount = Math.round(product.avgDailySales * effectiveLeadTime * price);
+          product.rarAmount = rarAmount;
+          product.price = price;
+
+          // Only show revenue loss for critical/high risk products
+          if (product.stockoutRisk === "critical" || product.stockoutRisk === "high") {
+            product.estimatedRevenueLoss = formatInr(rarAmount);
+            totalRarAmount += rarAmount;
+          } else {
+            product.estimatedRevenueLoss = null;
+            product.rarAmount = 0;
+          }
+        } else {
+          // No price data for this product — keep AI estimate but zero rarAmount
+          product.rarAmount = null;
+        }
+      }
+
+      // Override the top-level revenueAtRisk if we have deterministic data
+      if (totalRarAmount > 0) {
+        analysis.revenueAtRisk = `${formatInr(totalRarAmount)} revenue at risk`;
+      }
+    } else {
+      // No price column — set rarAmount null on all products so UI knows it's AI-estimated
+      if (Array.isArray(analysis.products)) {
+        for (const product of analysis.products) {
+          product.rarAmount = null;
+          product.price = null;
+        }
+      }
+    }
+    analysis.totalRarAmount = totalRarAmount;
 
     // Save to DB if user is signed in (best-effort — don't fail the request if DB is down)
     let savedId: string | null = null;

@@ -6,6 +6,7 @@ export interface ProductForecast {
   currentStock: number;
   avgDailySales: number;
   daysOfStockRemaining: number;
+  price?: number;               // parsed from CSV price column, used for deterministic RAR
   stockoutDate: string; // e.g. "Apr 3, 2026" or "Safe (90+ days)"
   stockoutRisk: RiskLevel;
   forecast30Days: number;
@@ -18,7 +19,8 @@ export interface ProductForecast {
   trendPercent: number;
   seasonalNote: string;
   riskReason: string;            // WHY this product is at risk — the specific signal
-  estimatedRevenueLoss: string | null; // e.g. "₹18,000–₹32,000" if stocked out, or null
+  estimatedRevenueLoss: string | null; // e.g. "₹18,000" if stocked out, or null
+  rarAmount: number | null;            // raw INR number for sorting/calculations
 }
 
 export interface ForecastAnalysis {
@@ -33,7 +35,8 @@ export interface ForecastAnalysis {
   safeCount: number;
   topRecommendations: string[];
   adSpendInsight: string;
-  revenueAtRisk: string;         // total estimated revenue loss if critical products stock out
+  revenueAtRisk: string;         // formatted total, e.g. "₹45,000"
+  totalRarAmount: number;        // raw INR number — sum of rarAmount for critical+high products
 }
 
 export type ForecastStep =

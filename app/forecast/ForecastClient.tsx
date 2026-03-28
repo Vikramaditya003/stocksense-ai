@@ -64,23 +64,23 @@ function countUniqueProducts(csv: string): number {
 // ─── Sample CSV download ───────────────────────────────────────────────────
 function downloadSampleCSV() {
   const sample = [
-    "product,sku,date,units_sold,current_stock",
-    "Premium Yoga Mat,YM-001,2024-03-01,8,45",
-    "Premium Yoga Mat,YM-001,2024-03-02,11,34",
-    "Premium Yoga Mat,YM-001,2024-03-03,6,28",
-    "Premium Yoga Mat,YM-001,2024-03-04,9,19",
-    "Water Bottle XL,WB-004,2024-03-01,18,120",
-    "Water Bottle XL,WB-004,2024-03-02,22,98",
-    "Water Bottle XL,WB-004,2024-03-03,25,73",
-    "Water Bottle XL,WB-004,2024-03-04,20,53",
-    "Resistance Bands Set,RB-002,2024-03-01,3,87",
-    "Resistance Bands Set,RB-002,2024-03-02,4,83",
-    "Resistance Bands Set,RB-002,2024-03-03,2,81",
-    "Resistance Bands Set,RB-002,2024-03-04,3,78",
-    "Foam Roller Pro,FR-003,2024-03-01,2,203",
-    "Foam Roller Pro,FR-003,2024-03-02,3,200",
-    "Foam Roller Pro,FR-003,2024-03-03,1,199",
-    "Foam Roller Pro,FR-003,2024-03-04,2,197",
+    "product,sku,date,units_sold,current_stock,price",
+    "Premium Yoga Mat,YM-001,2024-03-01,8,45,1299",
+    "Premium Yoga Mat,YM-001,2024-03-02,11,34,1299",
+    "Premium Yoga Mat,YM-001,2024-03-03,6,28,1299",
+    "Premium Yoga Mat,YM-001,2024-03-04,9,19,1299",
+    "Water Bottle XL,WB-004,2024-03-01,18,120,499",
+    "Water Bottle XL,WB-004,2024-03-02,22,98,499",
+    "Water Bottle XL,WB-004,2024-03-03,25,73,499",
+    "Water Bottle XL,WB-004,2024-03-04,20,53,499",
+    "Resistance Bands Set,RB-002,2024-03-01,3,87,799",
+    "Resistance Bands Set,RB-002,2024-03-02,4,83,799",
+    "Resistance Bands Set,RB-002,2024-03-03,2,81,799",
+    "Resistance Bands Set,RB-002,2024-03-04,3,78,799",
+    "Foam Roller Pro,FR-003,2024-03-01,2,203,1599",
+    "Foam Roller Pro,FR-003,2024-03-02,3,200,1599",
+    "Foam Roller Pro,FR-003,2024-03-03,1,199,1599",
+    "Foam Roller Pro,FR-003,2024-03-04,2,197,1599",
   ].join("\n");
   const blob = new Blob([sample], { type: "text/csv" });
   const url = URL.createObjectURL(blob);
@@ -96,6 +96,8 @@ const CSV_ALIASES: Record<string, string[]> = {
   product:       ["product", "product_name", "name", "item", "item_name", "title"],
   units_sold:    ["units_sold", "sold", "sales", "quantity_sold", "qty_sold", "quantity"],
   current_stock: ["current_stock", "stock", "inventory", "qty", "on_hand", "stock_quantity"],
+  // optional columns — recognized but not required
+  price:         ["price", "unit_price", "avg_price", "selling_price", "mrp"],
 };
 
 function validateCsv(csv: string): string[] {
@@ -538,9 +540,16 @@ function CriticalAlerts({ products, leadTime }: { products: ProductForecast[]; l
               )}
             </div>
             {p.estimatedRevenueLoss && (
-              <span className="text-sm font-bold text-red-400 whitespace-nowrap flex-shrink-0">
-                Lose {p.estimatedRevenueLoss}
-              </span>
+              <div className="flex flex-col items-end flex-shrink-0 gap-0.5">
+                <span className="text-sm font-bold text-red-400 whitespace-nowrap">
+                  {p.estimatedRevenueLoss} at risk
+                </span>
+                {p.price && p.rarAmount && (
+                  <span className="text-[10px] text-slate-500 whitespace-nowrap tabular-nums">
+                    {p.avgDailySales.toFixed(1)} u/day × {leadTime}d × ₹{p.price.toLocaleString("en-IN")}
+                  </span>
+                )}
+              </div>
             )}
             {p.reorderByDate && (
               <span className="text-xs font-semibold text-orange-300 bg-orange-500/10 border border-orange-500/15 px-2.5 py-1 rounded-lg whitespace-nowrap flex-shrink-0">
@@ -1252,7 +1261,6 @@ export default function ForecastClient() {
                     </tbody>
                   </table>
                 </div>
-                </div>{/* end desktop table wrapper */}
 
                 {/* Product gate — hidden SKUs */}
                 {sortedProducts.length > FREE_PRODUCT_LIMIT && (
