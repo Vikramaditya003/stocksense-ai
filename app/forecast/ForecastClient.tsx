@@ -25,6 +25,9 @@ function ForecastNavAuth({ onReset, showReset }: { onReset: () => void; showRese
       )}
       {isLoaded && isSignedIn ? (
         <>
+          <Link href="/history" className="text-xs font-medium text-slate-400 hover:text-white transition-colors">
+            History
+          </Link>
           <Link href="/#pricing" className="text-xs font-semibold text-slate-400 hover:text-white transition-colors">
             Upgrade to Pro
           </Link>
