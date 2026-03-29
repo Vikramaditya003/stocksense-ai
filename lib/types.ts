@@ -37,6 +37,7 @@ export interface ForecastAnalysis {
   adSpendInsight: string;
   revenueAtRisk: string;         // formatted total, e.g. "₹45,000"
   totalRarAmount: number;        // raw INR number — sum of rarAmount for critical+high products
+  forecastConfidence?: number;   // 0-100, data quality score from AI
 }
 
 export type ForecastStep =
