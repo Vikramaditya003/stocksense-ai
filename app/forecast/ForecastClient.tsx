@@ -238,7 +238,7 @@ function UpgradeModal({ feature, onClose }: { feature: string; onClose: () => vo
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
               </svg>
             </div>
-            <button onClick={onClose} className="text-slate-600 hover:text-slate-400 transition-colors">
+            <button type="button" aria-label="Close" onClick={onClose} className="text-slate-600 hover:text-slate-400 transition-colors">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
@@ -927,7 +927,7 @@ export default function ForecastClient() {
                       "border-[#2DD4BF]/15 hover:border-[#2DD4BF]/30 hover:bg-[#2DD4BF]/[0.02]"
                     }`}
                   >
-                    <input ref={fileRef} type="file" accept=".csv,text/csv" className="hidden" onChange={(e) => { if (e.target.files?.[0]) handleFile(e.target.files[0]); }} />
+                    <input ref={fileRef} id="csv-upload" type="file" accept=".csv,text/csv" title="Upload CSV file" aria-label="Upload inventory CSV file" className="hidden" onChange={(e) => { if (e.target.files?.[0]) handleFile(e.target.files[0]); }} />
                     {fileName ? (
                       <>
                         <div className="w-12 h-12 rounded-xl bg-[#2DD4BF]/10 border border-[#2DD4BF]/20 flex items-center justify-center mx-auto mb-3">
@@ -963,19 +963,20 @@ export default function ForecastClient() {
                 {/* Optional fields */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
                   <div>
-                    <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">Lead Time (days)</label>
+                    <label htmlFor="lead-time" className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">Lead Time (days)</label>
                     <input
-                      type="number" value={leadTime} onChange={(e) => setLeadTime(e.target.value)} min={1} max={120}
+                      id="lead-time" type="number" value={leadTime} onChange={(e) => setLeadTime(e.target.value)} min={1} max={120}
+                      placeholder="14"
                       className="w-full bg-[#0A1415] rounded-lg border border-[#2DD4BF]/15 focus:border-[#2DD4BF]/40 outline-none px-3 py-2 text-sm text-white transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider flex items-center gap-2">
+                    <label htmlFor="ad-spend" className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider flex items-center gap-2">
                       Upcoming Ad Spend
                       <span className="text-[9px] font-bold text-[#060C0D] bg-[#2DD4BF] px-1.5 py-0.5 rounded-full tracking-wider">PRO</span>
                     </label>
                     <input
-                      type="text" value={adSpend} onChange={(e) => setAdSpend(e.target.value)}
+                      id="ad-spend" type="text" value={adSpend} onChange={(e) => setAdSpend(e.target.value)}
                       placeholder="e.g. ₹50,000 Meta campaign starting Apr 1"
                       className="w-full bg-[#0A1415] rounded-lg border border-[#2DD4BF]/15 focus:border-[#2DD4BF]/40 outline-none px-3 py-2 text-sm text-slate-300 placeholder:text-slate-700 transition-colors"
                     />
