@@ -319,7 +319,7 @@ function riskBadgeClass(risk: string) {
   return map[risk] ?? "badge badge-neutral";
 }
 
-type SortKey = "productName" | "daysOfStockRemaining" | "stockoutRisk" | "avgDailySales" | "currentStock";
+type SortKey = "productName" | "daysOfStockRemaining" | "stockoutRisk" | "avgDailySales" | "currentStock" | "rarAmount";
 type SortDir = "asc" | "desc";
 
 const RISK_ORDER: Record<string, number> = { critical: 0, high: 1, medium: 2, low: 3 };
