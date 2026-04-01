@@ -28,11 +28,20 @@ function healthColor(s: number) {
 }
 
 function healthLabel(s: number) {
-  if (s >= 81) return "Excellent";
-  if (s >= 66) return "Good";
-  if (s >= 51) return "Fair";
-  if (s >= 26) return "At Risk";
-  return "Critical";
+  if (s >= 81) return "Fully Protected";
+  if (s >= 66) return "Mostly Safe";
+  if (s >= 51) return "Some Risk";
+  if (s >= 26) return "Losing Money";
+  return "Act Now";
+}
+
+// Profit-first copy helpers
+function urgencyLabel(days: number) {
+  if (days <= 0)  return "Stocked Out — losing sales now";
+  if (days <= 3)  return "Stocks out in 72 hours";
+  if (days <= 7)  return "Order this week";
+  if (days <= 14) return "Order within 2 weeks";
+  return "Monitor";
 }
 
 const RISK_ORDER: Record<string, number> = { critical: 0, high: 1, medium: 2, low: 3 };
@@ -328,224 +337,267 @@ export default function DashboardClient() {
     ? [...history].reverse().slice(-8).map(f => f.health_score)
     : [40, 45, 55, 50, 60, 58, 65, 70]; // placeholder shape
 
-  const renderOverview = () => (
-    <div className="space-y-4">
+  // Derive urgency numbers for the action banner
+  const stockingOutSoon = alertProducts.filter(p => p.daysOfStockRemaining <= 7 && p.daysOfStockRemaining >= 0);
+  const alreadyOut      = alertProducts.filter(p => p.daysOfStockRemaining <= 0);
 
-      {/* ── KPI row ── */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
-        {/* Revenue at Risk */}
-        <div className={`card p-4 group hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/20 transition-all duration-200 ${activeAnalysis?.totalRarAmount ? "border-red-500/20" : ""}`}>
-          <div className="flex items-start justify-between mb-3">
-            <div>
-              <p className="text-[10px] font-bold text-[#475569] uppercase tracking-widest">Revenue at Risk</p>
-              <p className={`text-[26px] font-bold tabular-nums tracking-tight mt-1 leading-none ${activeAnalysis?.totalRarAmount ? "text-red-400" : "text-slate-600"}`}>
-                {activeAnalysis?.totalRarAmount ? activeAnalysis.revenueAtRisk : "—"}
+  const renderOverview = () => (
+    <div className="space-y-3">
+
+      {/* ── URGENCY BANNER (only when there's an active threat) ── */}
+      {activeAnalysis && alertProducts.length > 0 && (
+        <div className="rounded-xl border border-red-500/25 bg-gradient-to-r from-red-500/[0.08] to-orange-500/[0.04] px-4 py-3 flex flex-col sm:flex-row sm:items-center gap-3">
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <span className="w-2.5 h-2.5 rounded-full bg-red-400 animate-pulse flex-shrink-0" />
+            <div className="min-w-0">
+              <p className="text-sm font-bold text-red-400 leading-tight">
+                {alreadyOut.length > 0
+                  ? `${alreadyOut.length} product${alreadyOut.length > 1 ? "s" : ""} stocked out — you're losing sales right now`
+                  : `${stockingOutSoon.length} product${stockingOutSoon.length > 1 ? "s" : ""} will stock out within 7 days`}
+              </p>
+              <p className="text-[11px] text-red-400/70 mt-0.5">
+                {activeAnalysis.totalRarAmount > 0 ? `${activeAnalysis.revenueAtRisk} in revenue at risk · ` : ""}
+                {alertProducts.length} SKUs need reorder action
               </p>
             </div>
-            <div className="w-8 h-8 rounded-xl bg-red-500/10 flex items-center justify-center flex-shrink-0">
-              <svg className="w-4 h-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126z" /></svg>
+          </div>
+          <button
+            type="button"
+            onClick={() => router.push("/dashboard?tab=products")}
+            className="flex-shrink-0 flex items-center gap-1.5 bg-red-500 hover:bg-red-400 text-white text-xs font-bold px-3.5 py-1.5 rounded-lg transition-all shadow-lg shadow-red-500/20"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+            Fix Now — Order Today
+          </button>
+        </div>
+      )}
+
+      {/* ── KPI row — compact, profit-first labels ── */}
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-2.5">
+        {/* Money at risk */}
+        <div className={`card p-3.5 group hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/20 transition-all duration-200 ${activeAnalysis?.totalRarAmount ? "border-red-500/20" : ""}`}>
+          <div className="flex items-start justify-between mb-2">
+            <p className="text-[10px] font-bold text-[#475569] uppercase tracking-widest leading-tight">Money You'll Lose</p>
+            <div className="w-7 h-7 rounded-lg bg-red-500/10 flex items-center justify-center flex-shrink-0">
+              <svg className="w-3.5 h-3.5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126z" /></svg>
             </div>
           </div>
+          <p className={`text-[24px] font-bold tabular-nums tracking-tight leading-none mb-1 ${activeAnalysis?.totalRarAmount ? "text-red-400" : "text-slate-600"}`}>
+            {activeAnalysis?.totalRarAmount ? activeAnalysis.revenueAtRisk : "₹0"}
+          </p>
           <div className="flex items-end justify-between">
-            <p className="text-[11px] text-[#475569]">{activeAnalysis?.totalRarAmount ? "if critical SKUs stock out" : "No critical risk detected"}</p>
+            <p className="text-[10px] text-[#475569]">{activeAnalysis?.totalRarAmount ? "if you don't reorder now" : "No losses detected"}</p>
             <Sparkline scores={sparkScores.map(s => 100 - s)} color="#f87171" />
           </div>
         </div>
 
-        {/* Inventory Health */}
-        <div className="card p-4 group hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/20 transition-all duration-200">
-          <div className="flex items-start justify-between mb-3">
-            <div>
-              <p className="text-[10px] font-bold text-[#475569] uppercase tracking-widest">Inventory Health</p>
-              <p className={`text-[26px] font-bold tabular-nums tracking-tight mt-1 leading-none ${
-                activeAnalysis
-                  ? activeAnalysis.healthScore >= 66 ? "text-green-400" : activeAnalysis.healthScore >= 51 ? "text-yellow-400" : "text-red-400"
-                  : "text-slate-600"
-              }`}>
-                {activeAnalysis ? `${activeAnalysis.healthScore}` : "—"}
-                {activeAnalysis && <span className="text-[14px] font-normal text-[#475569] ml-0.5">/100</span>}
-              </p>
-            </div>
-            <div className="w-8 h-8 rounded-xl bg-[#2DD4BF]/10 flex items-center justify-center flex-shrink-0">
-              <svg className="w-4 h-4 text-[#2DD4BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        {/* Stock protection score */}
+        <div className="card p-3.5 group hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/20 transition-all duration-200">
+          <div className="flex items-start justify-between mb-2">
+            <p className="text-[10px] font-bold text-[#475569] uppercase tracking-widest leading-tight">Stock Protection</p>
+            <div className="w-7 h-7 rounded-lg bg-[#2DD4BF]/10 flex items-center justify-center flex-shrink-0">
+              <svg className="w-3.5 h-3.5 text-[#2DD4BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             </div>
           </div>
+          <p className={`text-[24px] font-bold tabular-nums tracking-tight leading-none mb-1 ${
+            activeAnalysis ? activeAnalysis.healthScore >= 66 ? "text-green-400" : activeAnalysis.healthScore >= 51 ? "text-yellow-400" : "text-red-400" : "text-slate-600"
+          }`}>
+            {activeAnalysis ? `${activeAnalysis.healthScore}` : "—"}
+            {activeAnalysis && <span className="text-[13px] font-normal text-[#475569] ml-0.5">/100</span>}
+          </p>
           <div className="flex items-end justify-between">
-            <div>
-              <p className="text-[11px] text-[#475569]">{activeAnalysis ? healthLabel(activeAnalysis.healthScore) : "No data yet"}</p>
-              {activeAnalysis && (
-                <div className="mt-2 w-full h-1 rounded-full bg-white/[0.06] overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all duration-700 ${activeAnalysis.healthScore >= 66 ? "bg-green-400" : activeAnalysis.healthScore >= 51 ? "bg-yellow-400" : "bg-red-400"}`}
-                    style={{ width: `${activeAnalysis.healthScore}%` }}
-                    aria-hidden="true"
-                  />
-                </div>
-              )}
-            </div>
+            <p className="text-[10px] text-[#475569]">{activeAnalysis ? healthLabel(activeAnalysis.healthScore) : "Run a forecast"}</p>
             <Sparkline scores={sparkScores} color="#2DD4BF" />
           </div>
+          {activeAnalysis && (
+            <div className="mt-2 h-1 rounded-full bg-white/[0.06] overflow-hidden">
+              <div className={`h-full rounded-full transition-all duration-700 ${activeAnalysis.healthScore >= 66 ? "bg-green-400" : activeAnalysis.healthScore >= 51 ? "bg-yellow-400" : "bg-red-400"}`}
+                style={{ width: `${activeAnalysis.healthScore}%` }} aria-hidden="true" />
+            </div>
+          )}
         </div>
 
-        {/* Critical SKUs */}
-        <div className={`card p-4 group hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/20 transition-all duration-200 ${(activeAnalysis?.criticalCount ?? 0) > 0 ? "border-orange-500/20" : ""}`}>
-          <div className="flex items-start justify-between mb-3">
-            <div>
-              <p className="text-[10px] font-bold text-[#475569] uppercase tracking-widest">Critical SKUs</p>
-              <p className={`text-[26px] font-bold tabular-nums tracking-tight mt-1 leading-none ${(activeAnalysis?.criticalCount ?? 0) > 0 ? "text-red-400" : "text-green-400"}`}>
-                {activeAnalysis?.criticalCount ?? "—"}
-              </p>
-            </div>
-            <div className="w-8 h-8 rounded-xl bg-orange-500/10 flex items-center justify-center flex-shrink-0">
-              <svg className="w-4 h-4 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>
+        {/* Order now count */}
+        <div className={`card p-3.5 group hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/20 transition-all duration-200 ${(activeAnalysis?.criticalCount ?? 0) > 0 ? "border-orange-500/20" : ""}`}>
+          <div className="flex items-start justify-between mb-2">
+            <p className="text-[10px] font-bold text-[#475569] uppercase tracking-widest leading-tight">Order Now</p>
+            <div className="w-7 h-7 rounded-lg bg-orange-500/10 flex items-center justify-center flex-shrink-0">
+              <svg className="w-3.5 h-3.5 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" /></svg>
             </div>
           </div>
+          <p className={`text-[24px] font-bold tabular-nums tracking-tight leading-none mb-1 ${(activeAnalysis?.criticalCount ?? 0) > 0 ? "text-red-400" : "text-green-400"}`}>
+            {activeAnalysis?.criticalCount ?? "—"}
+            {activeAnalysis && <span className="text-[13px] font-normal text-[#475569] ml-1.5">SKUs</span>}
+          </p>
           <div className="flex items-end justify-between">
-            <div>
-              <p className="text-[11px] text-[#475569]">{activeAnalysis ? `+ ${activeAnalysis.atRiskCount} high risk` : "No data yet"}</p>
-              {activeAnalysis && (activeAnalysis.criticalCount ?? 0) > 0 && (
-                <span className="inline-flex items-center gap-1 mt-1.5 text-[10px] font-bold text-red-400 bg-red-500/10 border border-red-500/15 px-1.5 py-0.5 rounded-md">
-                  <span className="w-1 h-1 rounded-full bg-red-400 animate-pulse" />
-                  Action needed
-                </span>
-              )}
-            </div>
+            <p className="text-[10px] text-[#475569]">{activeAnalysis ? `+${activeAnalysis.atRiskCount} need restocking soon` : "No data yet"}</p>
             <Sparkline scores={sparkScores.map(s => Math.max(0, 100 - s))} color="#fb923c" />
           </div>
         </div>
 
-        {/* Total SKUs */}
-        <div className="card p-4 group hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/20 transition-all duration-200">
-          <div className="flex items-start justify-between mb-3">
-            <div>
-              <p className="text-[10px] font-bold text-[#475569] uppercase tracking-widest">Total SKUs</p>
-              <p className="text-[26px] font-bold tabular-nums tracking-tight mt-1 leading-none text-slate-100">
-                {activeAnalysis?.totalSkuCount ?? "—"}
-              </p>
-            </div>
-            <div className="w-8 h-8 rounded-xl bg-slate-500/10 flex items-center justify-center flex-shrink-0">
-              <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
+        {/* Products monitored */}
+        <div className="card p-3.5 group hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/20 transition-all duration-200">
+          <div className="flex items-start justify-between mb-2">
+            <p className="text-[10px] font-bold text-[#475569] uppercase tracking-widest leading-tight">Products Monitored</p>
+            <div className="w-7 h-7 rounded-lg bg-slate-500/10 flex items-center justify-center flex-shrink-0">
+              <svg className="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
             </div>
           </div>
+          <p className="text-[24px] font-bold tabular-nums tracking-tight leading-none mb-1 text-slate-100">
+            {activeAnalysis?.totalSkuCount ?? "—"}
+          </p>
           <div className="flex items-end justify-between">
-            <div>
-              <p className="text-[11px] text-[#475569]">{activeAnalysis ? `${activeAnalysis.safeCount} safe · ${activeAnalysis.atRiskCount} at risk` : "No data yet"}</p>
-              {activeAnalysis && (
-                <div className="flex items-center gap-1 mt-2">
-                  {[
-                    { count: activeAnalysis.safeCount, color: "bg-green-500" },
-                    { count: activeAnalysis.atRiskCount, color: "bg-yellow-500" },
-                    { count: activeAnalysis.criticalCount, color: "bg-red-500" },
-                  ].map((seg, i) => seg.count > 0 && (
-                    <div key={i} className={`h-1 rounded-full ${seg.color}`} style={{ width: `${(seg.count / activeAnalysis.totalSkuCount) * 60}px` }} aria-hidden="true" />
-                  ))}
-                </div>
-              )}
-            </div>
+            <p className="text-[10px] text-[#475569]">{activeAnalysis ? `${activeAnalysis.safeCount} safe · ${activeAnalysis.atRiskCount} at risk` : "No data yet"}</p>
             <Sparkline scores={sparkScores.map((_, i) => 45 + (i % 3) * 8)} color="#94a3b8" />
           </div>
+          {activeAnalysis && (
+            <div className="flex gap-0.5 mt-2 h-1 rounded-full overflow-hidden">
+              <div className="bg-green-500 rounded-l-full" style={{ width: `${(activeAnalysis.safeCount / activeAnalysis.totalSkuCount) * 100}%` }} aria-hidden="true" />
+              <div className="bg-yellow-500" style={{ width: `${(activeAnalysis.atRiskCount / activeAnalysis.totalSkuCount) * 100}%` }} aria-hidden="true" />
+              <div className="bg-red-500 rounded-r-full" style={{ width: `${(activeAnalysis.criticalCount / activeAnalysis.totalSkuCount) * 100}%` }} aria-hidden="true" />
+            </div>
+          )}
         </div>
       </div>
 
-      {/* ── Main content: two-column ── */}
-      <div className="grid grid-cols-1 xl:grid-cols-[1fr_300px] gap-4">
+      {/* ── Main two-column ── */}
+      <div className="grid grid-cols-1 xl:grid-cols-[1fr_288px] gap-3">
 
-        {/* LEFT: At-risk products table */}
+        {/* LEFT: action table */}
         <div className="card overflow-hidden">
-          <div className="px-5 py-3.5 border-b border-white/[0.06] flex items-center justify-between gap-3">
+          <div className="px-4 py-3 border-b border-white/[0.06] flex items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-semibold text-white">Products Needing Action</p>
+              <p className="text-sm font-bold text-white">
+                {activeAnalysis && alertProducts.length > 0 ? "⚡ Reorder These Today to Protect Revenue" : "Products Overview"}
+              </p>
               <p className="text-[11px] text-[#475569] mt-0.5">
-                {activeAnalysis ? `${alertProducts.length} of ${activeAnalysis.totalSkuCount} SKUs need attention` : "Run a forecast to see results"}
+                {activeAnalysis
+                  ? alertProducts.length > 0
+                    ? `${alertProducts.length} products will lose you money if not restocked`
+                    : "All products have safe stock levels — great work"
+                  : "Upload a CSV to protect your revenue"}
               </p>
             </div>
-            {activeAnalysis && (
-              <a
-                href="/dashboard?tab=products"
-                className="text-[11px] font-semibold text-[#2DD4BF] hover:text-[#14B8A6] transition-colors flex items-center gap-1"
+            {activeAnalysis && alertProducts.length > 0 && (
+              <button
+                type="button"
+                onClick={() => router.push("/dashboard?tab=products")}
+                className="flex-shrink-0 text-[11px] font-bold text-[#060C0D] bg-[#2DD4BF] hover:bg-[#14B8A6] px-3 py-1.5 rounded-lg transition-all"
               >
-                View all
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
-              </a>
+                See all {allProducts.length} →
+              </button>
             )}
           </div>
 
+          {/* Empty state — premium onboarding */}
           {!activeAnalysis && !histLoading ? (
-            <div className="px-5 py-16 text-center">
-              <div className="w-14 h-14 rounded-2xl bg-[#2DD4BF]/10 border border-[#2DD4BF]/20 flex items-center justify-center mx-auto mb-4">
-                <svg className="w-7 h-7 text-[#2DD4BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" /></svg>
+            <div className="px-5 py-8">
+              <div className="max-w-sm mx-auto text-center mb-6">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#2DD4BF]/20 to-[#2DD4BF]/5 border border-[#2DD4BF]/20 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#2DD4BF]/10">
+                  <svg className="w-8 h-8 text-[#2DD4BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" /></svg>
+                </div>
+                <h3 className="text-base font-bold text-white mb-1">Find out which products are costing you money</h3>
+                <p className="text-sm text-[#475569] leading-relaxed">Upload your Shopify inventory CSV and get exact stockout dates, reorder quantities, and revenue at risk in 30 seconds.</p>
               </div>
-              <p className="text-white font-semibold mb-1">No forecasts yet</p>
-              <p className="text-sm text-[#475569] mb-5">Upload your Shopify inventory CSV to get started</p>
-              <button type="button" onClick={() => setUploadOpen(true)} className="inline-flex items-center gap-2 bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] font-bold text-sm px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-[#2DD4BF]/20">
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                Run First Forecast
-              </button>
+
+              {/* Onboarding steps */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6 max-w-lg mx-auto">
+                {[
+                  { step: "1", label: "Export CSV from Shopify", sub: "Products → Export", done: false },
+                  { step: "2", label: "Upload it here", sub: "Takes 5 seconds", done: false },
+                  { step: "3", label: "Get your reorder plan", sub: "AI analysis in 30s", done: false },
+                ].map(s => (
+                  <div key={s.step} className="flex items-start gap-2.5 bg-white/[0.02] border border-white/[0.05] rounded-xl p-3">
+                    <div className="w-5 h-5 rounded-full bg-[#2DD4BF]/15 border border-[#2DD4BF]/25 text-[#2DD4BF] text-[10px] font-black flex items-center justify-center flex-shrink-0 mt-0.5">{s.step}</div>
+                    <div>
+                      <p className="text-[12px] font-semibold text-white leading-tight">{s.label}</p>
+                      <p className="text-[10px] text-[#475569] mt-0.5">{s.sub}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                <button
+                  type="button"
+                  onClick={() => setUploadOpen(true)}
+                  className="inline-flex items-center justify-center gap-2 bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] font-bold text-sm px-6 py-2.5 rounded-xl transition-all shadow-lg shadow-[#2DD4BF]/25"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" /></svg>
+                  Upload Shopify CSV — Free
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setUploadOpen(true)}
+                  className="inline-flex items-center justify-center gap-2 border border-white/10 hover:border-[#2DD4BF]/30 text-slate-400 hover:text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition-all"
+                >
+                  Try with sample data
+                </button>
+              </div>
             </div>
           ) : histLoading ? (
-            <div className="px-5 py-5 space-y-3">
-              {[1,2,3].map(i => <div key={i} className="h-12 rounded-xl shimmer" />)}
+            <div className="px-4 py-4 space-y-2.5">
+              {[1,2,3,4].map(i => <div key={i} className="h-10 rounded-xl shimmer" />)}
             </div>
           ) : alertProducts.length === 0 ? (
-            <div className="px-5 py-10 text-center">
-              <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center mx-auto mb-3">
-                <svg className="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <div className="px-5 py-8 text-center">
+              <div className="w-12 h-12 rounded-xl bg-green-500/10 border border-green-500/15 flex items-center justify-center mx-auto mb-3">
+                <svg className="w-6 h-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
               </div>
-              <p className="text-white font-semibold text-sm mb-0.5">All products are safe</p>
-              <p className="text-xs text-[#475569]">No critical or high-risk SKUs detected</p>
+              <p className="text-white font-bold mb-1">No stockouts predicted — your revenue is protected</p>
+              <p className="text-xs text-[#475569]">All {activeAnalysis?.totalSkuCount} products have healthy stock levels</p>
             </div>
           ) : (
             <table className="w-full">
               <thead>
-                <tr className="border-b border-white/[0.04]">
-                  <th className="text-left text-[10px] font-bold text-[#475569] uppercase tracking-widest px-5 py-2.5">Product</th>
-                  <th className="text-left text-[10px] font-bold text-[#475569] uppercase tracking-widest px-3 py-2.5">Risk</th>
-                  <th className="text-left text-[10px] font-bold text-[#475569] uppercase tracking-widest px-3 py-2.5 hidden sm:table-cell">Days Left</th>
-                  <th className="text-left text-[10px] font-bold text-[#475569] uppercase tracking-widest px-3 py-2.5 hidden md:table-cell">Reorder By</th>
-                  <th className="text-left text-[10px] font-bold text-[#475569] uppercase tracking-widest px-3 py-2.5 pr-5">Rev. at Risk</th>
+                <tr className="border-b border-white/[0.05] bg-white/[0.01]">
+                  <th className="text-left text-[9px] font-black text-[#475569] uppercase tracking-widest px-4 py-2">Product</th>
+                  <th className="text-left text-[9px] font-black text-[#475569] uppercase tracking-widest px-3 py-2">Urgency</th>
+                  <th className="text-left text-[9px] font-black text-[#475569] uppercase tracking-widest px-3 py-2 hidden sm:table-cell">Days Left</th>
+                  <th className="text-left text-[9px] font-black text-[#475569] uppercase tracking-widest px-3 py-2 hidden md:table-cell">Reorder By</th>
+                  <th className="text-left text-[9px] font-black text-[#475569] uppercase tracking-widest px-3 py-2 pr-4">You'll Lose</th>
                 </tr>
               </thead>
               <tbody>
-                {alertProducts.slice(0, 6).map((p, i) => {
+                {alertProducts.slice(0, 7).map((p, i) => {
                   const cfg = riskCfg[p.stockoutRisk] ?? riskCfg.low;
                   return (
                     <motion.tr
                       key={p.sku || p.productName}
                       initial={{ opacity: 0, x: -4 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.15, delay: i * 0.03 }}
-                      className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors group cursor-pointer"
+                      transition={{ duration: 0.12, delay: i * 0.025 }}
+                      className="border-b border-white/[0.03] hover:bg-white/[0.025] transition-colors cursor-pointer"
                       onClick={() => router.push("/dashboard?tab=products")}
                     >
-                      <td className="px-5 py-3">
-                        <div className="flex items-center gap-2.5">
-                          <div className={`w-[3px] h-8 rounded-full flex-shrink-0 ${cfg.bar} opacity-70`} />
+                      <td className="px-4 py-2.5">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-[3px] h-7 rounded-full flex-shrink-0 ${cfg.bar}`} />
                           <div className="min-w-0">
-                            <p className="text-sm font-semibold text-slate-200 truncate max-w-[160px]">{p.productName}</p>
-                            {p.sku && <p className="text-[10px] text-[#475569] font-mono">{p.sku}</p>}
+                            <p className="text-[13px] font-semibold text-slate-200 truncate max-w-[160px] leading-tight">{p.productName}</p>
+                            {p.sku && <p className="text-[10px] text-[#475569] font-mono leading-tight">{p.sku}</p>}
                           </div>
                         </div>
                       </td>
-                      <td className="px-3 py-3">
-                        <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-lg border ${cfg.badge}`}>
-                          <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot} ${p.stockoutRisk === "critical" ? "animate-pulse" : ""}`} />
-                          {cfg.label}
-                        </span>
+                      <td className="px-3 py-2.5">
+                        <p className={`text-[11px] font-bold leading-tight ${p.stockoutRisk === "critical" ? "text-red-400" : "text-orange-400"}`}>
+                          {urgencyLabel(p.daysOfStockRemaining)}
+                        </p>
                       </td>
-                      <td className="px-3 py-3 hidden sm:table-cell">
-                        <span className={`text-sm font-bold tabular-nums ${p.daysOfStockRemaining <= 0 ? "text-red-400" : cfg.text}`}>
+                      <td className="px-3 py-2.5 hidden sm:table-cell">
+                        <span className={`text-sm font-black tabular-nums ${p.daysOfStockRemaining <= 0 ? "text-red-400" : p.daysOfStockRemaining <= 7 ? "text-orange-400" : cfg.text}`}>
                           {p.daysOfStockRemaining <= 0 ? "OUT" : `${p.daysOfStockRemaining}d`}
                         </span>
                       </td>
-                      <td className="px-3 py-3 hidden md:table-cell">
+                      <td className="px-3 py-2.5 hidden md:table-cell">
                         {p.reorderByDate
-                          ? <p className="text-xs font-semibold text-orange-300">{p.reorderByDate}</p>
-                          : <span className="text-[#475569]">—</span>}
+                          ? <p className="text-[12px] font-semibold text-orange-300">{p.reorderByDate}</p>
+                          : <span className="text-[#475569] text-sm">—</span>}
                       </td>
-                      <td className="px-3 py-3 pr-5">
+                      <td className="px-3 py-2.5 pr-4">
                         {p.estimatedRevenueLoss
-                          ? <span className="text-sm font-bold text-red-400">{p.estimatedRevenueLoss}</span>
-                          : <span className="text-[#475569]">—</span>}
+                          ? <span className="text-[13px] font-black text-red-400">{p.estimatedRevenueLoss}</span>
+                          : <span className="text-[#475569] text-sm">—</span>}
                       </td>
                     </motion.tr>
                   );
@@ -554,101 +606,107 @@ export default function DashboardClient() {
             </table>
           )}
 
-          {activeAnalysis && alertProducts.length > 6 && (
-            <div className="px-5 py-3 border-t border-white/[0.04] text-center">
-              <a href="/dashboard?tab=products" className="text-xs font-semibold text-[#2DD4BF] hover:text-[#14B8A6] transition-colors">
-                +{alertProducts.length - 6} more products →
-              </a>
+          {activeAnalysis && alertProducts.length > 7 && (
+            <div className="px-4 py-2.5 border-t border-white/[0.04] flex items-center justify-between">
+              <p className="text-[11px] text-[#475569]">+{alertProducts.length - 7} more products need restocking</p>
+              <button type="button" onClick={() => router.push("/dashboard?tab=products")}
+                className="text-[11px] font-bold text-[#2DD4BF] hover:text-[#14B8A6] transition-colors">
+                See all & export reorder list →
+              </button>
             </div>
           )}
         </div>
 
-        {/* RIGHT: Health gauge + recent runs + AI summary */}
-        <div className="flex flex-col gap-4">
+        {/* RIGHT: sticky action panel */}
+        <div className="flex flex-col gap-3">
 
-          {/* Health gauge card */}
-          <div className="card p-5">
-            <p className="text-[10px] font-bold text-[#475569] uppercase tracking-widest mb-4">Health Score</p>
+          {/* Protection score */}
+          <div className="card p-4">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-[10px] font-black text-[#475569] uppercase tracking-widest">Protection Score</p>
+              {activeAnalysis && (
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                  activeAnalysis.healthScore >= 66 ? "text-green-400 bg-green-500/10 border-green-500/15"
+                  : activeAnalysis.healthScore >= 51 ? "text-yellow-400 bg-yellow-500/10 border-yellow-500/15"
+                  : "text-red-400 bg-red-500/10 border-red-500/15"
+                }`}>{healthLabel(activeAnalysis.healthScore)}</span>
+              )}
+            </div>
             {activeAnalysis ? (
               <>
-                {/* Ring gauge */}
-                <div className="relative flex items-center justify-center mb-4">
-                  <svg viewBox="0 0 100 100" className="w-28 h-28 -rotate-90">
-                    <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
-                    <circle
-                      cx="50" cy="50" r="40" fill="none"
+                <div className="relative flex items-center justify-center mb-3">
+                  <svg viewBox="0 0 100 100" className="w-24 h-24 -rotate-90">
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="9" />
+                    <circle cx="50" cy="50" r="40" fill="none"
                       stroke={activeAnalysis.healthScore >= 66 ? "#4ade80" : activeAnalysis.healthScore >= 51 ? "#facc15" : "#f87171"}
-                      strokeWidth="8"
-                      strokeLinecap="round"
+                      strokeWidth="9" strokeLinecap="round"
                       strokeDasharray={`${(activeAnalysis.healthScore / 100) * 251} 251`}
                       className="gauge-fill"
                       style={{ "--target-offset": `${251 - (activeAnalysis.healthScore / 100) * 251}` } as React.CSSProperties}
                     />
                   </svg>
                   <div className="absolute text-center">
-                    <p className={`text-2xl font-bold tabular-nums leading-none ${activeAnalysis.healthScore >= 66 ? "text-green-400" : activeAnalysis.healthScore >= 51 ? "text-yellow-400" : "text-red-400"}`}>
+                    <p className={`text-2xl font-black tabular-nums leading-none ${activeAnalysis.healthScore >= 66 ? "text-green-400" : activeAnalysis.healthScore >= 51 ? "text-yellow-400" : "text-red-400"}`}>
                       {activeAnalysis.healthScore}
                     </p>
-                    <p className="text-[10px] text-[#475569] mt-0.5">/ 100</p>
+                    <p className="text-[9px] text-[#475569]">/ 100</p>
                   </div>
                 </div>
-                <div className="text-center mb-3">
-                  <p className={`text-sm font-semibold ${activeAnalysis.healthScore >= 66 ? "text-green-400" : activeAnalysis.healthScore >= 51 ? "text-yellow-400" : "text-red-400"}`}>
-                    {healthLabel(activeAnalysis.healthScore)}
-                  </p>
-                  <p className="text-[11px] text-[#475569] mt-0.5">{activeAnalysis.totalSkuCount} SKUs analyzed</p>
-                </div>
-                {/* Distribution pills */}
-                <div className="grid grid-cols-3 gap-1.5 text-center">
+                <div className="grid grid-cols-3 gap-1.5">
                   {[
                     { label: "Safe", count: activeAnalysis.safeCount, cls: "bg-green-500/10 text-green-400 border-green-500/15" },
                     { label: "Risk", count: activeAnalysis.atRiskCount, cls: "bg-yellow-500/10 text-yellow-400 border-yellow-500/15" },
-                    { label: "Crit", count: activeAnalysis.criticalCount, cls: "bg-red-500/10 text-red-400 border-red-500/15" },
+                    { label: "Order", count: activeAnalysis.criticalCount, cls: "bg-red-500/10 text-red-400 border-red-500/15" },
                   ].map(d => (
-                    <div key={d.label} className={`rounded-xl py-2 border text-center ${d.cls}`}>
-                      <p className="text-base font-bold leading-none">{d.count}</p>
-                      <p className="text-[9px] font-semibold uppercase tracking-wider mt-0.5 opacity-70">{d.label}</p>
+                    <div key={d.label} className={`rounded-lg py-1.5 border text-center ${d.cls}`}>
+                      <p className="text-sm font-black leading-none">{d.count}</p>
+                      <p className="text-[8px] font-bold uppercase tracking-wider mt-0.5 opacity-70">{d.label}</p>
                     </div>
                   ))}
                 </div>
               </>
             ) : (
-              <div className="flex flex-col items-center justify-center py-6 text-center">
-                <div className="w-16 h-16 rounded-full border-4 border-white/[0.05] flex items-center justify-center mb-3">
-                  <span className="text-2xl font-bold text-[#475569]">—</span>
-                </div>
-                <p className="text-xs text-[#475569]">No forecast data</p>
+              <div className="py-4 text-center">
+                <p className="text-xs text-[#475569]">Upload a CSV to see your protection score</p>
               </div>
             )}
           </div>
 
-          {/* Recent runs */}
-          <div className="card p-5 flex-1">
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-[10px] font-bold text-[#475569] uppercase tracking-widest">Recent Runs</p>
-              <a href="/history" className="text-[10px] font-semibold text-[#2DD4BF] hover:text-[#14B8A6] transition-colors">View all →</a>
+          {/* What to do next (AI actions) */}
+          {(activeAnalysis?.topRecommendations?.length ?? 0) > 0 && (
+            <div className="card p-4">
+              <p className="text-[10px] font-black text-[#475569] uppercase tracking-widest mb-2.5">Your Action Plan</p>
+              <ol className="space-y-2">
+                {activeAnalysis?.topRecommendations.slice(0, 3).map((r, i) => (
+                  <li key={i} className="flex items-start gap-2 text-[11px] text-slate-400 leading-relaxed">
+                    <span className="w-4 h-4 rounded-full bg-[#2DD4BF]/10 border border-[#2DD4BF]/20 text-[#2DD4BF] text-[9px] font-black flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
+                    {r}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
+
+          {/* Past forecasts */}
+          <div className="card p-4 flex-1">
+            <div className="flex items-center justify-between mb-2.5">
+              <p className="text-[10px] font-black text-[#475569] uppercase tracking-widest">Past Analyses</p>
+              <a href="/history" className="text-[10px] font-bold text-[#2DD4BF] hover:text-[#14B8A6] transition-colors">All →</a>
             </div>
             {histLoading ? (
-              <div className="space-y-2">
-                {[1,2,3].map(i => <div key={i} className="h-10 rounded-xl shimmer" />)}
-              </div>
+              <div className="space-y-2">{[1,2,3].map(i => <div key={i} className="h-8 rounded-lg shimmer" />)}</div>
             ) : history.length === 0 ? (
-              <p className="text-xs text-[#475569] text-center py-4">No runs yet</p>
+              <p className="text-[11px] text-[#475569] py-2">No analyses yet</p>
             ) : (
-              <div className="space-y-1.5">
-                {history.slice(0, 5).map((f) => (
-                  <button
-                    key={f.id}
-                    type="button"
-                    onClick={() => loadDetail(f.id, f.created_at)}
-                    className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left transition-colors ${activeDate === f.created_at ? "bg-[#2DD4BF]/[0.06] border border-[#2DD4BF]/20" : "hover:bg-white/[0.03] border border-transparent"}`}
-                  >
-                    <div className={`w-2 h-2 rounded-full flex-shrink-0 ${f.health_score >= 66 ? "bg-green-400" : f.health_score >= 51 ? "bg-yellow-400" : "bg-red-400"}`} />
+              <div className="space-y-1">
+                {history.slice(0, 4).map((f) => (
+                  <button key={f.id} type="button" onClick={() => loadDetail(f.id, f.created_at)}
+                    className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-colors ${activeDate === f.created_at ? "bg-[#2DD4BF]/[0.06] border border-[#2DD4BF]/20" : "hover:bg-white/[0.03] border border-transparent"}`}>
+                    <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${f.health_score >= 66 ? "bg-green-400" : f.health_score >= 51 ? "bg-yellow-400" : "bg-red-400"}`} />
                     <div className="min-w-0 flex-1">
-                      <p className="text-[12px] font-medium text-slate-300 truncate">{fmt(f.created_at)}</p>
-                      <p className="text-[10px] text-[#475569]">{f.sku_count} SKUs</p>
+                      <p className="text-[11px] font-medium text-slate-300 truncate">{fmt(f.created_at)}</p>
                     </div>
-                    <span className={`text-[12px] font-bold tabular-nums flex-shrink-0 ${f.health_score >= 66 ? "text-green-400" : f.health_score >= 51 ? "text-yellow-400" : "text-red-400"}`}>
+                    <span className={`text-[11px] font-black tabular-nums ${f.health_score >= 66 ? "text-green-400" : f.health_score >= 51 ? "text-yellow-400" : "text-red-400"}`}>
                       {f.health_score}
                     </span>
                   </button>
@@ -657,32 +715,30 @@ export default function DashboardClient() {
             )}
           </div>
 
-          {/* AI Summary compact */}
-          {(activeAnalysis?.topRecommendations?.length ?? 0) > 0 && (
-            <div className="card p-4">
-              <p className="text-[10px] font-bold text-[#475569] uppercase tracking-widest mb-3">AI Recommendations</p>
-              <ol className="space-y-2.5">
-                {activeAnalysis?.topRecommendations.slice(0, 3).map((r, i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs text-slate-400 leading-relaxed">
-                    <span className="w-4 h-4 rounded-full bg-[#2DD4BF]/10 border border-[#2DD4BF]/20 text-[#2DD4BF] text-[9px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
-                    {r}
-                  </li>
-                ))}
-              </ol>
-            </div>
-          )}
+          {/* Upsell CTA */}
+          <div className="rounded-xl bg-gradient-to-br from-[#2DD4BF]/10 to-[#2DD4BF]/[0.03] border border-[#2DD4BF]/20 p-4">
+            <p className="text-[11px] font-black text-[#2DD4BF] uppercase tracking-widest mb-1">Upgrade to Pro</p>
+            <p className="text-[12px] text-slate-300 font-semibold mb-0.5">Get 90-day forecasts</p>
+            <p className="text-[10px] text-[#475569] mb-3">Merchants on Pro avoid 3× more stockouts on average.</p>
+            <a href="/#pricing"
+              className="block w-full text-center text-[12px] font-bold bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] py-2 rounded-lg transition-all shadow-md shadow-[#2DD4BF]/20">
+              Protect more revenue →
+            </a>
+          </div>
         </div>
       </div>
 
-      {/* ── Health trend ── (full width, below) */}
+      {/* ── Trend chart ── */}
       {history.length >= 2 && (
-        <div className="card p-5">
-          <div className="flex items-center justify-between mb-4">
+        <div className="card p-4">
+          <div className="flex items-center justify-between mb-3">
             <div>
-              <p className="text-sm font-semibold text-white">Inventory Health Trend</p>
-              <p className="text-xs text-[#475569] mt-0.5">{history.length} forecast{history.length !== 1 ? "s" : ""} · last run {timeAgo(history[0]?.created_at)}</p>
+              <p className="text-sm font-bold text-white">Revenue Protection Over Time</p>
+              <p className="text-[11px] text-[#475569] mt-0.5">How your stock health has changed across {history.length} analyses</p>
             </div>
-            <span className="text-[10px] font-semibold text-[#475569] bg-white/[0.03] border border-white/[0.06] px-2.5 py-1 rounded-lg">Last {Math.min(history.length, 8)} runs</span>
+            <span className="text-[10px] font-semibold text-[#475569] bg-white/[0.03] border border-white/[0.06] px-2 py-1 rounded-lg">
+              {history.length > 0 ? `Last run: ${timeAgo(history[0].created_at)}` : ""}
+            </span>
           </div>
           <TrendChart forecasts={history} />
         </div>
