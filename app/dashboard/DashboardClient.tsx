@@ -224,9 +224,10 @@ export default function DashboardClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const tabParam = searchParams.get("tab");
+  const qParam = searchParams.get("q") ?? "";
   const section: NavSection = (["products", "alerts"].includes(tabParam ?? "") ? tabParam : "overview") as NavSection;
   const [uploadOpen, setUploadOpen] = useState(false);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(qParam);
 
   // Data
   const [history, setHistory] = useState<Omit<SavedForecast, "analysis" | "clerk_user_id">[]>([]);
@@ -238,6 +239,9 @@ export default function DashboardClient() {
   type FilterTab = "all" | "critical" | "high" | "medium" | "low";
   const [filterTab, setFilterTab] = useState<FilterTab>("all");
   const [expandedSku, setExpandedSku] = useState<string | null>(null);
+
+  // Sync search from URL ?q= param
+  useEffect(() => { setSearch(qParam); }, [qParam]);
 
   // Load history
   useEffect(() => {
