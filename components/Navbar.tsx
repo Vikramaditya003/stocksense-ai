@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { LogoMark } from "@/components/StocksenseLogo";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
@@ -111,13 +112,9 @@ export default function Navbar() {
       >
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-xl bg-[#2DD4BF] flex items-center justify-center shadow-lg shadow-[#2DD4BF]/30 flex-shrink-0">
-            <svg className="w-5 h-5 text-[#060C0D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 20V14M9 20V8M14 20V11M19 20V4" />
-            </svg>
-          </div>
+          <LogoMark size={36} />
           <span className="text-[16px] font-semibold text-white tracking-tight">
-            StockSense<span className="text-[#2DD4BF]">AI</span>
+            Stock<span className="text-[#2DD4BF]">Sense</span>
           </span>
         </Link>
 
@@ -152,6 +149,7 @@ export default function Navbar() {
 
         {/* Mobile toggle */}
         <button
+          type="button"
           onClick={() => setMobileOpen(!mobileOpen)}
           className="md:hidden text-slate-400 hover:text-white p-2 rounded-xl hover:bg-white/[0.05] transition-all"
           aria-label="Toggle menu"
