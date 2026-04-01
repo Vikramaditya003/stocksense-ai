@@ -34,9 +34,9 @@ const stats = [
 
 export default function Testimonials() {
   return (
-    <section className="py-28 bg-[#060C0D] relative overflow-hidden">
-      {/* Subtle glow */}
-      <div className="hidden sm:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#2DD4BF]/[0.03] blur-[120px] rounded-full pointer-events-none" />
+    <section className="py-28 section-alt relative overflow-hidden">
+      {/* Subtle ambient glow */}
+      <div className="hidden sm:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-[#2DD4BF]/[0.03] blur-[130px] rounded-full pointer-events-none" />
 
       <div className="max-w-[960px] mx-auto px-4 sm:px-6 relative z-10">
 
@@ -48,30 +48,32 @@ export default function Testimonials() {
           transition={{ duration: 0.3, ease: "easeOut" }}
           className="text-center mb-14"
         >
-          <p className="section-label mb-4">Results</p>
-          <h2 className="text-4xl sm:text-[52px] font-light text-white tracking-[-0.03em] leading-tight mb-4">
+          <p className="section-label mb-5">Results</p>
+          <h2 className="text-4xl sm:text-[52px] font-semibold text-white tracking-[-0.03em] leading-tight mb-4 mt-4">
             Merchants stopped{" "}
-            <span className="text-slate-500">guessing</span>
+            <span className="text-[#2DD4BF]">guessing</span>
           </h2>
-          <p className="text-[15px] text-slate-500 max-w-sm mx-auto leading-relaxed tracking-tight">
+          <p className="text-[16px] text-slate-500 max-w-sm mx-auto leading-relaxed tracking-tight">
             Real feedback from Shopify store owners who switched from spreadsheets and Stocky.
           </p>
         </motion.div>
 
-        {/* Stats strip */}
+        {/* Stats strip — gradient treatment */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1 }}
-          transition={{ duration: 0.26, delay: 0.08 }}
-          className="grid grid-cols-3 gap-4 mb-10"
+          transition={{ duration: 0.28, delay: 0.08 }}
+          className="stats-gradient rounded-2xl overflow-hidden border border-[#2DD4BF]/15 mb-10"
         >
-          {stats.map((s) => (
-            <div key={s.label} className="rounded-2xl border border-[#2DD4BF]/10 bg-[#0A1415] p-5 text-center">
-              <p className="text-[26px] sm:text-[32px] font-semibold text-white tracking-tight tabular-nums mb-1">{s.value}</p>
-              <p className="text-[12px] text-slate-500 tracking-tight leading-snug">{s.label}</p>
-            </div>
-          ))}
+          <div className="grid grid-cols-3 divide-x divide-white/[0.06]">
+            {stats.map((s) => (
+              <div key={s.label} className="p-6 sm:p-8 text-center">
+                <p className="text-[28px] sm:text-[36px] font-bold text-white tracking-tight tabular-nums mb-1">{s.value}</p>
+                <p className="text-[12px] sm:text-[13px] text-slate-500 tracking-tight leading-snug">{s.label}</p>
+              </div>
+            ))}
+          </div>
         </motion.div>
 
         {/* Testimonial cards */}
@@ -79,12 +81,15 @@ export default function Testimonials() {
           {testimonials.map((t, i) => (
             <motion.div
               key={t.name}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.1 }}
-              transition={{ duration: 0.26, delay: i * 0.05 }}
-              className="rounded-2xl border border-[#2DD4BF]/10 bg-[#0A1415] p-6 flex flex-col gap-5 hover:border-[#2DD4BF]/20 transition-colors duration-200"
+              transition={{ duration: 0.28, delay: i * 0.06 }}
+              className="rounded-2xl border border-[#2DD4BF]/10 bg-[#0A1415] p-6 flex flex-col gap-4 hover:border-[#2DD4BF]/22 hover:shadow-lg hover:shadow-[#2DD4BF]/[0.05] transition-all duration-200 relative overflow-hidden"
             >
+              {/* Decorative quote mark */}
+              <span className="absolute top-4 right-5 text-[64px] leading-none font-bold text-[#2DD4BF]/[0.07] select-none pointer-events-none">&ldquo;</span>
+
               {/* Stars */}
               <div className="flex gap-0.5">
                 {[...Array(5)].map((_, j) => (
@@ -95,20 +100,20 @@ export default function Testimonials() {
               </div>
 
               {/* Quote */}
-              <p className="text-[14px] text-slate-400 leading-relaxed tracking-tight flex-1">
+              <p className="text-[14px] text-slate-400 leading-relaxed tracking-tight flex-1 relative z-10">
                 &ldquo;{t.quote}&rdquo;
               </p>
 
               {/* Author */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 pt-1 border-t border-white/[0.04]">
                 <div
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-bold text-[#060C0D] flex-shrink-0"
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-bold text-[#060C0D] flex-shrink-0 shadow-md"
                   style={{ backgroundColor: t.color }}
                 >
                   {t.initials}
                 </div>
                 <div>
-                  <p className="text-[13px] font-semibold text-slate-200 tracking-tight">{t.name}</p>
+                  <p className="text-[13px] font-semibold text-white tracking-tight">{t.name}</p>
                   <p className="text-[11px] text-slate-600 tracking-tight">{t.role}</p>
                 </div>
               </div>

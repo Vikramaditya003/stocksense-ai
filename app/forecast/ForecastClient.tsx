@@ -398,10 +398,10 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade }: { produ
   const cfg = riskConfig[product.stockoutRisk] ?? riskConfig.low;
 
   const trendIcon = product.trend === "growing"
-    ? <span className="text-green-400 font-medium text-xs">↑ +{product.trendPercent}%</span>
+    ? <span className="text-green-400 font-medium text-[11px]">↑ +{product.trendPercent}%</span>
     : product.trend === "declining"
-    ? <span className="text-red-400 font-medium text-xs">↓ {product.trendPercent}%</span>
-    : <span className="text-slate-500 text-xs">→</span>;
+    ? <span className="text-red-400 font-medium text-[11px]">↓ {product.trendPercent}%</span>
+    : null;
 
   // Days remaining bar (0-30 day scale, capped)
   const daysBarPct = Math.min(100, (product.daysOfStockRemaining / 30) * 100);
@@ -415,15 +415,18 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade }: { produ
         onClick={() => setOpen(!open)}
         className="cursor-pointer group"
       >
-        {/* Color stripe + Product */}
+        {/* Color stripe + Product + Trend */}
         <td className="!pl-0">
           <div className="flex items-center gap-0">
-            <div className={`w-1 self-stretch rounded-l-sm mr-3 flex-shrink-0 ${cfg.bar} opacity-70`} />
+            <div className={`w-[3px] self-stretch rounded-l-sm mr-3 flex-shrink-0 ${cfg.bar} opacity-80`} />
             <div className="min-w-0 py-0.5">
-              <p className="font-semibold text-slate-100 text-sm leading-tight truncate max-w-[160px]">{product.productName}</p>
-              {product.sku && <p className="text-[11px] text-slate-600 mt-0.5 font-mono">{product.sku}</p>}
+              <p className="font-semibold text-[#F1F5F9] text-sm leading-tight truncate max-w-[180px]">{product.productName}</p>
+              <div className="flex items-center gap-2 mt-0.5">
+                {product.sku && <p className="text-[11px] text-[#475569] font-mono">{product.sku}</p>}
+                {trendIcon}
+              </div>
               {alreadyLate && (
-                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-red-400 bg-red-500/10 border border-red-500/20 px-1.5 py-0.5 rounded mt-1">
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-red-400 border border-red-500/40 bg-transparent px-1.5 py-0.5 rounded mt-1">
                   ⚠ ORDER NOW
                 </span>
               )}
@@ -431,40 +434,7 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade }: { produ
           </div>
         </td>
 
-        {/* Days left with mini bar */}
-        <td>
-          <div className="flex flex-col gap-1.5">
-            <span className={`text-sm font-bold tabular-nums ${product.daysOfStockRemaining <= 0 ? "text-red-400" : cfg.text}`}>
-              {product.daysOfStockRemaining <= 0 ? "OUT" : `${product.daysOfStockRemaining}d`}
-            </span>
-            <div className="w-16 h-1 rounded-full bg-white/[0.06] overflow-hidden">
-              <div className={`h-full rounded-full ${cfg.bar} opacity-70`} style={{ width: `${daysBarPct}%` }} />
-            </div>
-          </div>
-        </td>
-
-        {/* Stock */}
-        <td>
-          <span className="tabular-nums text-slate-300 text-sm">{product.currentStock.toLocaleString()}</span>
-          <span className="text-slate-600 text-xs ml-1">u</span>
-        </td>
-
-        {/* Reorder action — inline */}
-        <td>
-          {product.reorderByDate ? (
-            <div>
-              <p className="text-xs font-semibold text-orange-400">{product.reorderByDate}</p>
-              <p className="text-[11px] text-slate-600 mt-0.5">{product.reorderQuantity} units</p>
-            </div>
-          ) : (
-            <span className="text-slate-600 text-xs">—</span>
-          )}
-        </td>
-
-        {/* Trend */}
-        <td>{trendIcon}</td>
-
-        {/* Risk badge */}
+        {/* Risk badge — moved before Days Left */}
         <td>
           <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-lg border ${cfg.badge}`}>
             <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
@@ -472,32 +442,72 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade }: { produ
           </span>
         </td>
 
-        {/* Revenue at risk */}
+        {/* Days left with thicker bar */}
+        <td>
+          <div className="flex flex-col gap-1.5">
+            <span className={`text-sm font-bold tabular-nums ${product.daysOfStockRemaining <= 0 ? "text-red-400" : cfg.text}`}>
+              {product.daysOfStockRemaining <= 0 ? "OUT" : `${product.daysOfStockRemaining}d`}
+            </span>
+            <div className="w-16 h-[5px] rounded-full bg-white/[0.06] overflow-hidden">
+              <div className={`h-full rounded-full ${cfg.bar} opacity-80`} style={{ width: `${daysBarPct}%` }} />
+            </div>
+          </div>
+        </td>
+
+        {/* Stock — no "u" label */}
+        <td>
+          <span className="tabular-nums text-[#94A3B8] text-sm">{product.currentStock.toLocaleString()}</span>
+        </td>
+
+        {/* Reorder action — more prominent */}
+        <td>
+          {product.reorderByDate ? (
+            <div>
+              <p className="text-sm font-semibold text-[#F1F5F9]">{product.reorderByDate}</p>
+              <p className="text-[11px] text-[#475569] mt-0.5">{product.reorderQuantity} units</p>
+            </div>
+          ) : (
+            <span className="text-[#475569] text-xs">—</span>
+          )}
+        </td>
+
+        {/* Revenue at risk — more readable formula */}
         <td>
           {product.estimatedRevenueLoss ? (
             <div>
               <span className="text-red-400 text-sm font-bold">{product.estimatedRevenueLoss}</span>
               {product.price && product.rarAmount && (
-                <p className="text-[10px] text-slate-600 mt-0.5 tabular-nums">{product.avgDailySales.toFixed(1)}/d × {leadTime}d × ₹{product.price.toLocaleString("en-IN")}</p>
+                <p className="text-[11px] text-[#475569] mt-0.5 tabular-nums">{product.avgDailySales.toFixed(1)}/d × {leadTime}d × ₹{product.price.toLocaleString("en-IN")}</p>
               )}
             </div>
           ) : (
-            <span className="text-slate-600 text-sm">—</span>
+            <span className="text-[#475569] text-sm">—</span>
           )}
         </td>
 
-        {/* Expand */}
-        <td>
-          <svg className={`w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-all duration-200 ${open ? "rotate-180 text-[#2DD4BF]" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-          </svg>
+        {/* Expand + hover quick-action */}
+        <td onClick={(e) => e.stopPropagation()}>
+          <div className="flex items-center gap-2 justify-end">
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); setOpen(true); }}
+              className="hidden group-hover:inline-flex items-center text-[11px] font-semibold text-[#2DD4BF] border border-[#2DD4BF]/30 hover:bg-[#2DD4BF]/10 px-2 py-0.5 rounded transition-colors whitespace-nowrap"
+            >
+              Details
+            </button>
+            <div onClick={(e) => { e.stopPropagation(); setOpen(!open); }} className="cursor-pointer">
+              <svg className={`w-4 h-4 text-[#475569] group-hover:text-slate-400 transition-all duration-200 ${open ? "rotate-180 !text-[#2DD4BF]" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
         </td>
       </motion.tr>
 
       <AnimatePresence>
         {open && (
           <tr>
-            <td colSpan={8} className="p-0">
+            <td colSpan={7} className="p-0">
               <motion.div
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
@@ -1335,12 +1345,16 @@ export default function ForecastClient() {
 
               {/* Product table */}
               <div className="card overflow-hidden mb-5">
-                <div className="px-5 py-4 border-b border-white/[0.06] flex items-center justify-between">
-                  <div>
-                    <h2 className="text-sm font-semibold text-white">Product Forecasts</h2>
-                    <p className="text-xs text-slate-600 mt-0.5 hidden sm:block">Click any row to expand details, reorder dates, and revenue impact</p>
-                    <p className="text-xs text-slate-600 mt-0.5 sm:hidden">Tap a product to see reorder details</p>
+                <div className="px-5 py-3.5 border-b border-white/[0.06] flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <h2 className="text-sm font-semibold text-white flex-shrink-0">Product Forecasts</h2>
+                    <div className="hidden sm:flex items-center gap-2 text-xs">
+                      {analysis.criticalCount > 0 && <span className="text-red-400 font-semibold">{analysis.criticalCount} critical</span>}
+                      {analysis.atRiskCount > 0 && <><span className="text-[#475569]">·</span><span className="text-orange-400 font-semibold">{analysis.atRiskCount} high</span></>}
+                      {analysis.safeCount > 0 && <><span className="text-[#475569]">·</span><span className="text-[#475569]">{analysis.safeCount} safe</span></>}
+                    </div>
                   </div>
+                  <p className="text-xs text-[#475569] hidden sm:block flex-shrink-0">Click row to expand</p>
                 </div>
 
                 {/* Mobile card list — shown only on small screens */}
@@ -1396,14 +1410,13 @@ export default function ForecastClient() {
                 {/* Desktop table — hidden on small screens */}
                 <div className="hidden sm:block overflow-x-auto">
                   <table className="data-table">
-                    <thead>
+                    <thead className="sticky top-16 z-10">
                       <tr>
                         <th className="!pl-4"><button onClick={() => toggleSort("productName")} className="hover:text-slate-300 transition-colors">Product <SortIcon col="productName" /></button></th>
+                        <th><button onClick={() => toggleSort("stockoutRisk")} className="hover:text-slate-300 transition-colors">Risk <SortIcon col="stockoutRisk" /></button></th>
                         <th><button onClick={() => toggleSort("daysOfStockRemaining")} className="hover:text-slate-300 transition-colors">Days Left <SortIcon col="daysOfStockRemaining" /></button></th>
                         <th><button onClick={() => toggleSort("currentStock")} className="hover:text-slate-300 transition-colors">Stock <SortIcon col="currentStock" /></button></th>
                         <th>Reorder By</th>
-                        <th><button onClick={() => toggleSort("avgDailySales")} className="hover:text-slate-300 transition-colors">Trend <SortIcon col="avgDailySales" /></button></th>
-                        <th><button onClick={() => toggleSort("stockoutRisk")} className="hover:text-slate-300 transition-colors">Risk <SortIcon col="stockoutRisk" /></button></th>
                         <th><button onClick={() => toggleSort("rarAmount")} className="hover:text-slate-300 transition-colors">Rev. at Risk <SortIcon col="rarAmount" /></button></th>
                         <th />
                       </tr>

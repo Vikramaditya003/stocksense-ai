@@ -115,11 +115,103 @@ export default function RootLayout({
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          // JSON.stringify with replacer ensures no </script> injection via untrusted values.
+          // All values here are static constants — safe.
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd).replace(/<\//g, "<\\/"),
+          }}
         />
       </head>
       <body className="min-h-screen bg-[#060C0D] text-slate-200 antialiased font-[family-name:var(--font-inter)]">
-        {clerkReady ? <ClerkProvider>{children}</ClerkProvider> : children}
+        {clerkReady ? (
+        <ClerkProvider
+          appearance={{
+            variables: {
+              colorBackground: "#0A1415",
+              colorInputBackground: "#0F1C1E",
+              colorText: "#E2F4F4",
+              colorTextSecondary: "#7DB8BC",
+              colorPrimary: "#2DD4BF",
+              colorDanger: "#f87171",
+              borderRadius: "0.75rem",
+              fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
+            },
+            elements: {
+              // ── Shared cards ────────────────────────────────────────────────
+              card: "!bg-[#0A1415] !border !border-[#2DD4BF]/15 !shadow-2xl !shadow-black/80",
+              headerTitle: "!text-white !font-semibold",
+              headerSubtitle: "!text-slate-400",
+
+              // ── Social / OAuth buttons ───────────────────────────────────────
+              socialButtonsBlockButton: "!border !border-white/10 !bg-white/[0.04] hover:!bg-white/[0.07] !text-white",
+              socialButtonsBlockButtonText: "!text-slate-200 !font-medium",
+
+              // ── Dividers ─────────────────────────────────────────────────────
+              dividerLine: "!bg-white/10",
+              dividerText: "!text-slate-500",
+
+              // ── Form fields ──────────────────────────────────────────────────
+              formFieldInput: "!bg-[#0F1C1E] !border-[#2DD4BF]/20 !text-white focus:!border-[#2DD4BF]/50 !text-[15px]",
+              formFieldLabel: "!text-slate-300 !font-medium",
+              formButtonPrimary: "!bg-[#2DD4BF] hover:!bg-[#14B8A6] !text-[#060C0D] !font-semibold !shadow-lg !shadow-[#2DD4BF]/20",
+              formButtonReset: "!text-slate-400 hover:!text-white !border !border-white/10 hover:!border-white/20",
+
+              // ── Links ────────────────────────────────────────────────────────
+              footerActionLink: "!text-[#2DD4BF] hover:!text-[#14B8A6]",
+              formResendCodeLink: "!text-[#2DD4BF]",
+
+              // ── Identity preview ─────────────────────────────────────────────
+              identityPreviewText: "!text-slate-300",
+              identityPreviewEditButton: "!text-[#2DD4BF]",
+
+              // ── OTP ──────────────────────────────────────────────────────────
+              otpCodeFieldInput: "!bg-[#0F1C1E] !border-[#2DD4BF]/20 !text-white",
+
+              // ── UserProfile modal root ───────────────────────────────────────
+              rootBox: "!font-[family-name:var(--font-inter)]",
+              modalContent: "!bg-[#0A1415] !border !border-[#2DD4BF]/15 !shadow-2xl !shadow-black/80 !rounded-2xl",
+              modalCloseButton: "!text-slate-500 hover:!text-white hover:!bg-white/[0.05] !rounded-lg",
+
+              // ── UserProfile left nav ─────────────────────────────────────────
+              navbar: "!bg-[#07100F] !border-r !border-[#2DD4BF]/[0.08]",
+              navbarButton: "!text-slate-400 hover:!text-white hover:!bg-white/[0.04] !rounded-lg !font-medium",
+              navbarButtonActive: "!text-[#2DD4BF] !bg-[#2DD4BF]/10 !rounded-lg",
+              navbarButtonIcon: "!text-slate-500",
+
+              // ── UserProfile page content ─────────────────────────────────────
+              pageScrollBox: "!bg-[#0A1415]",
+              page: "!bg-[#0A1415]",
+              profilePage: "!bg-[#0A1415]",
+
+              // ── Section titles & content ─────────────────────────────────────
+              profileSectionTitle: "!border-b !border-[#2DD4BF]/[0.08]",
+              profileSectionTitleText: "!text-white !font-semibold",
+              profileSectionContent: "!text-slate-300",
+              profileSectionPrimaryButton: "!text-[#2DD4BF] hover:!text-[#14B8A6] !font-medium",
+
+              // ── Badge (e.g. "Primary" email badge) ──────────────────────────
+              badge: "!bg-[#2DD4BF]/10 !text-[#2DD4BF] !border !border-[#2DD4BF]/20 !font-semibold",
+
+              // ── Menu items (⋯ action menus) ──────────────────────────────────
+              menuList: "!bg-[#0D1B1D] !border !border-[#2DD4BF]/15 !rounded-xl !shadow-xl !shadow-black/60",
+              menuItem: "!text-slate-300 hover:!bg-white/[0.05] hover:!text-white",
+              menuItemDestructive: "!text-red-400 hover:!bg-red-500/[0.06]",
+
+              // ── Action rows (connected accounts, etc.) ───────────────────────
+              accordionTriggerButton: "!text-slate-300 hover:!text-white",
+              userPreviewMainIdentifier: "!text-white !font-semibold",
+              userPreviewSecondaryIdentifier: "!text-slate-500",
+              avatarBox: "!ring-1 !ring-[#2DD4BF]/20",
+
+              // ── Alert / danger zone ──────────────────────────────────────────
+              alertText: "!text-red-400",
+              alert: "!bg-red-500/[0.06] !border !border-red-500/20 !rounded-xl",
+            },
+          }}
+        >
+          {children}
+        </ClerkProvider>
+      ) : children}
       </body>
     </html>
   );

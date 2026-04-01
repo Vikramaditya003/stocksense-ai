@@ -19,7 +19,7 @@ function AuthButtons() {
     return (
       <>
         <Button size="sm" asChild className="text-[15px] px-5">
-          <Link href="/forecast">Dashboard</Link>
+          <Link href="/dashboard">Dashboard</Link>
         </Button>
         <UserButton
           appearance={{
@@ -70,7 +70,7 @@ function MobileAuthButton() {
   if (isSignedIn) {
     return (
       <Button asChild className="w-full">
-        <Link href="/forecast">Dashboard</Link>
+        <Link href="/dashboard">Dashboard</Link>
       </Button>
     );
   }

@@ -1,38 +1,67 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import { auth } from "@clerk/nextjs/server";
+import { isStrictRateLimited, getClientIp, sanitizeError, logError } from "@/lib/security";
 
 const resendKey = process.env.RESEND_API_KEY ?? "";
 const resendReady = resendKey.startsWith("re_") && resendKey.length > 20;
 
-export async function POST(req: NextRequest) {
-  try {
-    const { email, analysis } = await req.json();
+// Basic email regex — not RFC-complete but catches obvious garbage
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-    if (!email || !email.includes("@")) {
+export async function POST(req: NextRequest) {
+  // Rate limit — 3 alert signups per minute per IP
+  const ip = getClientIp(req);
+  if (isStrictRateLimited(ip)) {
+    return NextResponse.json({ success: false, error: "Too many requests." }, { status: 429 });
+  }
+
+  // Auth check — must be signed in to set up alerts
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ success: false, error: "Sign in to set up alerts." }, { status: 401 });
+  }
+
+  try {
+    const body = await req.json();
+    const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
+    const analysis = body.analysis;
+
+    if (!email || !EMAIL_RE.test(email)) {
       return NextResponse.json({ success: false, error: "Valid email required." }, { status: 400 });
+    }
+
+    // Cap email length to prevent abuse
+    if (email.length > 254) {
+      return NextResponse.json({ success: false, error: "Invalid email." }, { status: 400 });
     }
 
     // Always acknowledge — even if Resend isn't configured yet
     if (!resendReady) {
-      console.log(`[Alert signup] Email: ${email} — Resend not configured, storing intent.`);
+      console.log(`[Alert signup] userId=${userId} email=${email} — Resend not configured.`);
       return NextResponse.json({ success: true });
     }
 
     const resend = new Resend(resendKey);
 
-    // Build summary of critical/high products
-    const urgent = (analysis?.products ?? [])
+    // Whitelist only the fields we need — never forward raw user data to email template
+    const urgent = (Array.isArray(analysis?.products) ? analysis.products : [])
       .filter((p: { stockoutRisk: string }) => p.stockoutRisk === "critical" || p.stockoutRisk === "high")
-      .slice(0, 5);
+      .slice(0, 5)
+      .map((p: { productName: unknown; daysOfStockRemaining: unknown; estimatedRevenueLoss?: unknown }) => ({
+        name: String(p.productName ?? "").slice(0, 100),
+        days: Number(p.daysOfStockRemaining ?? 0),
+        loss: typeof p.estimatedRevenueLoss === "string" ? p.estimatedRevenueLoss.slice(0, 30) : null,
+      }));
 
     const productRows = urgent.length
-      ? urgent.map((p: { productName: string; daysOfStockRemaining: number; estimatedRevenueLoss?: string }) =>
-          `• ${p.productName} — stockout in ${p.daysOfStockRemaining} days${p.estimatedRevenueLoss ? ` · ${p.estimatedRevenueLoss} at risk` : ""}`
+      ? urgent.map((p: { name: string; days: number; loss: string | null }) =>
+          `• ${p.name} — stockout in ${p.days} days${p.loss ? ` · ${p.loss} at risk` : ""}`
         ).join("\n")
       : "• No critical items detected";
 
     await resend.emails.send({
-      from: "StockSense AI <alerts@stocksense.ai>",
+      from: "StockSense AI <alerts@stocksenseai.com>",
       to: email,
       subject: `⚠ ${urgent.length} product${urgent.length !== 1 ? "s" : ""} at risk — StockSense AI`,
       text: `Hi there,
@@ -44,7 +73,7 @@ ${productRows}
 
 Log in to StockSense AI to see full reorder quantities, exact stockout dates, and download your purchase order.
 
-→ https://stocksense.ai/forecast
+→ https://stocksenseai.com/forecast
 
 You're receiving this because you signed up for StockSense AI stockout alerts.
 To unsubscribe, reply STOP.
@@ -54,7 +83,7 @@ To unsubscribe, reply STOP.
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Alert email error:", error);
-    return NextResponse.json({ success: false, error: "Failed to send alert." }, { status: 500 });
+    logError("alert/email", error);
+    return NextResponse.json({ success: false, error: sanitizeError(error) }, { status: 500 });
   }
 }

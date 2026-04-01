@@ -2,7 +2,7 @@
 import { supabaseAdmin } from "./supabase";
 import type { ForecastAnalysis } from "./types";
 
-export type UserPlan = "free" | "pro" | "business";
+export type UserPlan = "free" | "growth" | "pro" | "business";
 
 export interface SavedForecast {
   id: string;
@@ -63,6 +63,23 @@ export async function getForecast(id: string, clerkUserId: string) {
 
   if (error) throw error;
   return data as SavedForecast;
+}
+
+// Activate or update a user's subscription plan after successful payment
+export async function updateUserPlan(clerkUserId: string, plan: UserPlan, paymentId: string): Promise<void> {
+  const { error } = await db
+    .from("user_plans")
+    .upsert(
+      {
+        clerk_user_id: clerkUserId,
+        plan,
+        payment_id: paymentId,
+        active: true,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "clerk_user_id" }
+    );
+  if (error) throw error;
 }
 
 // Get or create user plan record

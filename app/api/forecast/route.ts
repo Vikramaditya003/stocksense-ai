@@ -1,6 +1,6 @@
 import Groq from "groq-sdk";
 import { NextRequest, NextResponse } from "next/server";
-import { requireEnv, isRateLimited, getClientIp, sanitizeError } from "@/lib/security";
+import { requireEnv, isRateLimited, isUserRateLimited, getClientIp, sanitizeError, logError, logWarn } from "@/lib/security";
 import { auth } from "@clerk/nextjs/server";
 import { saveForecast } from "@/lib/db";
 
@@ -114,6 +114,19 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Per-user rate limit for signed-in users (20 forecasts/hour)
+  try {
+    const { userId } = await auth();
+    if (userId && isUserRateLimited(userId)) {
+      return NextResponse.json(
+        { success: false, error: "Forecast limit reached. Please wait before running another." },
+        { status: 429 }
+      );
+    }
+  } catch {
+    // auth() can throw if Clerk isn't configured — don't block the request
+  }
+
   try {
     const body = await req.json();
     const { salesData, adSpendData, leadTimeDays } = body;
@@ -125,6 +138,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Hard cap: 5MB max CSV — prevents memory exhaustion / Groq token abuse
+    if (salesData.length > 5_000_000) {
+      return NextResponse.json(
+        { success: false, error: "CSV file is too large. Maximum size is 5MB." },
+        { status: 413 }
+      );
+    }
+
     const trimmed = salesData.trim();
     if (trimmed.length < 30) {
       return NextResponse.json(
@@ -133,7 +154,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const leadTime = typeof leadTimeDays === "number" ? leadTimeDays : 14;
+    // Clamp leadTime to a sane range — prevents prompt injection via large numbers
+    const rawLeadTime = typeof leadTimeDays === "number" ? leadTimeDays : 14;
+    const leadTime = Math.min(Math.max(Math.round(rawLeadTime), 1), 180);
     const effectiveLeadTime = Math.max(leadTime, 7); // minimum 7 days for RAR calc
     const today = new Date().toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
 
@@ -141,9 +164,13 @@ export async function POST(req: NextRequest) {
     const csvPrices = extractPricesFromCsv(trimmed);
     const hasPriceData = csvPrices.size > 0;
 
+    const adSpend = adSpendData
+      ? String(adSpendData).replace(/<[^>]*>/g, "").substring(0, 500)
+      : "";
+
     const userMessage = `Today's date: ${today}
 Lead time for restocking: ${leadTime} days
-${adSpendData ? `Upcoming ad spend: ${String(adSpendData).substring(0, 500)}` : ""}
+${adSpend ? `Upcoming ad spend: ${adSpend}` : ""}
 
 Analyze this inventory and sales data. Calculate specific stockout dates, reorder-by dates, and estimated revenue loss for each product.
 
@@ -165,6 +192,31 @@ ${trimmed.substring(0, 40000)}`;
     if (!jsonMatch) throw new Error("Could not parse forecast results. Please try again.");
 
     const analysis = JSON.parse(jsonMatch[0]);
+
+    // ── Validate AI response shape — never trust unvalidated AI output ──────
+    if (
+      typeof analysis.healthScore !== "number" ||
+      analysis.healthScore < 0 || analysis.healthScore > 100 ||
+      !Array.isArray(analysis.products) ||
+      analysis.products.length > 500
+    ) {
+      throw new Error("Forecast returned unexpected data. Please try again.");
+    }
+    // Sanitize all string fields in products — strip HTML tags that could cause XSS
+    const tagRe = /<[^>]*>/g;
+    for (const p of analysis.products) {
+      if (typeof p.productName === "string") p.productName = p.productName.replace(tagRe, "").substring(0, 200);
+      if (typeof p.sku === "string") p.sku = p.sku.replace(tagRe, "").substring(0, 100);
+      if (typeof p.riskReason === "string") p.riskReason = p.riskReason.replace(tagRe, "").substring(0, 500);
+      if (typeof p.reorderByDate === "string") p.reorderByDate = p.reorderByDate.replace(tagRe, "").substring(0, 100);
+      if (typeof p.stockoutDate === "string") p.stockoutDate = p.stockoutDate.replace(tagRe, "").substring(0, 100);
+      if (typeof p.estimatedRevenueLoss === "string") p.estimatedRevenueLoss = p.estimatedRevenueLoss.replace(tagRe, "").substring(0, 50);
+      // Clamp numeric fields to sane ranges
+      if (typeof p.daysOfStockRemaining === "number") p.daysOfStockRemaining = Math.max(0, Math.min(p.daysOfStockRemaining, 9999));
+      if (typeof p.currentStock === "number") p.currentStock = Math.max(0, Math.min(p.currentStock, 9_999_999));
+    }
+    if (typeof analysis.summary === "string") analysis.summary = analysis.summary.replace(tagRe, "").substring(0, 1000);
+    if (typeof analysis.revenueAtRisk === "string") analysis.revenueAtRisk = analysis.revenueAtRisk.replace(tagRe, "").substring(0, 100);
 
     // ── Override RAR with deterministic formula when price data is present ──
     // Formula: RAR = avgDailySales × effectiveLeadTime × price
@@ -218,12 +270,12 @@ ${trimmed.substring(0, 40000)}`;
         savedId = saved?.id ?? null;
       }
     } catch (dbErr) {
-      console.warn("Failed to save forecast to DB:", dbErr);
+      logWarn("forecast/save", `DB save failed for userId=${savedId ?? "?"}: ${sanitizeError(dbErr)}`);
     }
 
     return NextResponse.json({ success: true, analysis, savedId });
   } catch (error) {
-    console.error("Forecast error:", error);
+    logError("forecast", error);
     return NextResponse.json(
       { success: false, error: sanitizeError(error) },
       { status: 500 }

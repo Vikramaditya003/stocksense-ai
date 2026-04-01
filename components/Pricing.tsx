@@ -61,8 +61,11 @@ const plans = [
 
 export default function Pricing() {
   return (
-    <section id="pricing" className="py-28 bg-[#060C0D] relative">
-      <div className="max-w-[960px] mx-auto px-4 sm:px-6">
+    <section id="pricing" className="py-28 bg-[#060C0D] relative overflow-hidden">
+      {/* Subtle glow behind pro card */}
+      <div className="hidden sm:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[#2DD4BF]/[0.04] blur-[120px] rounded-full pointer-events-none" />
+
+      <div className="max-w-[960px] mx-auto px-4 sm:px-6 relative z-10">
 
         {/* Header */}
         <motion.div
@@ -72,12 +75,12 @@ export default function Pricing() {
           transition={{ duration: 0.3, ease: "easeOut" }}
           className="text-center mb-14"
         >
-          <p className="section-label mb-4">Pricing</p>
-          <h2 className="text-4xl sm:text-[52px] font-light text-white tracking-[-0.03em] leading-tight mb-4">
+          <p className="section-label mb-5">Pricing</p>
+          <h2 className="text-4xl sm:text-[52px] font-semibold text-white tracking-[-0.03em] leading-tight mb-4 mt-4">
             10× cheaper than{" "}
             <span className="text-slate-500">the alternatives</span>
           </h2>
-          <p className="text-[15px] text-slate-500 max-w-sm mx-auto leading-relaxed tracking-tight">
+          <p className="text-[16px] text-slate-500 max-w-sm mx-auto leading-relaxed tracking-tight">
             Prediko starts at ₹4,000/mo. We&apos;re ₹1,499 — with features they don&apos;t have.
           </p>
         </motion.div>
@@ -87,15 +90,15 @@ export default function Pricing() {
           {plans.map((plan, i) => (
             <motion.div
               key={plan.name}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.1 }}
-              transition={{ duration: 0.26, delay: i * 0.05 }}
+              transition={{ duration: 0.28, delay: i * 0.06 }}
               className="relative"
             >
               {plan.badge && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                  <span className="bg-emerald-500 text-white text-[10px] font-semibold px-3 py-1 rounded-full shadow-lg shadow-emerald-500/25 tracking-wide uppercase">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
+                  <span className="bg-[#2DD4BF] text-[#060C0D] text-[10px] font-bold px-3.5 py-1.5 rounded-full shadow-lg shadow-[#2DD4BF]/30 tracking-widest uppercase">
                     {plan.badge}
                   </span>
                 </div>
@@ -103,13 +106,13 @@ export default function Pricing() {
 
               <div className={`rounded-2xl p-6 h-full transition-all duration-200 ${
                 plan.highlight
-                  ? "border border-[#2DD4BF]/30 bg-[#0A1415] shadow-xl shadow-[#2DD4BF]/[0.08]"
-                  : "border border-[#2DD4BF]/10 bg-[#0A1415] hover:border-[#2DD4BF]/20"
+                  ? "gradient-border-teal bg-[#0A1415] shadow-2xl shadow-[#2DD4BF]/[0.1]"
+                  : "border border-[#2DD4BF]/10 bg-[#0A1415] hover:border-[#2DD4BF]/20 hover:shadow-lg hover:shadow-[#2DD4BF]/[0.04]"
               }`}>
                 <div className="mb-5">
-                  <p className="text-[11px] font-semibold uppercase tracking-widest text-slate-500 mb-3">{plan.name}</p>
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">{plan.name}</p>
                   <div className="flex items-baseline gap-1.5 mb-2">
-                    <span className="text-[40px] font-semibold text-white tracking-tight leading-none">{plan.price}</span>
+                    <span className="text-[42px] font-bold text-white tracking-tight leading-none">{plan.price}</span>
                     <span className="text-[14px] text-slate-500 tracking-tight">{plan.period}</span>
                   </div>
                   <p className="text-[14px] text-slate-500 tracking-tight">{plan.description}</p>
@@ -117,10 +120,10 @@ export default function Pricing() {
 
                 <Link
                   href={plan.href}
-                  className={`block w-full text-center text-[13px] font-semibold py-2.5 px-4 rounded-xl mb-5 transition-all duration-150 tracking-tight ${
+                  className={`block w-full text-center text-[14px] font-bold py-3 px-4 rounded-xl mb-6 transition-all duration-150 tracking-tight ${
                     plan.highlight
-                      ? "bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] font-bold shadow-lg shadow-[#2DD4BF]/25"
-                      : "bg-white/[0.05] hover:bg-white/[0.08] text-slate-300 border border-white/[0.08]"
+                      ? "bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] shadow-lg shadow-[#2DD4BF]/25 hover:shadow-[#2DD4BF]/35"
+                      : "bg-white/[0.05] hover:bg-white/[0.09] text-slate-300 border border-white/[0.08]"
                   }`}
                 >
                   {plan.cta}
@@ -128,15 +131,15 @@ export default function Pricing() {
 
                 <div className="space-y-2.5">
                   {plan.features.map((f) => (
-                    <div key={f} className="flex items-start gap-2">
+                    <div key={f} className="flex items-start gap-2.5">
                       <svg className="w-3.5 h-3.5 text-[#2DD4BF] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="text-[14px] text-slate-400 tracking-tight">{f}</span>
+                      <span className="text-[14px] text-slate-300 tracking-tight">{f}</span>
                     </div>
                   ))}
                   {plan.out.map((f) => (
-                    <div key={f} className="flex items-start gap-2 opacity-30">
+                    <div key={f} className="flex items-start gap-2.5 opacity-30">
                       <svg className="w-3.5 h-3.5 text-slate-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                       </svg>
@@ -154,12 +157,12 @@ export default function Pricing() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, amount: 0.1 }}
-          transition={{ duration: 0.25, delay: 0.12 }}
+          transition={{ duration: 0.25, delay: 0.14 }}
           className="flex flex-wrap items-center justify-center gap-6 text-[12px] text-slate-500"
         >
           {["No credit card for Free plan", "Cancel anytime", "Instant forecasts", "Shopify CSV compatible"].map(t => (
             <span key={t} className="flex items-center gap-1.5">
-              <svg className="w-3 h-3 text-emerald-500/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <svg className="w-3 h-3 text-[#2DD4BF]/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
               {t}

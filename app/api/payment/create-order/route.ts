@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Razorpay from "razorpay";
+import { auth } from "@clerk/nextjs/server";
+import { isStrictRateLimited, getClientIp, sanitizeError, logError } from "@/lib/security";
 
 const rzpKey = process.env.RAZORPAY_KEY_ID ?? "";
 const rzpSecret = process.env.RAZORPAY_KEY_SECRET ?? "";
@@ -13,6 +15,18 @@ const PLANS: Record<string, { amount: number; name: string }> = {
 };
 
 export async function POST(req: NextRequest) {
+  // Rate limit — 5 order creation attempts per minute per IP
+  const ip = getClientIp(req);
+  if (isStrictRateLimited(ip)) {
+    return NextResponse.json({ success: false, error: "Too many requests." }, { status: 429 });
+  }
+
+  // Must be signed in — we need userId to tie the order to a user
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ success: false, error: "Sign in to upgrade." }, { status: 401 });
+  }
+
   if (!rzpReady) {
     return NextResponse.json(
       { success: false, error: "Payment not configured. Contact support." },
@@ -33,7 +47,8 @@ export async function POST(req: NextRequest) {
       amount: selected.amount,
       currency: "INR",
       receipt: `ss_${plan}_${Date.now()}`,
-      notes: { plan, product: selected.name },
+      // Embed userId in notes so verify route can read it back
+      notes: { plan, product: selected.name, clerk_user_id: userId },
     });
 
     return NextResponse.json({
@@ -41,12 +56,12 @@ export async function POST(req: NextRequest) {
       orderId: order.id,
       amount: selected.amount,
       currency: "INR",
-      keyId: rzpKey,
+      keyId: rzpKey, // publishable key — safe to send to frontend
       plan,
       planName: selected.name,
     });
   } catch (error) {
-    console.error("Razorpay create order error:", error);
-    return NextResponse.json({ success: false, error: "Payment order failed." }, { status: 500 });
+    logError("payment/create-order", error);
+    return NextResponse.json({ success: false, error: sanitizeError(error) }, { status: 500 });
   }
 }

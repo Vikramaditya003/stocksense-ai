@@ -3,9 +3,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { useUser, UserButton } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import type { SavedForecast } from "@/lib/db";
 import type { ForecastAnalysis } from "@/lib/types";
+import AppSidebar from "@/components/AppSidebar";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -62,8 +63,7 @@ function TrendChart({ forecasts }: { forecasts: Omit<SavedForecast, "analysis" |
     <div className="relative w-full overflow-x-auto">
       <svg
         viewBox={`0 0 ${W} ${H}`}
-        className="w-full"
-        style={{ minWidth: 340 }}
+        className="w-full min-w-[340px]"
         onMouseLeave={() => setTooltip(null)}
       >
         {/* Grid lines */}
@@ -283,7 +283,6 @@ function ForecastCard({
   onToggleCompare: () => void;
   onSelect: () => void;
 }) {
-  const color = healthColor(forecast.health_score);
   const label = healthLabel(forecast.health_score);
   const barPct = forecast.health_score;
 
@@ -314,16 +313,23 @@ function ForecastCard({
 
         {/* Right: health score */}
         <div className="flex-shrink-0 text-right">
-          <p className="text-xl font-bold tabular-nums" style={{ color }}>{forecast.health_score}</p>
-          <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color }}>{label}</p>
+          <p className={`text-xl font-bold tabular-nums ${
+            forecast.health_score >= 66 ? "text-green-400" : forecast.health_score >= 51 ? "text-yellow-400" : "text-red-400"
+          }`}>{forecast.health_score}</p>
+          <p className={`text-[10px] font-semibold uppercase tracking-wider ${
+            forecast.health_score >= 66 ? "text-green-400" : forecast.health_score >= 51 ? "text-yellow-400" : "text-red-400"
+          }`}>{label}</p>
         </div>
       </div>
 
       {/* Bottom stats + health bar */}
       <div className="mt-3 space-y-2">
-        <div className="h-1 rounded-full bg-white/[0.05] overflow-hidden">
-          <div className="h-full rounded-full transition-all" style={{ width: `${barPct}%`, background: color }} />
-        </div>
+        <progress
+          value={barPct}
+          max={100}
+          className={`health-bar ${forecast.health_score >= 66 ? "health-bar-green" : forecast.health_score >= 51 ? "health-bar-yellow" : "health-bar-red"}`}
+          aria-label={`Inventory health: ${barPct}%`}
+        />
         <div className="flex items-center gap-4 text-[10px] text-slate-600">
           <span className="flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-slate-600 inline-block" />
@@ -361,14 +367,20 @@ function ForecastDetail({ forecast }: { forecast: SavedForecast }) {
         {/* KPI row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
           {[
-            { label: "Health Score", val: `${a.healthScore}/100`, color: healthColor(a.healthScore) },
-            { label: "Revenue at Risk", val: a.revenueAtRisk || "—", color: "#f87171" },
-            { label: "Critical SKUs", val: String(a.criticalCount), color: a.criticalCount > 0 ? "#f87171" : "#4ade80" },
-            { label: "Forecast Confidence", val: `${a.forecastConfidence ?? "—"}%`, color: "#2DD4BF" },
+            {
+              label: "Health Score", val: `${a.healthScore}/100`,
+              cls: a.healthScore >= 66 ? "text-green-400" : a.healthScore >= 51 ? "text-yellow-400" : "text-red-400",
+            },
+            { label: "Revenue at Risk", val: a.revenueAtRisk || "—", cls: "text-red-400" },
+            {
+              label: "Critical SKUs", val: String(a.criticalCount),
+              cls: a.criticalCount > 0 ? "text-red-400" : "text-green-400",
+            },
+            { label: "Forecast Confidence", val: `${a.forecastConfidence ?? "—"}%`, cls: "text-[#2DD4BF]" },
           ].map(k => (
             <div key={k.label} className="card-sm p-3">
               <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">{k.label}</p>
-              <p className="text-base font-bold tabular-nums" style={{ color: k.color }}>{k.val}</p>
+              <p className={`text-base font-bold tabular-nums ${k.cls}`}>{k.val}</p>
             </div>
           ))}
         </div>
@@ -447,9 +459,14 @@ export default function HistoryClient() {
       });
   }, [isLoaded, isSignedIn]);
 
+  // UUID validation — only send well-formed IDs to the API
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const safeId = (id: string) => UUID_RE.test(id) ? id : null;
+
   // Load detail when card selected
   const handleSelect = useCallback(async (id: string) => {
     if (selectedId === id) { setSelectedId(null); setSelectedDetail(null); return; }
+    if (!safeId(id)) return;
     setSelectedId(id);
     setDetailLoading(true);
     try {
@@ -458,15 +475,18 @@ export default function HistoryClient() {
       setSelectedDetail(d.forecast);
     } catch { /* ignore */ }
     setDetailLoading(false);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId]);
 
   // Toggle compare selection
   const toggleCompare = useCallback(async (id: string) => {
+    if (!safeId(id)) return;
     setCompareIds(prev => {
       if (prev.includes(id)) return prev.filter(x => x !== id);
       if (prev.length >= 2) return [prev[1], id];
       return [...prev, id];
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Load compare details whenever compareIds changes
@@ -504,63 +524,38 @@ export default function HistoryClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#060C0D]">
-      {/* Nav */}
-      <nav className="border-b border-[#2DD4BF]/10 px-4 sm:px-6 h-16 flex items-center justify-between sticky top-0 z-40 bg-[#060C0D]/90 backdrop-blur-md">
-        <div className="flex items-center gap-3">
-          <Link href="/forecast" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-[#2DD4BF] flex items-center justify-center shadow-lg shadow-[#2DD4BF]/25">
-              <svg className="w-4.5 h-4.5 text-[#060C0D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 20V14M9 20V8M14 20V11M19 20V4" />
-              </svg>
-            </div>
-            <span className="text-[16px] font-semibold text-white tracking-tight">StockSense<span className="text-[#2DD4BF]">AI</span></span>
-          </Link>
-          <span className="text-slate-700">/</span>
-          <span className="text-sm font-medium text-slate-400">History</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link href="/forecast" className="text-xs font-semibold bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] px-3.5 py-1.5 rounded-lg transition-colors shadow-lg shadow-[#2DD4BF]/20">
-            + New Forecast
-          </Link>
-          <UserButton
-            appearance={{
-              variables: { colorBackground: "#0D1B1D", colorText: "#e2f4f4", colorTextSecondary: "#94a3b8", colorPrimary: "#e2f4f4", borderRadius: "0.75rem" },
-              elements: {
-                avatarBox: "w-8 h-8",
-                userButtonPopoverCard: "!bg-[#0D1B1D] !border !border-[#2DD4BF]/20 !shadow-2xl !rounded-xl",
-                userButtonPopoverActionButtonText: "!text-slate-200",
-                userButtonPopoverFooter: "!hidden",
-                userPreviewMainIdentifier: "!text-white",
-                userPreviewSecondaryIdentifier: "!text-slate-500",
-              },
-            }}
-          />
-        </div>
-      </nav>
+    <div className="min-h-screen bg-[#060C0D] flex">
+      <AppSidebar />
 
-      <div className="max-w-[960px] mx-auto px-4 sm:px-6 py-8">
-
-        {/* Page header */}
-        <div className="flex items-start justify-between mb-6">
-          <div>
-            <h1 className="text-xl font-bold text-white tracking-tight">Forecast History</h1>
-            <p className="text-xs text-slate-500 mt-0.5">{forecasts.length} forecast{forecasts.length !== 1 ? "s" : ""} saved</p>
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Top bar */}
+        <header className="h-16 flex items-center gap-3 px-5 border-b border-[#2DD4BF]/[0.08] bg-[#060C0D]/80 backdrop-blur-md sticky top-0 z-20 flex-shrink-0">
+          <div className="min-w-0">
+            <p className="text-[15px] font-semibold text-white leading-tight">Forecast History</p>
+            <p className="text-[11px] text-[#475569] leading-tight">{forecasts.length} forecast{forecasts.length !== 1 ? "s" : ""} saved</p>
           </div>
-          <button
-            type="button"
-            onClick={() => { setCompareMode(m => !m); setCompareIds([]); setCompareDetails([]); }}
-            className={`text-xs font-semibold px-3.5 py-1.5 rounded-lg border transition-all ${
-              compareMode
-                ? "bg-[#2DD4BF]/10 border-[#2DD4BF]/30 text-[#2DD4BF]"
-                : "border-white/[0.08] text-slate-400 hover:text-white hover:border-white/[0.15]"
-            }`}
-          >
-            {compareMode ? "✓ Compare mode on" : "Compare forecasts"}
-          </button>
-        </div>
+          <div className="ml-auto flex items-center gap-2.5">
+            <button
+              type="button"
+              onClick={() => { setCompareMode(m => !m); setCompareIds([]); setCompareDetails([]); }}
+              className={`text-xs font-semibold px-3.5 py-1.5 rounded-lg border transition-all ${
+                compareMode
+                  ? "bg-[#2DD4BF]/10 border-[#2DD4BF]/30 text-[#2DD4BF]"
+                  : "border-white/[0.08] text-slate-400 hover:text-white hover:border-white/[0.15]"
+              }`}
+            >
+              {compareMode ? "✓ Compare mode on" : "Compare forecasts"}
+            </button>
+            <Link href="/forecast" className="text-xs font-semibold bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] px-3.5 py-1.5 rounded-lg transition-colors shadow-lg shadow-[#2DD4BF]/20">
+              + New Forecast
+            </Link>
+          </div>
+        </header>
 
-        {error && (
+        <main className="flex-1 overflow-y-auto">
+          <div className="max-w-[960px] mx-auto px-4 sm:px-6 py-8">
+
+            {error && (
           <div className="card p-4 mb-5 border-red-500/20 bg-red-500/[0.05]">
             <p className="text-sm text-red-400">{error}</p>
           </div>
@@ -589,42 +584,46 @@ export default function HistoryClient() {
                   label: "Total Forecasts",
                   val: String(forecasts.length),
                   sub: "all time",
-                  color: "#2DD4BF",
+                  valCls: "text-[#2DD4BF]",
+                  iconCls: "bg-[#2DD4BF]/10 text-[#2DD4BF]",
                   icon: <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />,
                 },
                 {
                   label: "Latest Health",
                   val: latest ? `${latest.health_score}/100` : "—",
                   sub: latest ? healthLabel(latest.health_score) : "",
-                  color: latest ? healthColor(latest.health_score) : "#94a3b8",
+                  valCls: latest ? (latest.health_score >= 66 ? "text-green-400" : latest.health_score >= 51 ? "text-yellow-400" : "text-red-400") : "text-slate-400",
+                  iconCls: "bg-green-500/10 text-green-400",
                   icon: <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />,
                 },
                 {
                   label: "Avg Health",
                   val: `${avgHealth}/100`,
                   sub: "across all forecasts",
-                  color: healthColor(avgHealth),
+                  valCls: avgHealth >= 66 ? "text-green-400" : avgHealth >= 51 ? "text-yellow-400" : "text-red-400",
+                  iconCls: "bg-[#2DD4BF]/10 text-[#2DD4BF]",
                   icon: <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />,
                 },
                 {
                   label: "Best Score",
                   val: best ? `${best.health_score}/100` : "—",
                   sub: best ? fmt(best.created_at) : "",
-                  color: "#4ade80",
+                  valCls: "text-green-400",
+                  iconCls: "bg-green-500/10 text-green-400",
                   icon: <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0" />,
                 },
               ].map(k => (
                 <div key={k.label} className="card p-4 flex flex-col gap-2.5">
                   <div className="flex items-center justify-between">
                     <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{k.label}</p>
-                    <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: `${k.color}18` }}>
-                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8} style={{ color: k.color }}>
+                    <div className={`w-6 h-6 rounded-lg flex items-center justify-center ${k.iconCls}`}>
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
                         {k.icon}
                       </svg>
                     </div>
                   </div>
                   <div>
-                    <p className="text-xl font-bold tabular-nums" style={{ color: k.color }}>{k.val}</p>
+                    <p className={`text-xl font-bold tabular-nums ${k.valCls}`}>{k.val}</p>
                     {k.sub && <p className="text-[10px] text-slate-600 mt-0.5">{k.sub}</p>}
                   </div>
                 </div>
@@ -685,6 +684,8 @@ export default function HistoryClient() {
             </div>
           </>
         )}
+      </div>
+        </main>
       </div>
     </div>
   );

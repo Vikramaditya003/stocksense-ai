@@ -110,7 +110,7 @@ const rows = [
 
 export default function Features() {
   return (
-    <section id="features" className="py-28 bg-[#060C0D] relative">
+    <section id="features" className="py-28 bg-[#060C0D] relative overflow-hidden">
       <div className="max-w-[960px] mx-auto px-4 sm:px-6">
 
         {/* Header */}
@@ -121,12 +121,12 @@ export default function Features() {
           transition={{ duration: 0.3, ease: "easeOut" }}
           className="text-center mb-14"
         >
-          <p className="section-label mb-4">Why teams switch</p>
-          <h2 className="text-4xl sm:text-[52px] font-light text-white tracking-[-0.03em] leading-tight mb-4">
+          <p className="section-label mb-5">Why teams switch</p>
+          <h2 className="text-4xl sm:text-[52px] font-semibold text-white tracking-[-0.03em] leading-tight mb-4 mt-4">
             Decisions, not{" "}
             <span className="text-slate-500">dashboards</span>
           </h2>
-          <p className="text-[15px] text-slate-500 max-w-md mx-auto leading-relaxed tracking-tight">
+          <p className="text-[16px] text-slate-500 max-w-md mx-auto leading-relaxed tracking-tight">
             Most tools show data. StockSense tells you what to do, why, and by when — with the revenue impact if you don&apos;t.
           </p>
         </motion.div>
@@ -140,7 +140,7 @@ export default function Features() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.08 }}
               transition={{ duration: 0.26, delay: i * 0.04 }}
-              className="rounded-2xl border border-[#2DD4BF]/10 bg-[#0A1415] p-5 transition-all duration-200 hover:border-[#2DD4BF]/20 hover:bg-[#0F1C1E] hover:-translate-y-0.5"
+              className="rounded-2xl border border-[#2DD4BF]/10 bg-[#0A1415] p-5 transition-all duration-200 hover:border-[#2DD4BF]/25 hover:bg-[#0F1C1E] hover:-translate-y-1 hover:shadow-lg hover:shadow-[#2DD4BF]/[0.06]"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className={`w-8 h-8 rounded-lg border flex items-center justify-center flex-shrink-0 ${f.iconStyle}`}>
@@ -151,7 +151,7 @@ export default function Features() {
                 </span>
               </div>
 
-              <h3 className="text-[13px] font-semibold text-slate-100 mb-2 tracking-tight">{f.title}</h3>
+              <h3 className="text-[14px] font-semibold text-white mb-2 tracking-tight">{f.title}</h3>
 
               {/* Formula (ad-spend) */}
               {"formula" in f && f.formula && (
@@ -193,8 +193,9 @@ export default function Features() {
           transition={{ duration: 0.3, delay: 0.1 }}
           className="rounded-2xl border border-[#2DD4BF]/10 bg-[#0A1415] overflow-hidden"
         >
-          <div className="px-5 py-4 border-b border-white/[0.05] bg-[#07100F]">
-            <h3 className="text-[13px] font-semibold text-slate-300 tracking-tight">vs. the alternatives</h3>
+          <div className="px-5 py-4 border-b border-white/[0.05] bg-[#07100F] flex items-center justify-between">
+            <h3 className="text-[14px] font-semibold text-white tracking-tight">vs. the alternatives</h3>
+            <span className="text-[11px] text-slate-500 tracking-tight">StockSense AI wins on every metric</span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
