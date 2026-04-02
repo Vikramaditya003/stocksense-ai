@@ -106,6 +106,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -154,8 +155,8 @@ h3 { font-size: 1.0625rem; font-weight: 600; letter-spacing: -0.02em; }
 /* ── Glass ────────────────────────────────────────────────── */
 .glass {
   background: rgba(255,255,255,0.03);
-  backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
   border: 1px solid rgba(255,255,255,0.07);
 }
 
