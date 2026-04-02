@@ -1,46 +1,46 @@
 // Inline SVG recreation of the StockSense logo mark.
-// Uses a white rounded-square background so the navy S is visible on dark navbars/sidebars.
+// Navy bold-S (single thick stroke) + green trending-arrow line, white rounded bg.
 
 export function LogoMark({ size = 36 }: { size?: number }) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 40 40"
+      viewBox="0 0 100 100"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
-      {/* White rounded background */}
-      <rect width="40" height="40" rx="9" fill="white" />
+      {/* White rounded-square background */}
+      <rect width="100" height="100" rx="18" fill="white" />
 
-      {/* Upper bowl of S — thick arc from mid-left → upper-right */}
+      {/*
+        Bold navy S — single cubic-bezier stroke.
+        Starts upper-right, curves left across top,
+        crosses to right at mid, curves left across bottom.
+      */}
       <path
-        d="M 8 22 C 8 6 36 4 36 14"
+        d="M 68 18 C 68 10 18 10 18 30 C 18 50 82 50 82 70 C 82 90 32 90 32 82"
         stroke="#1B2B6E"
-        strokeWidth="9"
+        strokeWidth="20"
         strokeLinecap="round"
+        fill="none"
       />
 
-      {/* Lower bowl of S — thick arc from mid-right → lower-left */}
-      <path
-        d="M 32 18 C 32 34 4 36 4 26"
-        stroke="#1B2B6E"
-        strokeWidth="9"
-        strokeLinecap="round"
-      />
-
-      {/* Green stock-chart trend line */}
+      {/* Green stock-chart trend line — lower-left to upper-right */}
       <polyline
-        points="7,32 14,24 20,28 28,15 34,8"
-        stroke="#00C27A"
-        strokeWidth="3"
+        points="16,82  34,61  48,70  65,44  84,20"
+        stroke="#1DB87A"
+        strokeWidth="6"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
 
-      {/* Arrow tip */}
-      <path d="M34 8 L28 6 L30 13Z" fill="#00C27A" />
+      {/* Arrowhead at tip */}
+      <path
+        d="M84 20 L72 18 L76 30 Z"
+        fill="#1DB87A"
+      />
     </svg>
   );
 }
