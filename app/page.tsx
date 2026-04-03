@@ -29,7 +29,7 @@ export default function Home() {
             to <span className="text-[#2DD4BF]">stockouts.</span>
           </h2>
           <p className="text-[17px] text-slate-400 mb-10 max-w-lg mx-auto leading-relaxed tracking-tight">
-            Upload your Shopify CSV and get AI-powered forecasts, reorder quantities, and revenue-at-risk in under 60 seconds.
+            Upload your Shopify CSV and get AI-powered forecasts, reorder quantities, and revenue at risk in under 60 seconds.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
             <Button asChild size="lg"
@@ -102,8 +102,8 @@ export default function Home() {
               <ul className="space-y-2.5">
                 {[
                   { label: "Blog", href: "/blog" },
-                  { label: "Instagram", href: "#" },
-                  { label: "Twitter / X", href: "#" },
+                  { label: "Instagram", href: "https://instagram.com/stocksenseai" },
+                  { label: "Twitter / X", href: "https://x.com/stocksenseai" },
                   { label: "Contact Us", href: "mailto:support@stocksenseai.com" },
                 ].map((l) => (
                   <li key={l.label}>

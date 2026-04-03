@@ -9,9 +9,7 @@ const rzpReady = rzpKey.startsWith("rzp_") && rzpSecret.length > 10;
 
 // Plan definitions (amount in paise = INR × 100)
 const PLANS: Record<string, { amount: number; name: string }> = {
-  growth:   { amount:  79900, name: "StockSense AI Growth" },   // ₹799/mo
-  pro:      { amount: 199900, name: "StockSense AI Pro" },      // ₹1,999/mo
-  business: { amount: 499900, name: "StockSense AI Business" }, // ₹4,999/mo
+  pro: { amount: 99900, name: "StockSense AI Pro" }, // ₹999/mo
 };
 
 export async function POST(req: NextRequest) {

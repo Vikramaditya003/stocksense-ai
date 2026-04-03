@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef, Fragment } from "react";
+import useSWR from "swr";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
@@ -239,10 +240,14 @@ export default function DashboardClient() {
   const [search, setSearch] = useState(qParam);
 
   // Data
-  const [history, setHistory] = useState<Omit<SavedForecast, "analysis" | "clerk_user_id">[]>([]);
+  const fetcher = (url: string) => fetch(url).then(r => r.json());
+  const { data: histData, isLoading: histLoading, mutate: mutateHistory } = useSWR<{ forecasts: Omit<SavedForecast, "analysis" | "clerk_user_id">[] }>(
+    isLoaded ? "/api/forecasts" : null,
+    fetcher
+  );
+  const history = histData?.forecasts ?? [];
   const [activeAnalysis, setActiveAnalysis] = useState<ForecastAnalysis | null>(null);
   const [activeDate, setActiveDate] = useState<string | null>(null);
-  const [histLoading, setHistLoading] = useState(true);
 
   // Product table filter
   type FilterTab = "all" | "critical" | "high" | "medium" | "low";
@@ -251,21 +256,6 @@ export default function DashboardClient() {
 
   // Sync search from URL ?q= param
   useEffect(() => { setSearch(qParam); }, [qParam]);
-
-  // Load history
-  useEffect(() => {
-    if (!isLoaded) return;
-    fetch("/api/forecasts")
-      .then(r => r.json())
-      .then(d => {
-        setHistory(d.forecasts ?? []);
-        setHistLoading(false);
-        // Auto-load the latest forecast's products
-        if (d.forecasts?.length) loadDetail(d.forecasts[0].id, d.forecasts[0].created_at);
-      })
-      .catch(() => setHistLoading(false));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoaded]);
 
   const loadDetail = useCallback(async (id: string, date: string) => {
     const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -280,12 +270,20 @@ export default function DashboardClient() {
     } catch { /* ignore */ }
   }, []);
 
+  // Auto-load the latest forecast's products when history first arrives
+  const didAutoLoad = useRef(false);
+  useEffect(() => {
+    if (!histLoading && history.length && !didAutoLoad.current) {
+      didAutoLoad.current = true;
+      loadDetail(history[0].id, history[0].created_at);
+    }
+  }, [histLoading, history, loadDetail]);
+
   const handleNewForecast = (analysis: ForecastAnalysis) => {
     setActiveAnalysis(analysis);
     setActiveDate(new Date().toISOString());
     router.push("/dashboard");
-    // Refresh history list
-    fetch("/api/forecasts").then(r => r.json()).then(d => setHistory(d.forecasts ?? []));
+    mutateHistory();
   };
 
   // Filtered + searched products
@@ -342,7 +340,7 @@ export default function DashboardClient() {
   const alreadyOut      = alertProducts.filter(p => p.daysOfStockRemaining <= 0);
 
   const renderOverview = () => (
-    <div className="space-y-3">
+    <div className="space-y-4">
 
       {/* ── URGENCY BANNER (only when there's an active threat) ── */}
       {activeAnalysis && alertProducts.length > 0 && (
@@ -373,7 +371,7 @@ export default function DashboardClient() {
       )}
 
       {/* ── KPI row — compact, profit-first labels ── */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-2.5">
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
         {/* Money at risk */}
         <div className={`card p-3.5 group hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/20 transition-all duration-200 ${activeAnalysis?.totalRarAmount ? "border-red-500/20" : ""}`}>
           <div className="flex items-start justify-between mb-2">
@@ -461,7 +459,7 @@ export default function DashboardClient() {
       </div>
 
       {/* ── Main two-column ── */}
-      <div className="grid grid-cols-1 xl:grid-cols-[1fr_288px] gap-3">
+      <div className="grid grid-cols-1 xl:grid-cols-[1fr_272px] gap-4">
 
         {/* LEFT: action table */}
         <div className="card overflow-hidden">
@@ -718,8 +716,8 @@ export default function DashboardClient() {
           {/* Upsell CTA */}
           <div className="rounded-xl bg-gradient-to-br from-[#2DD4BF]/10 to-[#2DD4BF]/[0.03] border border-[#2DD4BF]/20 p-4">
             <p className="text-[11px] font-black text-[#2DD4BF] uppercase tracking-widest mb-1">Upgrade to Pro</p>
-            <p className="text-[12px] text-slate-300 font-semibold mb-0.5">Get 90-day forecasts</p>
-            <p className="text-[10px] text-[#475569] mb-3">Merchants on Pro avoid 3× more stockouts on average.</p>
+            <p className="text-[12px] text-slate-300 font-semibold mb-0.5">Get 90-day forecasts — ₹999/mo</p>
+            <p className="text-[10px] text-[#475569] mb-3">Cancel anytime. 10× cheaper than Prediko.</p>
             <a href="/#pricing"
               className="block w-full text-center text-[12px] font-bold bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] py-2 rounded-lg transition-all shadow-md shadow-[#2DD4BF]/20">
               Protect more revenue →
@@ -1022,37 +1020,10 @@ export default function DashboardClient() {
             </button>
           </div>
 
-          {/* ── Summary stat strip (Donee-style) — overview only ── */}
-          {section === "overview" && activeAnalysis && (
-            <div className="flex items-center gap-1 px-5 pb-3 overflow-x-auto">
-              {[
-                {
-                  label: `${alertProducts.filter(p => p.stockoutRisk === "critical").length} Critical SKUs`,
-                  dot: "bg-red-400",
-                  cls: "text-red-400 bg-red-500/[0.07] border-red-500/15",
-                },
-                {
-                  label: `${alertProducts.length} Need Reorder`,
-                  dot: "bg-orange-400",
-                  cls: "text-orange-400 bg-orange-500/[0.07] border-orange-500/15",
-                },
-                {
-                  label: `${activeAnalysis.safeCount} Products Safe`,
-                  dot: "bg-green-400",
-                  cls: "text-green-400 bg-green-500/[0.07] border-green-500/15",
-                },
-              ].map(s => (
-                <span key={s.label} className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full border whitespace-nowrap ${s.cls}`}>
-                  <span className={`w-1.5 h-1.5 rounded-full ${s.dot}`} />
-                  {s.label}
-                </span>
-              ))}
-            </div>
-          )}
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-5">
+        <main className="flex-1 overflow-y-auto p-5 sm:p-6">
           <AnimatePresence mode="wait">
             <motion.div
               key={section}

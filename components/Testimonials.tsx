@@ -27,9 +27,9 @@ const testimonials = [
 ];
 
 const stats = [
-  { value: "₹2.4Cr+", label: "revenue protected from stockouts" },
-  { value: "1,200+", label: "forecasts run this month" },
-  { value: "4.9 / 5", label: "average merchant rating" },
+  { value: "30 sec", label: "from CSV upload to full forecast" },
+  { value: "90 days", label: "max forecast horizon on Pro" },
+  { value: "₹0", label: "to get started, no card needed" },
 ];
 
 export default function Testimonials() {

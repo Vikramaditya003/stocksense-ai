@@ -18,7 +18,13 @@ const riskStyle: Record<string, { pill: string; days: string }> = {
   low:      { pill: "text-[#2DD4BF] bg-[#2DD4BF]/[0.08] border-[#2DD4BF]/20", days: "text-slate-500" },
 };
 
+function orderByLabel() {
+  const d = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000);
+  return d.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+}
+
 export default function Hero() {
+  const orderBy = orderByLabel();
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center pt-28 pb-16 overflow-hidden">
       <div className="absolute inset-0 bg-[#060C0D]" />
@@ -164,7 +170,7 @@ export default function Hero() {
               <span className="text-red-400 font-semibold">lose ₹18,000</span>
             </span>
             <span className="ml-auto text-[12px] font-semibold text-orange-300 bg-orange-500/10 border border-orange-500/20 px-2.5 py-1 rounded-lg flex-shrink-0">
-              Order by Mar 28
+              Order by {orderBy}
             </span>
           </motion.div>
 

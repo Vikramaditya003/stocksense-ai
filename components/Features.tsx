@@ -100,7 +100,7 @@ const features = [
 ];
 
 const rows = [
-  ["Monthly cost",        "₹1,499/mo",  "Free (dead Aug '26)", "₹4k–25k/mo"],
+  ["Monthly cost",        "₹999/mo",  "Free (dead Aug '26)", "₹4k–25k/mo"],
   ["Exact stockout date", "✓",           "✗",                   "✓"],
   ["Ad-spend forecast",   "✓ Unique",    "✗",                   "✗"],
   ["Lead time alerts",    "✓ Auto",      "✗",                   "Partial"],

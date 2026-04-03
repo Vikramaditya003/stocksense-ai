@@ -98,16 +98,11 @@ export default function RootLayout({
       {
         "@type": "Offer",
         "name": "Pro",
-        "price": "1999",
+        "price": "999",
         "priceCurrency": "INR",
         "description": "Unlimited products, 90-day forecasts, purchase order generation"
       }
-    ],
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "reviewCount": "127"
-    }
+    ]
   };
 
   return (

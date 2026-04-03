@@ -10,7 +10,7 @@ const plans = [
     period: "forever",
     description: "Try it risk-free. No credit card.",
     features: ["5 products/month", "30-day forecast", "Stockout alerts", "Health score", "CSV upload"],
-    out: ["Unlimited products", "60/90-day forecasts", "Ad-spend correlation", "Reorder automation"],
+    out: ["Unlimited products", "Up to 90-day forecasts", "Ad-spend correlation", "Reorder automation"],
     cta: "Start free",
     href: "/forecast",
     highlight: false,
@@ -18,12 +18,12 @@ const plans = [
   },
   {
     name: "Pro",
-    price: "₹1,499",
+    price: "₹999",
     period: "/mo",
     description: "For stores that can't afford stockouts.",
     features: [
       "Unlimited products",
-      "30, 60 & 90-day forecasts",
+      "Up to 90-day forecasts",
       "AI ad-spend correlation",
       "Smart reorder quantities",
       "Seasonal pattern detection",
@@ -37,35 +37,14 @@ const plans = [
     highlight: true,
     badge: "Most popular",
   },
-  {
-    name: "Business",
-    price: "₹3,999",
-    period: "/mo",
-    description: "For multi-brand or high-SKU merchants.",
-    features: [
-      "Everything in Pro",
-      "5 team seats",
-      "Multi-store support (soon)",
-      "Bulk CSV processing",
-      "Custom lead time settings",
-      "API access (soon)",
-      "Dedicated Slack support",
-    ],
-    out: [],
-    cta: "Get Business",
-    href: "/forecast",
-    highlight: false,
-    badge: null,
-  },
 ];
 
 export default function Pricing() {
   return (
     <section id="pricing" className="py-28 bg-[#060C0D] relative overflow-hidden">
-      {/* Subtle glow behind pro card */}
       <div className="hidden sm:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[#2DD4BF]/[0.04] blur-[120px] rounded-full pointer-events-none" />
 
-      <div className="max-w-[960px] mx-auto px-4 sm:px-6 relative z-10">
+      <div className="max-w-[680px] mx-auto px-4 sm:px-6 relative z-10">
 
         {/* Header */}
         <motion.div
@@ -77,16 +56,16 @@ export default function Pricing() {
         >
           <p className="section-label mb-5">Pricing</p>
           <h2 className="text-4xl sm:text-[52px] font-semibold text-white tracking-[-0.03em] leading-tight mb-4 mt-4">
-            10× cheaper than{" "}
-            <span className="text-slate-500">the alternatives</span>
+            Simple,{" "}
+            <span className="text-slate-500">honest pricing</span>
           </h2>
           <p className="text-[16px] text-slate-500 max-w-sm mx-auto leading-relaxed tracking-tight">
-            Prediko starts at ₹4,000/mo. We&apos;re ₹1,499 — with features they don&apos;t have.
+            Prediko starts at ₹4,000/mo. We&apos;re ₹999 — with features they don&apos;t have.
           </p>
         </motion.div>
 
-        {/* Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-start mb-8">
+        {/* Cards — 2 column */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start mb-8">
           {plans.map((plan, i) => (
             <motion.div
               key={plan.name}
@@ -107,7 +86,7 @@ export default function Pricing() {
               <div className={`rounded-2xl p-6 h-full transition-all duration-200 ${
                 plan.highlight
                   ? "gradient-border-teal bg-[#0A1415] shadow-2xl shadow-[#2DD4BF]/[0.1]"
-                  : "border border-[#2DD4BF]/10 bg-[#0A1415] hover:border-[#2DD4BF]/20 hover:shadow-lg hover:shadow-[#2DD4BF]/[0.04]"
+                  : "border border-[#2DD4BF]/10 bg-[#0A1415] hover:border-[#2DD4BF]/20"
               }`}>
                 <div className="mb-5">
                   <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">{plan.name}</p>
@@ -122,7 +101,7 @@ export default function Pricing() {
                   href={plan.href}
                   className={`block w-full text-center text-[14px] font-bold py-3 px-4 rounded-xl mb-6 transition-all duration-150 tracking-tight ${
                     plan.highlight
-                      ? "bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] shadow-lg shadow-[#2DD4BF]/25 hover:shadow-[#2DD4BF]/35"
+                      ? "bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] shadow-lg shadow-[#2DD4BF]/25"
                       : "bg-white/[0.05] hover:bg-white/[0.09] text-slate-300 border border-white/[0.08]"
                   }`}
                 >

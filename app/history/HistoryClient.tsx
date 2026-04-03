@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import useSWR from "swr";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
@@ -434,30 +435,19 @@ function ForecastDetail({ forecast }: { forecast: SavedForecast }) {
 
 export default function HistoryClient() {
   const { isSignedIn, isLoaded } = useUser();
-  const [forecasts, setForecasts] = useState<Omit<SavedForecast, "analysis" | "clerk_user_id">[]>([]);
-  const [loading, setLoading] = useState(true);
+  const fetcher = (url: string) => fetch(url).then(r => r.json());
+  const { data: histData, isLoading: loading, error: fetchError } = useSWR<{ forecasts: Omit<SavedForecast, "analysis" | "clerk_user_id">[] }>(
+    isLoaded && isSignedIn ? "/api/forecasts" : null,
+    fetcher
+  );
+  const forecasts = histData?.forecasts ?? [];
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selectedDetail, setSelectedDetail] = useState<SavedForecast | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [compareDetails, setCompareDetails] = useState<SavedForecast[]>([]);
   const [compareMode, setCompareMode] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  // Load history
-  useEffect(() => {
-    if (!isLoaded || !isSignedIn) return;
-    fetch("/api/forecasts")
-      .then(r => r.json())
-      .then(d => {
-        setForecasts(d.forecasts ?? []);
-        setLoading(false);
-      })
-      .catch(() => {
-        setError("Failed to load forecast history.");
-        setLoading(false);
-      });
-  }, [isLoaded, isSignedIn]);
+  const error = fetchError ? "Failed to load forecast history." : null;
 
   // UUID validation — only send well-formed IDs to the API
   const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

@@ -269,7 +269,7 @@ function UpgradeModal({ feature, onClose }: { feature: string; onClose: () => vo
             ))}
           </ul>
           <div className="flex items-baseline gap-1.5 mb-4">
-            <span className="text-[28px] font-semibold text-white tracking-tight">₹1,499</span>
+            <span className="text-[28px] font-semibold text-white tracking-tight">₹999</span>
             <span className="text-slate-500 text-sm">/month · cancel anytime</span>
           </div>
           {paySuccess ? (
@@ -288,7 +288,7 @@ function UpgradeModal({ feature, onClose }: { feature: string; onClose: () => vo
                 disabled={paying}
                 className="block w-full text-center bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] font-bold py-3 rounded-xl transition-all text-sm shadow-lg shadow-[#2DD4BF]/20 hover:-translate-y-0.5 disabled:opacity-60"
               >
-                {paying ? "Opening payment..." : "Upgrade to Pro — ₹1,999/mo"}
+                {paying ? "Opening payment..." : "Upgrade to Pro — ₹999/mo"}
               </button>
               {payError && <p className="text-xs text-red-400 text-center mt-2">Payment failed. Try again or <Link href="/#pricing" className="underline">pay on pricing page</Link>.</p>}
               <button onClick={onClose} className="block w-full text-center text-slate-600 hover:text-slate-400 text-xs mt-3 transition-colors">
@@ -1532,7 +1532,7 @@ export default function ForecastClient() {
               {/* Upsell */}
               <div className="card p-6 border-[#2DD4BF]/15 bg-gradient-to-r from-[#2DD4BF]/[0.04] to-[#0D9488]/[0.02] text-center">
                 <p className="text-white font-semibold mb-1 text-sm">Unlock unlimited forecasts + ad-spend correlation + supplier alerts</p>
-                <p className="text-slate-500 text-xs mb-4">Pro plan — ₹1,499/mo. 10× cheaper than Prediko. Cancel anytime.</p>
+                <p className="text-slate-500 text-xs mb-4">Pro plan — ₹999/mo. 10× cheaper than Prediko. Cancel anytime.</p>
                 <Link
                   href="/#pricing"
                   className="inline-flex items-center gap-2 bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] font-bold px-5 py-2.5 rounded-xl transition-all text-sm shadow-lg shadow-[#2DD4BF]/20 hover:-translate-y-0.5"
