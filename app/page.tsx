@@ -67,7 +67,7 @@ export default function Home() {
                   </svg>
                 </div>
                 <span className="text-[16px] font-bold text-white tracking-tight">
-                  StockSense<span className="text-[#2DD4BF]">AI</span>
+                  Stock<span className="text-[#2DD4BF]">Sense AI</span>
                 </span>
               </div>
               <p className="text-[12px] text-slate-600 leading-relaxed mb-4">

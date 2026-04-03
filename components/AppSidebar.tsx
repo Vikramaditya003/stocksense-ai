@@ -108,7 +108,7 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
           <LogoMark size={32} />
           {!collapsed && (
             <span className="text-[15px] font-bold text-white truncate tracking-tight">
-              Stock<span className="text-[#2DD4BF]">Sense</span>
+              Stock<span className="text-[#2DD4BF]">Sense AI</span>
             </span>
           )}
         </Link>
