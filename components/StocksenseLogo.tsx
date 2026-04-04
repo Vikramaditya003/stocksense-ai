@@ -1,6 +1,6 @@
-// SVG recreation of the StockSense AI logo mark.
-// Rising bar chart (3 columns) + S-curve shelf lines + upward arrow.
-// Flat teal — no gradient, scales cleanly from 16px favicon to 200px OG image.
+// StockSense AI logo mark — Option 1 style:
+// Green rounded-square badge with a white rising sparkline (4 dots connected).
+// Clean, high-contrast, scales perfectly from 16px favicon to 200px OG image.
 
 export function LogoMark({ size = 36 }: { size?: number }) {
   return (
@@ -12,44 +12,28 @@ export function LogoMark({ size = 36 }: { size?: number }) {
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
-      {/*
-        Three rising bar columns — left=short, mid=medium, right=tall.
-        Columns are filled teal rectangles with rounded tops.
-      */}
-      <rect x="8"  y="62" width="18" height="32" rx="3" fill="#22C55E" opacity="0.55" />
-      <rect x="32" y="44" width="18" height="50" rx="3" fill="#22C55E" opacity="0.75" />
-      <rect x="56" y="24" width="18" height="70" rx="3" fill="#22C55E" />
+      {/* Green rounded-square badge background */}
+      <rect width="100" height="100" rx="22" fill="#22C55E" />
 
       {/*
-        S-curve shelf lines overlaid on left side of chart.
-        Upper arc: sweeps left-to-right across top of short+mid bars.
-        Lower arc: sweeps right-to-left across bottom area.
-        These form the S-for-Stock shape.
+        White sparkline — 4 points rising left-to-right with one dip (realistic trend).
+        Points: (16,72) → (36,52) → (56,62) → (78,22)
+        Drawn as a polyline with rounded joins for smooth feel.
       */}
-      <path
-        d="M 52 28 C 38 18 6 22 6 38 C 6 52 42 52 42 64 C 42 78 8 80 8 72"
-        stroke="#22C55E"
-        strokeWidth="7"
+      <polyline
+        points="16,72 36,48 56,60 78,22"
+        stroke="white"
+        strokeWidth="8"
         strokeLinecap="round"
+        strokeLinejoin="round"
         fill="none"
       />
 
-      {/*
-        Upward-right arrow — diagonal line + filled arrowhead.
-        Originates from mid-chart, exits upper-right corner.
-      */}
-      <line
-        x1="30" y1="72"
-        x2="82" y2="14"
-        stroke="#22C55E"
-        strokeWidth="7"
-        strokeLinecap="round"
-      />
-      {/* Arrowhead at (82, 14) pointing upper-right */}
-      <polygon
-        points="82,14  70,16  76,28"
-        fill="#22C55E"
-      />
+      {/* Dot at each data point for the "connected chart" look */}
+      <circle cx="16" cy="72" r="5.5" fill="white" />
+      <circle cx="36" cy="48" r="5.5" fill="white" />
+      <circle cx="56" cy="60" r="5.5" fill="white" />
+      <circle cx="78" cy="22" r="5.5" fill="white" />
     </svg>
   );
 }
