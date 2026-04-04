@@ -291,6 +291,13 @@ export default function DashboardClient() {
     ? [...activeAnalysis.products].sort((a, b) => (RISK_ORDER[a.stockoutRisk] ?? 9) - (RISK_ORDER[b.stockoutRisk] ?? 9))
     : [];
 
+  const inventoryValue = activeAnalysis?.products
+    ? activeAnalysis.products.reduce((sum, p) => sum + p.currentStock * (p.price ?? 0), 0)
+    : 0;
+  const fmtInventoryValue = inventoryValue > 0
+    ? `₹${inventoryValue.toLocaleString("en-IN")}`
+    : "—";
+
   const filteredProducts = allProducts.filter(p => {
     const matchesTab =
       filterTab === "all" ? true :
@@ -433,19 +440,21 @@ export default function DashboardClient() {
           </div>
         </div>
 
-        {/* Products monitored */}
+        {/* Inventory value */}
         <div className="card p-3.5 group hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/20 transition-all duration-200">
           <div className="flex items-start justify-between mb-2">
-            <p className="text-[10px] font-bold text-[#475569] uppercase tracking-widest leading-tight">Products Monitored</p>
+            <p className="text-[10px] font-bold text-[#475569] uppercase tracking-widest leading-tight">Inventory Value</p>
             <div className="w-7 h-7 rounded-lg bg-slate-500/10 flex items-center justify-center flex-shrink-0">
               <svg className="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
             </div>
           </div>
           <p className="text-[24px] font-bold tabular-nums tracking-tight leading-none mb-1 text-slate-100">
-            {activeAnalysis?.totalSkuCount ?? "—"}
+            {fmtInventoryValue}
           </p>
           <div className="flex items-end justify-between">
-            <p className="text-[10px] text-[#475569]">{activeAnalysis ? `${activeAnalysis.safeCount} safe · ${activeAnalysis.atRiskCount} at risk` : "No data yet"}</p>
+            <p className="text-[10px] text-[#475569]">
+              {activeAnalysis ? `${activeAnalysis.totalSkuCount} SKUs · ${activeAnalysis.safeCount} safe` : "No data yet"}
+            </p>
             <Sparkline scores={sparkScores.map((_, i) => 45 + (i % 3) * 8)} color="#94a3b8" />
           </div>
           {activeAnalysis && (
@@ -583,9 +592,18 @@ export default function DashboardClient() {
                         </p>
                       </td>
                       <td className="px-3 py-2.5 hidden sm:table-cell">
-                        <span className={`text-sm font-black tabular-nums ${p.daysOfStockRemaining <= 0 ? "text-red-400" : p.daysOfStockRemaining <= 7 ? "text-orange-400" : cfg.text}`}>
-                          {p.daysOfStockRemaining <= 0 ? "OUT" : `${p.daysOfStockRemaining}d`}
-                        </span>
+                        {p.daysOfStockRemaining <= 0 ? (
+                          <div>
+                            <span className="text-sm font-black tabular-nums text-red-400">OUT</span>
+                            {p.stockoutDate && p.stockoutDate !== "Safe (90+ days)" && (
+                              <p className="text-[10px] text-red-400/60 mt-0.5">since {p.stockoutDate}</p>
+                            )}
+                          </div>
+                        ) : (
+                          <span className={`text-sm font-black tabular-nums ${p.daysOfStockRemaining <= 7 ? "text-orange-400" : cfg.text}`}>
+                            {p.daysOfStockRemaining}d
+                          </span>
+                        )}
                       </td>
                       <td className="px-3 py-2.5 hidden md:table-cell">
                         {p.reorderByDate
@@ -809,12 +827,12 @@ export default function DashboardClient() {
           <table className="data-table">
             <thead className="sticky top-16 z-10">
               <tr>
-                <th className="!pl-4">Product</th>
-                <th>Risk</th>
+                <th className="!pl-4">Product / SKU</th>
+                <th>Risk Level</th>
                 <th>Days Left</th>
-                <th>Stock</th>
-                <th>Reorder By</th>
-                <th>Rev. at Risk</th>
+                <th>In Stock</th>
+                <th>Order By · Qty</th>
+                <th>Revenue at Risk</th>
                 <th />
               </tr>
             </thead>
@@ -858,16 +876,27 @@ export default function DashboardClient() {
                       </td>
                       <td>
                         <div className="flex flex-col gap-1.5">
-                          <span className={`text-sm font-bold tabular-nums ${product.daysOfStockRemaining <= 0 ? "text-red-400" : cfg.text}`}>
-                            {product.daysOfStockRemaining <= 0 ? "OUT" : `${product.daysOfStockRemaining}d`}
-                          </span>
-                          <div className="w-14 h-[5px] rounded-full bg-white/[0.06] overflow-hidden">
-                            <div
-                              className={`h-full rounded-full ${cfg.bar} opacity-80`}
-                              style={{ width: `${daysBarPct}%` }}
-                              aria-hidden="true"
-                            />
-                          </div>
+                          {product.daysOfStockRemaining <= 0 ? (
+                            <div>
+                              <span className="text-sm font-bold tabular-nums text-red-400">OUT</span>
+                              {product.stockoutDate && product.stockoutDate !== "Safe (90+ days)" && (
+                                <p className="text-[10px] text-red-400/60 leading-tight">since {product.stockoutDate}</p>
+                              )}
+                            </div>
+                          ) : (
+                            <>
+                              <span className={`text-sm font-bold tabular-nums ${cfg.text}`}>
+                                {product.daysOfStockRemaining}d
+                              </span>
+                              <div className="w-14 h-[5px] rounded-full bg-white/[0.06] overflow-hidden">
+                                <div
+                                  className={`h-full rounded-full ${cfg.bar} opacity-80`}
+                                  style={{ width: `${daysBarPct}%` }}
+                                  aria-hidden="true"
+                                />
+                              </div>
+                            </>
+                          )}
                         </div>
                       </td>
                       <td><span className="tabular-nums text-[#94A3B8] text-sm">{product.currentStock.toLocaleString()}</span></td>
@@ -904,6 +933,9 @@ export default function DashboardClient() {
                                 )}
                                 <div className="bg-[#2DD4BF]/[0.03] border border-[#2DD4BF]/10 rounded-xl p-4">
                                   <p className="text-[10px] font-bold text-[#2DD4BF] uppercase tracking-wider mb-2">Reorder Action</p>
+                                  {product.daysOfStockRemaining <= 0 && product.stockoutDate && product.stockoutDate !== "Safe (90+ days)" && (
+                                    <p className="text-xs font-bold text-red-400 mb-1.5">Out of stock since {product.stockoutDate}</p>
+                                  )}
                                   <p className="text-sm text-slate-200 font-medium mb-0.5">Order <span className="font-bold text-white">{product.reorderQuantity} units</span></p>
                                   <p className="text-xs text-[#475569] mb-1">Reorder point: {product.reorderPoint} · {product.avgDailySales.toFixed(1)}/day</p>
                                   {product.reorderByDate && <p className="text-xs font-bold text-orange-400">{product.reorderByDate}</p>}
@@ -956,7 +988,13 @@ export default function DashboardClient() {
                   </div>
                   <p className="text-sm text-slate-400">{p.riskReason}</p>
                   <div className="flex flex-wrap items-center gap-3 mt-2">
-                    <span className="text-xs text-[#475569]">Stockout in <span className={`font-bold ${isCrit ? "text-red-400" : "text-orange-400"}`}>{p.daysOfStockRemaining}d</span></span>
+                    {p.daysOfStockRemaining <= 0 ? (
+                      <span className="text-xs font-bold text-red-400 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded-lg">
+                        Out of stock{p.stockoutDate && p.stockoutDate !== "Safe (90+ days)" ? ` since ${p.stockoutDate}` : ""}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-[#475569]">Stockout in <span className={`font-bold ${isCrit ? "text-red-400" : "text-orange-400"}`}>{p.daysOfStockRemaining}d</span></span>
+                    )}
                     {p.reorderByDate && <span className="text-xs font-semibold text-orange-300 bg-orange-500/10 border border-orange-500/15 px-2 py-0.5 rounded-lg">{p.reorderByDate}</span>}
                     {p.estimatedRevenueLoss && <span className="text-xs font-bold text-red-400">{p.estimatedRevenueLoss} at risk</span>}
                   </div>
