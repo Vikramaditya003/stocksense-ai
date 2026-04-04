@@ -5,7 +5,7 @@ import { isStrictRateLimited, getClientIp, sanitizeError, logError, logWarn } fr
 import { updateUserPlan, type UserPlan } from "@/lib/db";
 
 // Allowlist of purchasable plans — never trust the client's plan value
-const VALID_PLANS = new Set<UserPlan>(["growth", "pro", "business"]);
+const VALID_PLANS = new Set<UserPlan>(["pro"]);
 
 export async function POST(req: NextRequest) {
   // Rate limit — prevent brute-force signature guessing
