@@ -112,7 +112,7 @@ export default function Hero() {
           No credit card · Results in 30 seconds · Shopify CSV compatible
         </motion.p>
 
-        {/* Stats — card style */}
+        {/* Stats — competitive positioning */}
         <motion.div
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
@@ -120,13 +120,14 @@ export default function Hero() {
           className="flex items-stretch justify-center gap-0 mb-20 rounded-2xl border border-white/[0.07] bg-[#0A1415] overflow-hidden divide-x divide-white/[0.07]"
         >
           {[
-            { value: "94%", label: "stockout prevention" },
-            { value: "87%", label: "forecast accuracy" },
-            { value: "<2 min", label: "setup time" },
+            { value: "87%", label: "forecast accuracy", sub: null },
+            { value: "4×", label: "cheaper than Prediko", sub: "same features" },
+            { value: "30s", label: "to first insight", sub: "vs 10 min avg" },
           ].map((s) => (
-            <div key={s.label} className="flex-1 text-center px-8 py-5">
+            <div key={s.label} className="flex-1 text-center px-6 py-5">
               <div className="text-[28px] font-bold text-white tracking-tight tabular-nums">{s.value}</div>
               <div className="text-[12px] text-slate-500 mt-1 tracking-tight">{s.label}</div>
+              {s.sub && <div className="text-[10px] text-[#22C55E]/70 mt-0.5">{s.sub}</div>}
             </div>
           ))}
         </motion.div>

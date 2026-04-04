@@ -99,6 +99,8 @@ export default function Home() {
               <ul className="space-y-2.5">
                 {[
                   { label: "Blog", href: "/blog" },
+                  { label: "vs Prediko", href: "/compare/prediko" },
+                  { label: "vs Stock Monitor", href: "/compare/stock-monitor" },
                   { label: "Instagram", href: "https://instagram.com/stocksenseai" },
                   { label: "Twitter / X", href: "https://x.com/stocksenseai" },
                   { label: "Contact Us", href: "mailto:support@stocksenseai.com" },
