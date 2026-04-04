@@ -253,6 +253,7 @@ export default function DashboardClient() {
   type FilterTab = "all" | "critical" | "high" | "medium" | "low";
   const [filterTab, setFilterTab] = useState<FilterTab>("all");
   const [expandedSku, setExpandedSku] = useState<string | null>(null);
+  const [safeSectionOpen, setSafeSectionOpen] = useState(false);
 
   // Sync search from URL ?q= param
   useEffect(() => { setSearch(qParam); }, [qParam]);
@@ -319,6 +320,16 @@ export default function DashboardClient() {
 
   const alertProducts = allProducts.filter(p => p.stockoutRisk === "critical" || p.stockoutRisk === "high");
 
+  // ── Delta: compare current vs previous forecast ────────────────────────────
+  const prevForecast = history.length >= 2 ? history[1] : null;
+  const currForecast = history.length >= 1 ? history[0] : null;
+  const delta = (prevForecast && currForecast && activeDate === currForecast.created_at) ? {
+    health: currForecast.health_score - prevForecast.health_score,
+    critical: currForecast.critical_count - prevForecast.critical_count,
+    skus: currForecast.sku_count - prevForecast.sku_count,
+    since: fmt(prevForecast.created_at),
+  } : null;
+
   // ── Render sections ──────────────────────────────────────────────────────────
 
   // Derive urgency numbers for the action banner
@@ -353,6 +364,26 @@ export default function DashboardClient() {
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
             Fix Now — Order Today
           </button>
+        </div>
+      )}
+
+      {/* ── DELTA BANNER — what changed since last forecast ── */}
+      {delta && (
+        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3 flex flex-wrap items-center gap-x-5 gap-y-2">
+          <p className="text-xs font-medium text-slate-400">Since {delta.since}:</p>
+          <span className={`flex items-center gap-1 text-xs font-semibold ${delta.health > 0 ? "text-green-400" : delta.health < 0 ? "text-red-400" : "text-slate-500"}`}>
+            {delta.health > 0 ? "↑" : delta.health < 0 ? "↓" : "→"}
+            {" "}Health {delta.health > 0 ? "+" : ""}{delta.health} pts
+          </span>
+          <span className={`flex items-center gap-1 text-xs font-semibold ${delta.critical > 0 ? "text-red-400" : delta.critical < 0 ? "text-green-400" : "text-slate-500"}`}>
+            {delta.critical > 0 ? "↑" : delta.critical < 0 ? "↓" : "→"}
+            {" "}{Math.abs(delta.critical)} critical SKU{Math.abs(delta.critical) !== 1 ? "s" : ""} {delta.critical > 0 ? "added" : delta.critical < 0 ? "resolved" : "unchanged"}
+          </span>
+          {delta.skus !== 0 && (
+            <span className="text-xs text-slate-500">
+              {delta.skus > 0 ? `+${delta.skus}` : delta.skus} SKUs tracked
+            </span>
+          )}
         </div>
       )}
 
@@ -808,7 +839,11 @@ export default function DashboardClient() {
               </tr>
             </thead>
             <tbody>
-              {filteredProducts.map((product, i) => {
+              {/* Render a row — extracted to avoid duplication */}
+              {(() => {
+                const atRisk = filteredProducts.filter(p => p.stockoutRisk !== "low");
+                const safe   = filteredProducts.filter(p => p.stockoutRisk === "low");
+                const renderRow = (product: ProductForecast, i: number) => {
                 const cfg = riskCfg[product.stockoutRisk] ?? riskCfg.low;
                 const daysBarPct = Math.min(100, (product.daysOfStockRemaining / 30) * 100);
                 const skuKey = product.sku || product.productName;
@@ -927,7 +962,40 @@ export default function DashboardClient() {
                     </AnimatePresence>
                   </Fragment>
                 );
-              })}
+                };
+                return (
+                  <>
+                    {atRisk.map((p, i) => renderRow(p, i))}
+                    {safe.length > 0 && filterTab === "all" && (
+                      <>
+                        {/* Safe products divider */}
+                        <tr>
+                          <td colSpan={7} className="px-4 py-0">
+                            <button
+                              type="button"
+                              onClick={() => setSafeSectionOpen(o => !o)}
+                              className="w-full flex items-center gap-3 py-2.5 text-left group"
+                            >
+                              <div className="flex-1 h-px bg-white/[0.05]" />
+                              <span className="flex items-center gap-1.5 text-xs font-medium text-slate-500 group-hover:text-slate-300 transition-colors flex-shrink-0">
+                                <span className="w-2 h-2 rounded-full bg-green-500" />
+                                {safe.length} safe product{safe.length !== 1 ? "s" : ""}
+                                <svg className={`w-3.5 h-3.5 transition-transform duration-200 ${safeSectionOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                              </span>
+                              <div className="flex-1 h-px bg-white/[0.05]" />
+                            </button>
+                          </td>
+                        </tr>
+                        <AnimatePresence>
+                          {safeSectionOpen && safe.map((p, i) => renderRow(p, atRisk.length + i))}
+                        </AnimatePresence>
+                      </>
+                    )}
+                    {/* When filtering to "low" directly, show them normally */}
+                    {filterTab === "low" && safe.map((p, i) => renderRow(p, i))}
+                  </>
+                );
+              })()}
             </tbody>
           </table>
         </div>
@@ -1011,11 +1079,25 @@ export default function DashboardClient() {
               </p>
             </div>
 
-            {/* Last updated pill */}
+            {/* Last updated + confidence pills */}
             {activeDate && (
-              <div className="hidden sm:flex items-center gap-1.5 text-xs text-[#475569] bg-white/[0.03] border border-white/[0.05] px-2.5 py-1 rounded-lg">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#2DD4BF] animate-pulse" />
-                Updated {timeAgo(activeDate)}
+              <div className="hidden sm:flex items-center gap-2">
+                <div className="flex items-center gap-1.5 text-xs text-slate-500 bg-white/[0.03] border border-white/[0.05] px-2.5 py-1 rounded-lg">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#2DD4BF] animate-pulse" />
+                  Updated {timeAgo(activeDate)}
+                </div>
+                {activeAnalysis?.forecastConfidence != null && (
+                  <div className={`flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-lg border ${
+                    activeAnalysis.forecastConfidence >= 75
+                      ? "text-green-400 bg-green-500/[0.06] border-green-500/20"
+                      : activeAnalysis.forecastConfidence >= 50
+                      ? "text-yellow-400 bg-yellow-500/[0.06] border-yellow-500/20"
+                      : "text-slate-400 bg-white/[0.03] border-white/[0.05]"
+                  }`}>
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    {activeAnalysis.forecastConfidence}% confidence
+                  </div>
+                )}
               </div>
             )}
 
