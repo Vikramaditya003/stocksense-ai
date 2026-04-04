@@ -12,7 +12,7 @@ function DashboardSkeleton() {
     <div className="min-h-screen bg-[#060C0D] flex">
 
       {/* Sidebar ghost — matches AppSidebar collapsed=false width */}
-      <div className="flex-shrink-0 w-[240px] bg-[#07100F] border-r border-[#2DD4BF]/[0.08] h-screen sticky top-0 flex flex-col p-4 gap-3 overflow-hidden">
+      <div className="flex-shrink-0 w-[240px] bg-[#07100F] border-r border-[#22C55E]/[0.08] h-screen sticky top-0 flex flex-col p-4 gap-3 overflow-hidden">
         <S className="h-9 w-36 mb-2" />
         <S className="h-8 w-full rounded-xl" />
         <div className="mt-1 space-y-1.5">
@@ -28,7 +28,7 @@ function DashboardSkeleton() {
       <div className="flex-1 flex flex-col min-w-0">
 
         {/* Header — h-16 matches the real sticky header */}
-        <div className="h-16 border-b border-[#2DD4BF]/[0.08] flex items-center px-5 gap-4 flex-shrink-0">
+        <div className="h-16 border-b border-[#22C55E]/[0.08] flex items-center px-5 gap-4 flex-shrink-0">
           <S className="h-4 w-44" />
           <div className="ml-auto flex items-center gap-2">
             <S className="h-7 w-28 hidden sm:block rounded-lg" />
@@ -123,7 +123,7 @@ function DashboardSkeleton() {
               </div>
 
               {/* Upsell card ghost */}
-              <div className="rounded-xl border border-[#2DD4BF]/[0.12] bg-[#2DD4BF]/[0.02] p-4">
+              <div className="rounded-xl border border-[#22C55E]/[0.12] bg-[#22C55E]/[0.02] p-4">
                 <S className="h-2.5 w-24 mb-2" />
                 <S className="h-4 w-36 mb-1.5" />
                 <S className="h-2.5 w-full mb-3" />

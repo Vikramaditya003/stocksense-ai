@@ -49,7 +49,7 @@ function renderSection(s: Section, i: number) {
         <ul key={i} className="space-y-2">
           {s.items?.map((item, j) => (
             <li key={j} className="flex items-start gap-2.5 text-slate-400">
-              <span className="text-[#2DD4BF] mt-0.5 flex-shrink-0">→</span>
+              <span className="text-[#22C55E] mt-0.5 flex-shrink-0">→</span>
               <span>{item}</span>
             </li>
           ))}
@@ -61,7 +61,7 @@ function renderSection(s: Section, i: number) {
         <ol key={i} className="space-y-3">
           {s.items?.map((item, j) => (
             <li key={j} className="flex items-start gap-3 text-slate-400">
-              <span className="w-6 h-6 rounded-full bg-[#2DD4BF]/10 border border-[#2DD4BF]/20 text-[#2DD4BF] text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+              <span className="w-6 h-6 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/20 text-[#22C55E] text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
                 {j + 1}
               </span>
               <span>{item}</span>
@@ -72,14 +72,14 @@ function renderSection(s: Section, i: number) {
 
     case "formula":
       return (
-        <div key={i} className="bg-[#2DD4BF]/[0.04] border border-[#2DD4BF]/20 rounded-xl px-5 py-4 font-mono text-sm text-[#2DD4BF] text-center tracking-tight">
+        <div key={i} className="bg-[#22C55E]/[0.04] border border-[#22C55E]/20 rounded-xl px-5 py-4 font-mono text-sm text-[#22C55E] text-center tracking-tight">
           {s.text}
         </div>
       );
 
     case "callout": {
       const cfg = {
-        tip:     { border: "border-[#2DD4BF]/20",   bg: "bg-[#2DD4BF]/[0.04]",   icon: "💡", label: "Tip",     labelColor: "text-[#2DD4BF]" },
+        tip:     { border: "border-[#22C55E]/20",   bg: "bg-[#22C55E]/[0.04]",   icon: "💡", label: "Tip",     labelColor: "text-[#22C55E]" },
         warning: { border: "border-orange-500/20",   bg: "bg-orange-500/[0.04]",  icon: "⚠",  label: "Warning", labelColor: "text-orange-400" },
         info:    { border: "border-blue-500/20",     bg: "bg-blue-500/[0.04]",    icon: "ℹ",  label: "Note",    labelColor: "text-blue-400"  },
       };
@@ -137,14 +137,14 @@ export default async function BlogPostPage(
   return (
     <div className="min-h-screen bg-[#060C0D] text-slate-300">
       {/* Nav */}
-      <nav className="border-b border-[#2DD4BF]/10 px-6 h-16 flex items-center justify-between max-w-[960px] mx-auto">
+      <nav className="border-b border-[#22C55E]/10 px-6 h-16 flex items-center justify-between max-w-[960px] mx-auto">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[#2DD4BF] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-[#22C55E] flex items-center justify-center">
             <svg className="w-4 h-4 text-[#060C0D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 20V14M9 20V8M14 20V11M19 20V4" />
             </svg>
           </div>
-          <span className="text-[15px] font-semibold text-white">StockSense<span className="text-[#2DD4BF]">AI</span></span>
+          <span className="text-[15px] font-semibold text-white">StockSense<span className="text-[#22C55E]">AI</span></span>
         </Link>
         <Link href="/blog" className="text-xs text-slate-500 hover:text-white transition-colors">← All articles</Link>
       </nav>
@@ -177,15 +177,15 @@ export default async function BlogPostPage(
         </div>
 
         {/* CTA */}
-        <div className="mt-14 border border-[#2DD4BF]/15 rounded-2xl p-8 text-center bg-[#2DD4BF]/[0.02]">
-          <p className="text-xs font-semibold text-[#2DD4BF] uppercase tracking-widest mb-3">Try it free</p>
+        <div className="mt-14 border border-[#22C55E]/15 rounded-2xl p-8 text-center bg-[#22C55E]/[0.02]">
+          <p className="text-xs font-semibold text-[#22C55E] uppercase tracking-widest mb-3">Try it free</p>
           <h2 className="text-lg font-bold text-white mb-2">Ready to stop guessing?</h2>
           <p className="text-sm text-slate-500 mb-6 max-w-[360px] mx-auto">
             Upload your Shopify CSV and see which products are at risk — in 30 seconds.
           </p>
           <Link
             href="/forecast"
-            className="inline-flex items-center gap-2 bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] font-bold text-sm px-6 py-3 rounded-xl transition-all shadow-lg shadow-[#2DD4BF]/20"
+            className="inline-flex items-center gap-2 bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] font-bold text-sm px-6 py-3 rounded-xl transition-all shadow-lg shadow-[#22C55E]/20"
           >
             Run a free forecast
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -205,12 +205,12 @@ export default async function BlogPostPage(
                 <Link
                   key={p.slug}
                   href={`/blog/${p.slug}`}
-                  className="group block bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-[#2DD4BF]/20 rounded-xl p-5 transition-all"
+                  className="group block bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-[#22C55E]/20 rounded-xl p-5 transition-all"
                 >
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${p.tagColor} mb-3 inline-block`}>
                     {p.tag}
                   </span>
-                  <h3 className="text-sm font-semibold text-white group-hover:text-[#2DD4BF] transition-colors leading-snug mb-2">
+                  <h3 className="text-sm font-semibold text-white group-hover:text-[#22C55E] transition-colors leading-snug mb-2">
                     {p.title}
                   </h3>
                   <p className="text-[11px] text-[#475569]">{p.date} · {p.readTime}</p>

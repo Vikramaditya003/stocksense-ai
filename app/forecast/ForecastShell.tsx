@@ -9,7 +9,7 @@ const ForecastClient = dynamic(() => import("./ForecastClient"), {
   ssr: false,
   loading: () => (
     <div className="min-h-screen bg-[#060C0D] flex items-center justify-center">
-      <div className="w-8 h-8 rounded-full border-2 border-[#2DD4BF]/30 border-t-[#2DD4BF] animate-spin" />
+      <div className="w-8 h-8 rounded-full border-2 border-[#22C55E]/30 border-t-[#22C55E] animate-spin" />
     </div>
   ),
 });

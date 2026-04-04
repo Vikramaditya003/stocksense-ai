@@ -36,7 +36,7 @@ function AuthButtons() {
             },
             elements: {
               avatarBox: "w-8 h-8",
-              userButtonPopoverCard: "!bg-[#0D1B1D] !border !border-[#2DD4BF]/20 !shadow-2xl !shadow-black/80 !rounded-xl",
+              userButtonPopoverCard: "!bg-[#0D1B1D] !border !border-[#22C55E]/20 !shadow-2xl !shadow-black/80 !rounded-xl",
               userButtonPopoverMain: "!bg-[#0D1B1D]",
               userButtonPopoverHeader: "!bg-[#0D1B1D] !border-b !border-white/[0.05]",
               userButtonPopoverActions: "!bg-[#0D1B1D]",
@@ -106,7 +106,7 @@ export default function Navbar() {
         transition={{ duration: 0.35, ease: "easeOut" }}
         className={`w-full max-w-[1000px] flex items-center justify-between px-6 h-16 rounded-2xl transition-all duration-300 ${
           scrolled
-            ? "bg-[#0A1415]/95 backdrop-blur-2xl border border-[#2DD4BF]/15 shadow-2xl shadow-black/60"
+            ? "bg-[#0A1415]/95 backdrop-blur-2xl border border-[#22C55E]/15 shadow-2xl shadow-black/60"
             : "bg-[#0A1415]/70 backdrop-blur-xl border border-white/[0.07]"
         }`}
       >
@@ -114,7 +114,7 @@ export default function Navbar() {
         <Link href="/" className="flex items-center gap-2.5 group">
           <LogoMark size={36} />
           <span className="text-[16px] font-semibold text-white tracking-tight">
-            Stock<span className="text-[#2DD4BF]">Sense AI</span>
+            Stock<span className="text-[#22C55E]">Sense AI</span>
           </span>
         </Link>
 
@@ -169,7 +169,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -4, scale: 0.98 }}
             transition={{ duration: 0.14 }}
-            className="absolute top-[4.75rem] left-4 right-4 bg-[#0A1415] border border-[#2DD4BF]/15 rounded-2xl p-3 shadow-2xl shadow-black/70 md:hidden"
+            className="absolute top-[4.75rem] left-4 right-4 bg-[#0A1415] border border-[#22C55E]/15 rounded-2xl p-3 shadow-2xl shadow-black/70 md:hidden"
           >
             <div className="space-y-0.5 mb-3">
               {links.map((link) => (

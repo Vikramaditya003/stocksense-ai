@@ -100,15 +100,15 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
 
   return (
     <aside
-      className={`flex-shrink-0 ${collapsed ? "w-[64px]" : "w-[240px]"} transition-all duration-200 bg-[#07100F] border-r border-[#2DD4BF]/[0.08] flex flex-col h-screen sticky top-0 z-30 overflow-hidden`}
+      className={`flex-shrink-0 ${collapsed ? "w-[64px]" : "w-[240px]"} transition-all duration-200 bg-[#07100F] border-r border-[#22C55E]/[0.08] flex flex-col h-screen sticky top-0 z-30 overflow-hidden`}
     >
       {/* ── Logo ── */}
-      <div className="h-16 flex items-center gap-3 px-4 border-b border-[#2DD4BF]/[0.07] flex-shrink-0">
+      <div className="h-16 flex items-center gap-3 px-4 border-b border-[#22C55E]/[0.07] flex-shrink-0">
         <Link href="/" className="flex items-center gap-2.5 min-w-0 flex-1">
           <LogoMark size={32} />
           {!collapsed && (
             <span className="text-[15px] font-bold text-white truncate tracking-tight">
-              Stock<span className="text-[#2DD4BF]">Sense AI</span>
+              Stock<span className="text-[#22C55E]">Sense AI</span>
             </span>
           )}
         </Link>
@@ -129,8 +129,8 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
       {/* ── Search ── */}
       {!collapsed && (
         <div className="px-3 pt-3 pb-1 flex-shrink-0">
-          <div className="flex items-center gap-2 bg-white/[0.04] border border-white/[0.06] rounded-xl px-3 py-2 group focus-within:border-[#2DD4BF]/30 focus-within:bg-[#2DD4BF]/[0.03] transition-all">
-            <svg className="w-3.5 h-3.5 text-slate-600 group-focus-within:text-[#2DD4BF] transition-colors flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <div className="flex items-center gap-2 bg-white/[0.04] border border-white/[0.06] rounded-xl px-3 py-2 group focus-within:border-[#22C55E]/30 focus-within:bg-[#22C55E]/[0.03] transition-all">
+            <svg className="w-3.5 h-3.5 text-slate-600 group-focus-within:text-[#22C55E] transition-colors flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
             </svg>
             <input
@@ -186,8 +186,8 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
                 href={item.href}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl mb-2 font-semibold text-[13px] transition-all group ${
                   active
-                    ? "bg-[#2DD4BF] text-[#060C0D] shadow-lg shadow-[#2DD4BF]/25"
-                    : "bg-[#2DD4BF]/10 text-[#2DD4BF] border border-[#2DD4BF]/20 hover:bg-[#2DD4BF]/15"
+                    ? "bg-[#22C55E] text-[#060C0D] shadow-lg shadow-[#22C55E]/25"
+                    : "bg-[#22C55E]/10 text-[#22C55E] border border-[#22C55E]/20 hover:bg-[#22C55E]/15"
                 }`}
                 title={collapsed ? item.label : undefined}
               >
@@ -203,7 +203,7 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
               href={item.href}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all relative group ${
                 active
-                  ? "bg-[#2DD4BF]/10 text-[#2DD4BF] border border-[#2DD4BF]/15"
+                  ? "bg-[#22C55E]/10 text-[#22C55E] border border-[#22C55E]/15"
                   : "text-slate-500 hover:text-slate-200 hover:bg-white/[0.04] border border-transparent"
               }`}
               title={collapsed ? item.label : undefined}
@@ -250,15 +250,15 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
         <div className="px-3 pb-3">
           <Link
             href="/#pricing"
-            className="flex items-center gap-2.5 bg-gradient-to-r from-[#2DD4BF]/10 to-cyan-500/5 border border-[#2DD4BF]/20 px-3 py-2.5 rounded-xl hover:border-[#2DD4BF]/35 transition-all group"
+            className="flex items-center gap-2.5 bg-gradient-to-r from-[#22C55E]/10 to-cyan-500/5 border border-[#22C55E]/20 px-3 py-2.5 rounded-xl hover:border-[#22C55E]/35 transition-all group"
           >
-            <div className="w-7 h-7 rounded-lg bg-[#2DD4BF]/15 flex items-center justify-center flex-shrink-0">
-              <svg className="w-3.5 h-3.5 text-[#2DD4BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <div className="w-7 h-7 rounded-lg bg-[#22C55E]/15 flex items-center justify-center flex-shrink-0">
+              <svg className="w-3.5 h-3.5 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
               </svg>
             </div>
             <div className="min-w-0">
-              <p className="text-[12px] font-bold text-[#2DD4BF] truncate">Upgrade to Pro</p>
+              <p className="text-[12px] font-bold text-[#22C55E] truncate">Upgrade to Pro</p>
               <p className="text-[10px] text-slate-600 truncate">Unlimited SKUs · 90-day forecasts</p>
             </div>
           </Link>
@@ -266,7 +266,7 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
       )}
 
       {/* ── User profile ── */}
-      <div className={`flex-shrink-0 border-t border-[#2DD4BF]/[0.07] p-3 flex items-center gap-3 ${collapsed ? "justify-center" : ""}`}>
+      <div className={`flex-shrink-0 border-t border-[#22C55E]/[0.07] p-3 flex items-center gap-3 ${collapsed ? "justify-center" : ""}`}>
         <UserButton
           appearance={{
             variables: {
@@ -274,15 +274,15 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
               colorInputBackground: "#0F1C1E",
               colorText: "#E2F4F4",
               colorTextSecondary: "#7DB8BC",
-              colorPrimary: "#2DD4BF",
+              colorPrimary: "#22C55E",
               colorDanger: "#f87171",
               borderRadius: "0.75rem",
               fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
             },
             elements: {
               // Popover
-              avatarBox: "w-8 h-8 !ring-1 !ring-[#2DD4BF]/20",
-              userButtonPopoverCard: "!bg-[#0D1B1D] !border !border-[#2DD4BF]/20 !shadow-2xl !shadow-black/80 !rounded-xl",
+              avatarBox: "w-8 h-8 !ring-1 !ring-[#22C55E]/20",
+              userButtonPopoverCard: "!bg-[#0D1B1D] !border !border-[#22C55E]/20 !shadow-2xl !shadow-black/80 !rounded-xl",
               userButtonPopoverMain: "!bg-[#0D1B1D]",
               userButtonPopoverHeader: "!bg-[#0D1B1D] !border-b !border-white/[0.05]",
               userButtonPopoverActions: "!bg-[#0D1B1D]",
@@ -293,21 +293,21 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
               userPreviewMainIdentifier: "!text-white !font-semibold",
               userPreviewSecondaryIdentifier: "!text-slate-500",
               // Manage Account modal
-              modalContent: "!bg-[#0A1415] !border !border-[#2DD4BF]/15 !shadow-2xl !shadow-black/80 !rounded-2xl",
+              modalContent: "!bg-[#0A1415] !border !border-[#22C55E]/15 !shadow-2xl !shadow-black/80 !rounded-2xl",
               modalCloseButton: "!text-slate-500 hover:!text-white hover:!bg-white/[0.05] !rounded-lg",
-              navbar: "!bg-[#07100F] !border-r !border-[#2DD4BF]/[0.08]",
+              navbar: "!bg-[#07100F] !border-r !border-[#22C55E]/[0.08]",
               navbarButton: "!text-slate-400 hover:!text-white hover:!bg-white/[0.04] !rounded-lg !font-medium",
-              navbarButtonActive: "!text-[#2DD4BF] !bg-[#2DD4BF]/10 !rounded-lg",
+              navbarButtonActive: "!text-[#22C55E] !bg-[#22C55E]/10 !rounded-lg",
               pageScrollBox: "!bg-[#0A1415]",
               profileSectionTitleText: "!text-white !font-semibold",
-              profileSectionTitle: "!border-b !border-[#2DD4BF]/[0.08]",
-              profileSectionPrimaryButton: "!text-[#2DD4BF] hover:!text-[#14B8A6] !font-medium",
-              badge: "!bg-[#2DD4BF]/10 !text-[#2DD4BF] !border !border-[#2DD4BF]/20 !font-semibold",
-              formFieldInput: "!bg-[#0F1C1E] !border-[#2DD4BF]/20 !text-white focus:!border-[#2DD4BF]/50",
+              profileSectionTitle: "!border-b !border-[#22C55E]/[0.08]",
+              profileSectionPrimaryButton: "!text-[#22C55E] hover:!text-[#16A34A] !font-medium",
+              badge: "!bg-[#22C55E]/10 !text-[#22C55E] !border !border-[#22C55E]/20 !font-semibold",
+              formFieldInput: "!bg-[#0F1C1E] !border-[#22C55E]/20 !text-white focus:!border-[#22C55E]/50",
               formFieldLabel: "!text-slate-300 !font-medium",
-              formButtonPrimary: "!bg-[#2DD4BF] hover:!bg-[#14B8A6] !text-[#060C0D] !font-semibold",
+              formButtonPrimary: "!bg-[#22C55E] hover:!bg-[#16A34A] !text-[#060C0D] !font-semibold",
               formButtonReset: "!text-slate-400 hover:!text-white !border !border-white/10",
-              menuList: "!bg-[#0D1B1D] !border !border-[#2DD4BF]/15 !rounded-xl !shadow-xl !shadow-black/60",
+              menuList: "!bg-[#0D1B1D] !border !border-[#22C55E]/15 !rounded-xl !shadow-xl !shadow-black/60",
               menuItem: "!text-slate-300 hover:!bg-white/[0.05] hover:!text-white",
               menuItemDestructive: "!text-red-400 hover:!bg-red-500/[0.06]",
             },

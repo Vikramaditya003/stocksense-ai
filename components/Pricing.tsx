@@ -42,7 +42,7 @@ const plans = [
 export default function Pricing() {
   return (
     <section id="pricing" className="py-28 bg-[#060C0D] relative overflow-hidden">
-      <div className="hidden sm:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[#2DD4BF]/[0.04] blur-[120px] rounded-full pointer-events-none" />
+      <div className="hidden sm:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[#22C55E]/[0.04] blur-[120px] rounded-full pointer-events-none" />
 
       <div className="max-w-[680px] mx-auto px-4 sm:px-6 relative z-10">
 
@@ -77,7 +77,7 @@ export default function Pricing() {
             >
               {plan.badge && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
-                  <span className="bg-[#2DD4BF] text-[#060C0D] text-[10px] font-bold px-3.5 py-1.5 rounded-full shadow-lg shadow-[#2DD4BF]/30 tracking-widest uppercase">
+                  <span className="bg-[#22C55E] text-[#060C0D] text-[10px] font-bold px-3.5 py-1.5 rounded-full shadow-lg shadow-[#22C55E]/30 tracking-widest uppercase">
                     {plan.badge}
                   </span>
                 </div>
@@ -85,8 +85,8 @@ export default function Pricing() {
 
               <div className={`rounded-2xl p-6 h-full transition-all duration-200 ${
                 plan.highlight
-                  ? "gradient-border-teal bg-[#0A1415] shadow-2xl shadow-[#2DD4BF]/[0.1]"
-                  : "border border-[#2DD4BF]/10 bg-[#0A1415] hover:border-[#2DD4BF]/20"
+                  ? "gradient-border-teal bg-[#0A1415] shadow-2xl shadow-[#22C55E]/[0.1]"
+                  : "border border-[#22C55E]/10 bg-[#0A1415] hover:border-[#22C55E]/20"
               }`}>
                 <div className="mb-5">
                   <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">{plan.name}</p>
@@ -101,7 +101,7 @@ export default function Pricing() {
                   href={plan.href}
                   className={`block w-full text-center text-[14px] font-bold py-3 px-4 rounded-xl mb-6 transition-all duration-150 tracking-tight ${
                     plan.highlight
-                      ? "bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] shadow-lg shadow-[#2DD4BF]/25"
+                      ? "bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] shadow-lg shadow-[#22C55E]/25"
                       : "bg-white/[0.05] hover:bg-white/[0.09] text-slate-300 border border-white/[0.08]"
                   }`}
                 >
@@ -111,7 +111,7 @@ export default function Pricing() {
                 <div className="space-y-2.5">
                   {plan.features.map((f) => (
                     <div key={f} className="flex items-start gap-2.5">
-                      <svg className="w-3.5 h-3.5 text-[#2DD4BF] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <svg className="w-3.5 h-3.5 text-[#22C55E] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                       <span className="text-[14px] text-slate-300 tracking-tight">{f}</span>
@@ -141,7 +141,7 @@ export default function Pricing() {
         >
           {["No credit card for Free plan", "Cancel anytime", "Instant forecasts", "Shopify CSV compatible"].map(t => (
             <span key={t} className="flex items-center gap-1.5">
-              <svg className="w-3 h-3 text-[#2DD4BF]/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <svg className="w-3 h-3 text-[#22C55E]/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
               {t}

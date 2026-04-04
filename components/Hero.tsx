@@ -15,7 +15,7 @@ const riskStyle: Record<string, { pill: string; days: string }> = {
   critical: { pill: "text-red-400 bg-red-500/[0.08] border-red-500/20", days: "text-red-400" },
   high:     { pill: "text-orange-400 bg-orange-500/[0.08] border-orange-500/20", days: "text-orange-400" },
   medium:   { pill: "text-yellow-400 bg-yellow-500/[0.08] border-yellow-500/20", days: "text-slate-400" },
-  low:      { pill: "text-[#2DD4BF] bg-[#2DD4BF]/[0.08] border-[#2DD4BF]/20", days: "text-slate-500" },
+  low:      { pill: "text-[#22C55E] bg-[#22C55E]/[0.08] border-[#22C55E]/20", days: "text-slate-500" },
 };
 
 function orderByLabel() {
@@ -30,7 +30,7 @@ export default function Hero() {
       <div className="absolute inset-0 bg-[#060C0D]" />
       <div className="absolute inset-0 dot-grid opacity-40" />
       {/* Ambient glows */}
-      <div className="hidden sm:block absolute top-[-10%] left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-[#2DD4BF]/[0.07] blur-[140px] rounded-full pointer-events-none" />
+      <div className="hidden sm:block absolute top-[-10%] left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-[#22C55E]/[0.07] blur-[140px] rounded-full pointer-events-none" />
       <div className="hidden sm:block absolute top-[50%] right-[0%] w-[300px] h-[300px] bg-cyan-500/[0.04] blur-[100px] rounded-full pointer-events-none" />
       <div className="hidden sm:block absolute top-[30%] left-[0%] w-[250px] h-[250px] bg-[#0D9488]/[0.05] blur-[80px] rounded-full pointer-events-none" />
 
@@ -58,7 +58,7 @@ export default function Hero() {
         >
           Inventory that
           <br />
-          <span className="text-[#2DD4BF]">never runs out</span>
+          <span className="text-[#22C55E]">never runs out</span>
         </motion.h1>
 
         {/* Sub */}
@@ -83,7 +83,7 @@ export default function Hero() {
           className="flex flex-col sm:flex-row items-center gap-3 mb-5"
         >
           <Button asChild size="lg"
-            className="text-[16px] px-8 h-13 gap-2 w-full sm:w-auto font-semibold shadow-xl shadow-[#2DD4BF]/20 hover:shadow-[#2DD4BF]/30 transition-shadow">
+            className="text-[16px] px-8 h-13 gap-2 w-full sm:w-auto font-semibold shadow-xl shadow-[#22C55E]/20 hover:shadow-[#22C55E]/30 transition-shadow">
             <Link href="/forecast">
               Analyze free
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -92,9 +92,9 @@ export default function Hero() {
             </Link>
           </Button>
           <Button asChild variant="outline" size="lg"
-            className="text-[16px] px-8 h-13 gap-2 w-full sm:w-auto border-white/15 hover:border-[#2DD4BF]/40 text-slate-300 hover:text-white">
+            className="text-[16px] px-8 h-13 gap-2 w-full sm:w-auto border-white/15 hover:border-[#22C55E]/40 text-slate-300 hover:text-white">
             <Link href="/forecast?demo=true">
-              <svg className="w-4 h-4 text-[#2DD4BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="w-4 h-4 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
               </svg>
               See live demo
@@ -140,22 +140,22 @@ export default function Hero() {
         className="relative z-10 w-full max-w-[780px] mx-auto px-4 sm:px-6"
       >
         {/* Glow under mockup */}
-        <div className="absolute inset-x-[15%] -top-4 h-8 bg-[#2DD4BF]/20 blur-3xl" />
+        <div className="absolute inset-x-[15%] -top-4 h-8 bg-[#22C55E]/20 blur-3xl" />
 
         <div className="rounded-2xl gradient-border-teal bg-[#0A1415] overflow-hidden shadow-2xl shadow-black/80">
           {/* Browser chrome */}
           <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/[0.05] bg-[#07100F]">
             <div className="flex items-center gap-2.5">
               <div className="flex gap-1.5">
-                {["bg-red-500/50","bg-yellow-500/50","bg-[#2DD4BF]/50"].map(c => (
+                {["bg-red-500/50","bg-yellow-500/50","bg-[#22C55E]/50"].map(c => (
                   <div key={c} className={`w-2.5 h-2.5 rounded-full ${c}`} />
                 ))}
               </div>
               <span className="text-[12px] text-slate-600 ml-1 font-mono">stocksenseai.com/forecast</span>
             </div>
-            <div className="flex items-center gap-1.5 bg-[#2DD4BF]/[0.1] border border-[#2DD4BF]/25 px-2.5 py-1 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#2DD4BF] animate-pulse" />
-              <span className="text-[11px] font-semibold text-[#2DD4BF]">Live analysis</span>
+            <div className="flex items-center gap-1.5 bg-[#22C55E]/[0.1] border border-[#22C55E]/25 px-2.5 py-1 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
+              <span className="text-[11px] font-semibold text-[#22C55E]">Live analysis</span>
             </div>
           </div>
 
@@ -185,13 +185,13 @@ export default function Hero() {
             </div>
             <div className="flex-1 h-2 bg-white/[0.05] rounded-full overflow-hidden">
               <motion.div initial={{ width: 0 }} animate={{ width: "72%" }} transition={{ duration: 1.2, delay: 0.95, ease: "easeOut" }}
-                className="h-full rounded-full bg-gradient-to-r from-[#2DD4BF] to-emerald-400" />
+                className="h-full rounded-full bg-gradient-to-r from-[#22C55E] to-emerald-400" />
             </div>
             <div className="flex items-center gap-4 text-[12px]">
               {[
                 { label: "2 critical", color: "text-red-400", dot: "bg-red-500" },
                 { label: "1 at risk", color: "text-orange-400", dot: "bg-orange-500" },
-                { label: "1 safe", color: "text-[#2DD4BF]", dot: "bg-[#2DD4BF]" },
+                { label: "1 safe", color: "text-[#22C55E]", dot: "bg-[#22C55E]" },
               ].map(s => (
                 <span key={s.label} className={`flex items-center gap-1.5 ${s.color}`}>
                   <span className={`w-1.5 h-1.5 rounded-full ${s.dot}`} />
@@ -208,7 +208,7 @@ export default function Hero() {
               return (
                 <motion.div key={p.name} initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: 0.55 + i * 0.07 }}
-                  className="flex items-center justify-between px-5 py-3.5 hover:bg-[#2DD4BF]/[0.02] transition-colors">
+                  className="flex items-center justify-between px-5 py-3.5 hover:bg-[#22C55E]/[0.02] transition-colors">
                   <div className="flex-1 min-w-0 mr-4">
                     <p className="text-[14px] font-medium text-slate-200 truncate tracking-tight">{p.name}</p>
                     <p className="text-[12px] mt-0.5">
@@ -220,8 +220,8 @@ export default function Hero() {
                   </div>
                   <div className="flex items-center gap-3">
                     {p.loss ? <span className="text-[12px] font-bold text-red-400 hidden sm:block">{p.loss}</span>
-                            : <span className="text-[12px] text-[#2DD4BF] hidden sm:block">Safe</span>}
-                    <span className={`text-[12px] font-medium ${p.trend.startsWith("+") ? "text-[#2DD4BF]" : "text-red-400"}`}>{p.trend}</span>
+                            : <span className="text-[12px] text-[#22C55E] hidden sm:block">Safe</span>}
+                    <span className={`text-[12px] font-medium ${p.trend.startsWith("+") ? "text-[#22C55E]" : "text-red-400"}`}>{p.trend}</span>
                     <span className={`text-[12px] font-semibold px-2 py-0.5 rounded-lg border ${s.pill}`}>{p.risk}</span>
                   </div>
                 </motion.div>
@@ -231,9 +231,9 @@ export default function Hero() {
 
           {/* AI footer */}
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1 }}
-            className="flex items-center gap-3 px-5 py-3.5 border-t border-white/[0.04] bg-[#2DD4BF]/[0.03]">
-            <div className="w-6 h-6 rounded-lg bg-[#2DD4BF]/15 border border-[#2DD4BF]/20 flex items-center justify-center flex-shrink-0">
-              <svg className="w-3.5 h-3.5 text-[#2DD4BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            className="flex items-center gap-3 px-5 py-3.5 border-t border-white/[0.04] bg-[#22C55E]/[0.03]">
+            <div className="w-6 h-6 rounded-lg bg-[#22C55E]/15 border border-[#22C55E]/20 flex items-center justify-center flex-shrink-0">
+              <svg className="w-3.5 h-3.5 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
               </svg>
             </div>

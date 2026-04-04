@@ -56,8 +56,8 @@ const features = [
       </svg>
     ),
     tag: "Supplier-aware",
-    tagStyle: "text-[#2DD4BF] bg-[#2DD4BF]/[0.08] border-[#2DD4BF]/20",
-    iconStyle: "text-[#2DD4BF] bg-[#2DD4BF]/[0.07] border-[#2DD4BF]/15",
+    tagStyle: "text-[#22C55E] bg-[#22C55E]/[0.08] border-[#22C55E]/20",
+    iconStyle: "text-[#22C55E] bg-[#22C55E]/[0.07] border-[#22C55E]/15",
     hoverBorder: "hover:border-blue-500/15",
     title: "Lead time planning",
     before: "Lead time: 10d. Days left: 8.",
@@ -140,7 +140,7 @@ export default function Features() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.08 }}
               transition={{ duration: 0.26, delay: i * 0.04 }}
-              className="rounded-2xl border border-[#2DD4BF]/10 bg-[#0A1415] p-5 transition-all duration-200 hover:border-[#2DD4BF]/25 hover:bg-[#0F1C1E] hover:-translate-y-1 hover:shadow-lg hover:shadow-[#2DD4BF]/[0.06]"
+              className="rounded-2xl border border-[#22C55E]/10 bg-[#0A1415] p-5 transition-all duration-200 hover:border-[#22C55E]/25 hover:bg-[#0F1C1E] hover:-translate-y-1 hover:shadow-lg hover:shadow-[#22C55E]/[0.06]"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className={`w-8 h-8 rounded-lg border flex items-center justify-center flex-shrink-0 ${f.iconStyle}`}>
@@ -191,7 +191,7 @@ export default function Features() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.08 }}
           transition={{ duration: 0.3, delay: 0.1 }}
-          className="rounded-2xl border border-[#2DD4BF]/10 bg-[#0A1415] overflow-hidden"
+          className="rounded-2xl border border-[#22C55E]/10 bg-[#0A1415] overflow-hidden"
         >
           <div className="px-5 py-4 border-b border-white/[0.05] bg-[#07100F] flex items-center justify-between">
             <h3 className="text-[14px] font-semibold text-white tracking-tight">vs. the alternatives</h3>
@@ -202,7 +202,7 @@ export default function Features() {
               <thead>
                 <tr className="border-b border-white/[0.04]">
                   <th className="text-left text-[10px] font-medium uppercase tracking-widest text-slate-600 px-5 py-3">Feature</th>
-                  <th className="text-center text-[10px] font-medium uppercase tracking-widest text-[#2DD4BF] px-4 py-3">StockSense AI</th>
+                  <th className="text-center text-[10px] font-medium uppercase tracking-widest text-[#22C55E] px-4 py-3">StockSense AI</th>
                   <th className="text-center text-[10px] font-medium uppercase tracking-widest text-slate-600 px-4 py-3 whitespace-nowrap">Stocky (dead)</th>
                   <th className="text-center text-[10px] font-medium uppercase tracking-widest text-slate-600 px-4 py-3 whitespace-nowrap">Prediko / IPlanner</th>
                 </tr>
@@ -211,7 +211,7 @@ export default function Features() {
                 {rows.map(([feat, us, stocky, comp], i) => (
                   <tr key={feat as string} className={i < rows.length - 1 ? "border-b border-white/[0.03]" : ""}>
                     <td className="px-5 py-3 text-[13px] text-slate-300 font-medium tracking-tight">{feat}</td>
-                    <td className="px-4 py-3 text-center text-[13px] text-[#2DD4BF] font-medium tracking-tight">{us}</td>
+                    <td className="px-4 py-3 text-center text-[13px] text-[#22C55E] font-medium tracking-tight">{us}</td>
                     <td className="px-4 py-3 text-center text-[13px] text-slate-600 tracking-tight">{stocky}</td>
                     <td className="px-4 py-3 text-center text-[13px] text-slate-600 tracking-tight">{comp}</td>
                   </tr>

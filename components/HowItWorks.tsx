@@ -52,7 +52,7 @@ export default function HowItWorks() {
           <p className="section-label mb-5">Process</p>
           <h2 className="text-4xl sm:text-[52px] font-semibold text-white tracking-[-0.03em] leading-tight mb-4 mt-4">
             Forecasts in{" "}
-            <span className="text-[#2DD4BF]">under 60 seconds</span>
+            <span className="text-[#22C55E]">under 60 seconds</span>
           </h2>
           <p className="text-[16px] text-slate-500 max-w-md mx-auto leading-relaxed tracking-tight">
             No Shopify app install. No API keys. Just your CSV.
@@ -62,7 +62,7 @@ export default function HowItWorks() {
         {/* Steps with connector */}
         <div className="relative grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Connector line (desktop only) */}
-          <div className="hidden md:block absolute top-[2.75rem] left-[calc(16.66%+1.5rem)] right-[calc(16.66%+1.5rem)] h-px bg-gradient-to-r from-[#2DD4BF]/30 via-[#2DD4BF]/15 to-[#2DD4BF]/30 z-0" />
+          <div className="hidden md:block absolute top-[2.75rem] left-[calc(16.66%+1.5rem)] right-[calc(16.66%+1.5rem)] h-px bg-gradient-to-r from-[#22C55E]/30 via-[#22C55E]/15 to-[#22C55E]/30 z-0" />
 
           {steps.map((step, i) => (
             <motion.div
@@ -71,11 +71,11 @@ export default function HowItWorks() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.1 }}
               transition={{ duration: 0.3, delay: i * 0.08 }}
-              className="relative z-10 rounded-2xl border border-[#2DD4BF]/10 bg-[#0A1415] p-6 hover:border-[#2DD4BF]/25 hover:shadow-lg hover:shadow-[#2DD4BF]/[0.05] transition-all duration-250 group"
+              className="relative z-10 rounded-2xl border border-[#22C55E]/10 bg-[#0A1415] p-6 hover:border-[#22C55E]/25 hover:shadow-lg hover:shadow-[#22C55E]/[0.05] transition-all duration-250 group"
             >
               {/* Step icon + number */}
               <div className="flex items-start justify-between mb-6">
-                <div className="w-11 h-11 rounded-xl bg-[#2DD4BF]/10 border border-[#2DD4BF]/20 flex items-center justify-center text-[#2DD4BF] group-hover:bg-[#2DD4BF]/15 group-hover:border-[#2DD4BF]/30 transition-colors">
+                <div className="w-11 h-11 rounded-xl bg-[#22C55E]/10 border border-[#22C55E]/20 flex items-center justify-center text-[#22C55E] group-hover:bg-[#22C55E]/15 group-hover:border-[#22C55E]/30 transition-colors">
                   {step.icon}
                 </div>
                 <span className="text-5xl font-black text-white/[0.04] leading-none tabular-nums select-none">{step.step}</span>
@@ -92,7 +92,7 @@ export default function HowItWorks() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.3, delay: 0.18 }}
-          className="mt-4 rounded-2xl border border-[#2DD4BF]/15 bg-[#0A1415] px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4"
+          className="mt-4 rounded-2xl border border-[#22C55E]/15 bg-[#0A1415] px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4"
         >
           <div>
             <p className="text-[17px] font-semibold text-white tracking-tight mb-0.5">
@@ -102,7 +102,7 @@ export default function HowItWorks() {
               Switch before your next peak season. Start free, no credit card.
             </p>
           </div>
-          <Button asChild className="flex-shrink-0 gap-2 font-semibold shadow-lg shadow-[#2DD4BF]/15">
+          <Button asChild className="flex-shrink-0 gap-2 font-semibold shadow-lg shadow-[#22C55E]/15">
             <Link href="/forecast">
               Start free
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>

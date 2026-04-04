@@ -21,20 +21,20 @@ export default function Home() {
       {/* ── CTA Section ─────────────────────────────────────────── */}
       <section className="relative py-28 bg-[#060C0D] overflow-hidden">
         <div className="absolute inset-0 dot-grid opacity-30" />
-        <div className="hidden sm:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-[#2DD4BF]/[0.06] blur-[130px] rounded-full pointer-events-none" />
+        <div className="hidden sm:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-[#22C55E]/[0.06] blur-[130px] rounded-full pointer-events-none" />
 
         <div className="relative z-10 max-w-[720px] mx-auto px-4 sm:px-6 text-center">
           <p className="section-label mb-5">Get started free</p>
           <h2 className="text-4xl sm:text-[56px] font-bold text-white tracking-[-0.035em] leading-[1.0] mb-6 mt-4">
             Stop losing revenue<br className="hidden sm:block" />{" "}
-            to <span className="text-[#2DD4BF]">stockouts.</span>
+            to <span className="text-[#22C55E]">stockouts.</span>
           </h2>
           <p className="text-[17px] text-slate-400 mb-10 max-w-lg mx-auto leading-relaxed tracking-tight">
             Upload your Shopify CSV and get AI-powered forecasts, reorder quantities, and revenue at risk in under 60 seconds.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
             <Button asChild size="lg"
-              className="text-[16px] px-8 h-13 font-semibold gap-2 shadow-xl shadow-[#2DD4BF]/20 hover:shadow-[#2DD4BF]/30 transition-shadow">
+              className="text-[16px] px-8 h-13 font-semibold gap-2 shadow-xl shadow-[#22C55E]/20 hover:shadow-[#22C55E]/30 transition-shadow">
               <Link href="/forecast">
                 Analyze free
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -43,7 +43,7 @@ export default function Home() {
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg"
-              className="text-[16px] px-8 h-13 border-white/15 hover:border-[#2DD4BF]/40 text-slate-300 hover:text-white">
+              className="text-[16px] px-8 h-13 border-white/15 hover:border-[#22C55E]/40 text-slate-300 hover:text-white">
               <Link href="/forecast?demo=true">See live demo</Link>
             </Button>
           </div>
@@ -54,7 +54,7 @@ export default function Home() {
       </section>
 
       {/* ── Footer ─────────────────────────────────────────────── */}
-      <footer className="bg-[#07100F] pt-16 pb-10 border-t border-[#2DD4BF]/10">
+      <footer className="bg-[#07100F] pt-16 pb-10 border-t border-[#22C55E]/10">
         <div className="max-w-[960px] mx-auto px-4 sm:px-6">
 
           {/* Top: logo + columns */}
@@ -64,7 +64,7 @@ export default function Home() {
               <div className="flex items-center gap-2.5 mb-4">
                 <LogoMark size={36} />
                 <span className="text-[16px] font-bold text-white tracking-tight">
-                  Stock<span className="text-[#2DD4BF]">Sense AI</span>
+                  Stock<span className="text-[#22C55E]">Sense AI</span>
                 </span>
               </div>
               <p className="text-[12px] text-slate-600 leading-relaxed mb-4">
@@ -134,7 +134,7 @@ export default function Home() {
               Forecasts are AI-generated estimates, not financial guarantees.
             </p>
             <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#2DD4BF] animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
               <span className="text-[11px] text-slate-600">All systems operational</span>
             </div>
           </div>

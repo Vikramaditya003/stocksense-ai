@@ -1,0 +1,19 @@
+{
+  // Tell VS Code's built-in CSS validator to ignore this file
+  // — it doesn't understand Tailwind v4 syntax (@theme, @custom-variant, @apply)
+  "css.validate": false,
+  "scss.validate": false,
+  "less.validate": false,
+
+  // Use the Tailwind CSS IntelliSense extension as the CSS language server instead
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+
+  // Suppress unknown at-rule warnings for Tailwind v4 directives
+  "css.customData": [],
+  "tailwindCSS.experimental.configFile": null,
+
+  // TypeScript: use the workspace version
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

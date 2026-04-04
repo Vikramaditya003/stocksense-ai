@@ -126,14 +126,14 @@ export default function RootLayout({
               colorInputBackground: "#0F1C1E",
               colorText: "#E2F4F4",
               colorTextSecondary: "#7DB8BC",
-              colorPrimary: "#2DD4BF",
+              colorPrimary: "#22C55E",
               colorDanger: "#f87171",
               borderRadius: "0.75rem",
               fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
             },
             elements: {
               // ── Shared cards ────────────────────────────────────────────────
-              card: "!bg-[#0A1415] !border !border-[#2DD4BF]/15 !shadow-2xl !shadow-black/80",
+              card: "!bg-[#0A1415] !border !border-[#22C55E]/15 !shadow-2xl !shadow-black/80",
               headerTitle: "!text-white !font-semibold",
               headerSubtitle: "!text-slate-400",
 
@@ -146,31 +146,31 @@ export default function RootLayout({
               dividerText: "!text-slate-500",
 
               // ── Form fields ──────────────────────────────────────────────────
-              formFieldInput: "!bg-[#0F1C1E] !border-[#2DD4BF]/20 !text-white focus:!border-[#2DD4BF]/50 !text-[15px]",
+              formFieldInput: "!bg-[#0F1C1E] !border-[#22C55E]/20 !text-white focus:!border-[#22C55E]/50 !text-[15px]",
               formFieldLabel: "!text-slate-300 !font-medium",
-              formButtonPrimary: "!bg-[#2DD4BF] hover:!bg-[#14B8A6] !text-[#060C0D] !font-semibold !shadow-lg !shadow-[#2DD4BF]/20",
+              formButtonPrimary: "!bg-[#22C55E] hover:!bg-[#16A34A] !text-[#060C0D] !font-semibold !shadow-lg !shadow-[#22C55E]/20",
               formButtonReset: "!text-slate-400 hover:!text-white !border !border-white/10 hover:!border-white/20",
 
               // ── Links ────────────────────────────────────────────────────────
-              footerActionLink: "!text-[#2DD4BF] hover:!text-[#14B8A6]",
-              formResendCodeLink: "!text-[#2DD4BF]",
+              footerActionLink: "!text-[#22C55E] hover:!text-[#16A34A]",
+              formResendCodeLink: "!text-[#22C55E]",
 
               // ── Identity preview ─────────────────────────────────────────────
               identityPreviewText: "!text-slate-300",
-              identityPreviewEditButton: "!text-[#2DD4BF]",
+              identityPreviewEditButton: "!text-[#22C55E]",
 
               // ── OTP ──────────────────────────────────────────────────────────
-              otpCodeFieldInput: "!bg-[#0F1C1E] !border-[#2DD4BF]/20 !text-white",
+              otpCodeFieldInput: "!bg-[#0F1C1E] !border-[#22C55E]/20 !text-white",
 
               // ── UserProfile modal root ───────────────────────────────────────
               rootBox: "!font-[family-name:var(--font-inter)]",
-              modalContent: "!bg-[#0A1415] !border !border-[#2DD4BF]/15 !shadow-2xl !shadow-black/80 !rounded-2xl",
+              modalContent: "!bg-[#0A1415] !border !border-[#22C55E]/15 !shadow-2xl !shadow-black/80 !rounded-2xl",
               modalCloseButton: "!text-slate-500 hover:!text-white hover:!bg-white/[0.05] !rounded-lg",
 
               // ── UserProfile left nav ─────────────────────────────────────────
-              navbar: "!bg-[#07100F] !border-r !border-[#2DD4BF]/[0.08]",
+              navbar: "!bg-[#07100F] !border-r !border-[#22C55E]/[0.08]",
               navbarButton: "!text-slate-400 hover:!text-white hover:!bg-white/[0.04] !rounded-lg !font-medium",
-              navbarButtonActive: "!text-[#2DD4BF] !bg-[#2DD4BF]/10 !rounded-lg",
+              navbarButtonActive: "!text-[#22C55E] !bg-[#22C55E]/10 !rounded-lg",
               navbarButtonIcon: "!text-slate-500",
 
               // ── UserProfile page content ─────────────────────────────────────
@@ -179,16 +179,16 @@ export default function RootLayout({
               profilePage: "!bg-[#0A1415]",
 
               // ── Section titles & content ─────────────────────────────────────
-              profileSectionTitle: "!border-b !border-[#2DD4BF]/[0.08]",
+              profileSectionTitle: "!border-b !border-[#22C55E]/[0.08]",
               profileSectionTitleText: "!text-white !font-semibold",
               profileSectionContent: "!text-slate-300",
-              profileSectionPrimaryButton: "!text-[#2DD4BF] hover:!text-[#14B8A6] !font-medium",
+              profileSectionPrimaryButton: "!text-[#22C55E] hover:!text-[#16A34A] !font-medium",
 
               // ── Badge (e.g. "Primary" email badge) ──────────────────────────
-              badge: "!bg-[#2DD4BF]/10 !text-[#2DD4BF] !border !border-[#2DD4BF]/20 !font-semibold",
+              badge: "!bg-[#22C55E]/10 !text-[#22C55E] !border !border-[#22C55E]/20 !font-semibold",
 
               // ── Menu items (⋯ action menus) ──────────────────────────────────
-              menuList: "!bg-[#0D1B1D] !border !border-[#2DD4BF]/15 !rounded-xl !shadow-xl !shadow-black/60",
+              menuList: "!bg-[#0D1B1D] !border !border-[#22C55E]/15 !rounded-xl !shadow-xl !shadow-black/60",
               menuItem: "!text-slate-300 hover:!bg-white/[0.05] hover:!text-white",
               menuItemDestructive: "!text-red-400 hover:!bg-red-500/[0.06]",
 
@@ -196,7 +196,7 @@ export default function RootLayout({
               accordionTriggerButton: "!text-slate-300 hover:!text-white",
               userPreviewMainIdentifier: "!text-white !font-semibold",
               userPreviewSecondaryIdentifier: "!text-slate-500",
-              avatarBox: "!ring-1 !ring-[#2DD4BF]/20",
+              avatarBox: "!ring-1 !ring-[#22C55E]/20",
 
               // ── Alert / danger zone ──────────────────────────────────────────
               alertText: "!text-red-400",

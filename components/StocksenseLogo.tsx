@@ -16,9 +16,9 @@ export function LogoMark({ size = 36 }: { size?: number }) {
         Three rising bar columns — left=short, mid=medium, right=tall.
         Columns are filled teal rectangles with rounded tops.
       */}
-      <rect x="8"  y="62" width="18" height="32" rx="3" fill="#2DD4BF" opacity="0.55" />
-      <rect x="32" y="44" width="18" height="50" rx="3" fill="#2DD4BF" opacity="0.75" />
-      <rect x="56" y="24" width="18" height="70" rx="3" fill="#2DD4BF" />
+      <rect x="8"  y="62" width="18" height="32" rx="3" fill="#22C55E" opacity="0.55" />
+      <rect x="32" y="44" width="18" height="50" rx="3" fill="#22C55E" opacity="0.75" />
+      <rect x="56" y="24" width="18" height="70" rx="3" fill="#22C55E" />
 
       {/*
         S-curve shelf lines overlaid on left side of chart.
@@ -28,7 +28,7 @@ export function LogoMark({ size = 36 }: { size?: number }) {
       */}
       <path
         d="M 52 28 C 38 18 6 22 6 38 C 6 52 42 52 42 64 C 42 78 8 80 8 72"
-        stroke="#2DD4BF"
+        stroke="#22C55E"
         strokeWidth="7"
         strokeLinecap="round"
         fill="none"
@@ -41,14 +41,14 @@ export function LogoMark({ size = 36 }: { size?: number }) {
       <line
         x1="30" y1="72"
         x2="82" y2="14"
-        stroke="#2DD4BF"
+        stroke="#22C55E"
         strokeWidth="7"
         strokeLinecap="round"
       />
       {/* Arrowhead at (82, 14) pointing upper-right */}
       <polygon
         points="82,14  70,16  76,28"
-        fill="#2DD4BF"
+        fill="#22C55E"
       />
     </svg>
   );

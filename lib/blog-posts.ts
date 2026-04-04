@@ -27,7 +27,7 @@ export const POSTS: BlogPost[] = [
     date: "25 March 2026",
     readTime: "6 min read",
     tag: "Guide",
-    tagColor: "text-[#2DD4BF] bg-[#2DD4BF]/10 border-[#2DD4BF]/20",
+    tagColor: "text-[#22C55E] bg-[#22C55E]/10 border-[#22C55E]/20",
     featured: true,
     content: [
       {
@@ -378,7 +378,7 @@ export const POSTS: BlogPost[] = [
     date: "2 March 2026",
     readTime: "5 min read",
     tag: "Guide",
-    tagColor: "text-[#2DD4BF] bg-[#2DD4BF]/10 border-[#2DD4BF]/20",
+    tagColor: "text-[#22C55E] bg-[#22C55E]/10 border-[#22C55E]/20",
     featured: false,
     content: [
       {

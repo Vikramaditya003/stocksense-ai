@@ -45,7 +45,7 @@ function ForecastNavAuth({ onReset, showReset }: { onReset: () => void; showRese
               },
               elements: {
                 avatarBox: "w-8 h-8",
-                userButtonPopoverCard: "!bg-[#0D1B1D] !border !border-[#2DD4BF]/20 !shadow-2xl !shadow-black/80 !rounded-xl",
+                userButtonPopoverCard: "!bg-[#0D1B1D] !border !border-[#22C55E]/20 !shadow-2xl !shadow-black/80 !rounded-xl",
                 userButtonPopoverMain: "!bg-[#0D1B1D]",
                 userButtonPopoverHeader: "!bg-[#0D1B1D] !border-b !border-white/[0.05]",
                 userButtonPopoverActions: "!bg-[#0D1B1D]",
@@ -62,7 +62,7 @@ function ForecastNavAuth({ onReset, showReset }: { onReset: () => void; showRese
         </>
       ) : (
         <SignInButton mode="redirect">
-          <button className="text-xs font-semibold bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] px-3.5 py-1.5 rounded-lg transition-colors shadow-lg shadow-[#2DD4BF]/20">
+          <button className="text-xs font-semibold bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] px-3.5 py-1.5 rounded-lg transition-colors shadow-lg shadow-[#22C55E]/20">
             Sign in
           </button>
         </SignInButton>
@@ -186,7 +186,7 @@ async function startRazorpayCheckout(plan: string, onSuccess: () => void, onErro
         name: "StockSense AI",
         description: data.planName,
         order_id: data.orderId,
-        theme: { color: "#2DD4BF" },
+        theme: { color: "#22C55E" },
         handler: async (response: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) => {
           const verify = await fetch("/api/payment/verify", {
             method: "POST",
@@ -228,13 +228,13 @@ function UpgradeModal({ feature, onClose }: { feature: string; onClose: () => vo
         exit={{ opacity: 0, scale: 0.95, y: 12 }}
         transition={{ duration: 0.2 }}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-sm rounded-2xl border border-[#2DD4BF]/20 bg-[#0A1415] shadow-2xl shadow-black/60 overflow-hidden"
+        className="w-full max-w-sm rounded-2xl border border-[#22C55E]/20 bg-[#0A1415] shadow-2xl shadow-black/60 overflow-hidden"
       >
         {/* Header */}
-        <div className="px-6 pt-6 pb-4 border-b border-[#2DD4BF]/[0.08]">
+        <div className="px-6 pt-6 pb-4 border-b border-[#22C55E]/[0.08]">
           <div className="flex items-start justify-between mb-3">
-            <div className="w-10 h-10 rounded-xl bg-[#2DD4BF]/10 border border-[#2DD4BF]/20 flex items-center justify-center">
-              <svg className="w-5 h-5 text-[#2DD4BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <div className="w-10 h-10 rounded-xl bg-[#22C55E]/10 border border-[#22C55E]/20 flex items-center justify-center">
+              <svg className="w-5 h-5 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
               </svg>
             </div>
@@ -244,7 +244,7 @@ function UpgradeModal({ feature, onClose }: { feature: string; onClose: () => vo
               </svg>
             </button>
           </div>
-          <p className="text-[11px] font-semibold text-[#2DD4BF] uppercase tracking-widest mb-1">Pro Feature</p>
+          <p className="text-[11px] font-semibold text-[#22C55E] uppercase tracking-widest mb-1">Pro Feature</p>
           <h3 className="text-[18px] font-semibold text-white tracking-tight">{feature}</h3>
         </div>
 
@@ -261,7 +261,7 @@ function UpgradeModal({ feature, onClose }: { feature: string; onClose: () => vo
               "1-click purchase order generation",
             ].map((f) => (
               <li key={f} className="flex items-center gap-2.5 text-[13px] text-slate-300">
-                <svg className="w-3.5 h-3.5 text-[#2DD4BF] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <svg className="w-3.5 h-3.5 text-[#22C55E] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
                 {f}
@@ -274,19 +274,19 @@ function UpgradeModal({ feature, onClose }: { feature: string; onClose: () => vo
           </div>
           {paySuccess ? (
             <div className="flex flex-col items-center gap-2 py-2">
-              <div className="w-10 h-10 rounded-full bg-[#2DD4BF]/10 border border-[#2DD4BF]/20 flex items-center justify-center">
-                <svg className="w-5 h-5 text-[#2DD4BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <div className="w-10 h-10 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/20 flex items-center justify-center">
+                <svg className="w-5 h-5 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <p className="text-sm font-semibold text-[#2DD4BF]">Payment successful! Refreshing your access...</p>
+              <p className="text-sm font-semibold text-[#22C55E]">Payment successful! Refreshing your access...</p>
             </div>
           ) : (
             <>
               <button
                 onClick={handleUpgrade}
                 disabled={paying}
-                className="block w-full text-center bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] font-bold py-3 rounded-xl transition-all text-sm shadow-lg shadow-[#2DD4BF]/20 hover:-translate-y-0.5 disabled:opacity-60"
+                className="block w-full text-center bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] font-bold py-3 rounded-xl transition-all text-sm shadow-lg shadow-[#22C55E]/20 hover:-translate-y-0.5 disabled:opacity-60"
               >
                 {paying ? "Opening payment..." : "Upgrade to Pro — ₹999/mo"}
               </button>
@@ -306,7 +306,7 @@ function UpgradeModal({ feature, onClose }: { feature: string; onClose: () => vo
 
 function healthColor(score: number) {
   if (score >= 80) return { color: "#22c55e", label: "text-green-400" };
-  if (score >= 60) return { color: "#2DD4BF", label: "text-[#2DD4BF]" };
+  if (score >= 60) return { color: "#22C55E", label: "text-[#22C55E]" };
   if (score >= 40) return { color: "#f59e0b", label: "text-amber-400" };
   if (score >= 20) return { color: "#f97316", label: "text-orange-400" };
   return { color: "#ef4444", label: "text-red-400" };
@@ -372,7 +372,7 @@ function StatCard({ label, value, sub, color, icon }: { label: string; value: st
     <div className="card p-4 flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{label}</p>
-        {icon && <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: `${color ?? "#2DD4BF"}18` }}>{icon}</div>}
+        {icon && <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: `${color ?? "#22C55E"}18` }}>{icon}</div>}
       </div>
       <div>
         <p className="text-2xl font-bold tracking-tight tabular-nums" style={{ color: color ?? "#fafafa" }}>{value}</p>
@@ -393,7 +393,7 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade }: { produ
     critical: { bar: "bg-red-500",    text: "text-red-400",    badge: "text-red-400 bg-red-500/[0.08] border-red-500/20",    dot: "bg-red-400" },
     high:     { bar: "bg-orange-500", text: "text-orange-400", badge: "text-orange-400 bg-orange-500/[0.08] border-orange-500/20", dot: "bg-orange-400" },
     medium:   { bar: "bg-yellow-500", text: "text-yellow-400", badge: "text-yellow-400 bg-yellow-500/[0.08] border-yellow-500/20", dot: "bg-yellow-400" },
-    low:      { bar: "bg-green-500",  text: "text-green-400",  badge: "text-[#2DD4BF] bg-[#2DD4BF]/[0.08] border-[#2DD4BF]/20",  dot: "bg-green-400" },
+    low:      { bar: "bg-green-500",  text: "text-green-400",  badge: "text-[#22C55E] bg-[#22C55E]/[0.08] border-[#22C55E]/20",  dot: "bg-green-400" },
   };
   const cfg = riskConfig[product.stockoutRisk] ?? riskConfig.low;
 
@@ -491,12 +491,12 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade }: { produ
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); setOpen(true); }}
-              className="hidden group-hover:inline-flex items-center text-[11px] font-semibold text-[#2DD4BF] border border-[#2DD4BF]/30 hover:bg-[#2DD4BF]/10 px-2 py-0.5 rounded transition-colors whitespace-nowrap"
+              className="hidden group-hover:inline-flex items-center text-[11px] font-semibold text-[#22C55E] border border-[#22C55E]/30 hover:bg-[#22C55E]/10 px-2 py-0.5 rounded transition-colors whitespace-nowrap"
             >
               Details
             </button>
             <div onClick={(e) => { e.stopPropagation(); setOpen(!open); }} className="cursor-pointer">
-              <svg className={`w-4 h-4 text-[#475569] group-hover:text-slate-400 transition-all duration-200 ${open ? "rotate-180 !text-[#2DD4BF]" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className={`w-4 h-4 text-[#475569] group-hover:text-slate-400 transition-all duration-200 ${open ? "rotate-180 !text-[#22C55E]" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
               </svg>
             </div>
@@ -525,8 +525,8 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade }: { produ
                   )}
 
                   {/* Reorder action */}
-                  <div className="card-sm p-4 bg-[#2DD4BF]/[0.03] border-[#2DD4BF]/15">
-                    <p className="text-[10px] font-bold text-[#2DD4BF] uppercase tracking-wider mb-2.5">Reorder Action</p>
+                  <div className="card-sm p-4 bg-[#22C55E]/[0.03] border-[#22C55E]/15">
+                    <p className="text-[10px] font-bold text-[#22C55E] uppercase tracking-wider mb-2.5">Reorder Action</p>
                     <p className="text-sm text-slate-200 mb-0.5 font-medium">
                       Order <span className="font-bold text-white">{product.reorderQuantity} units</span>
                       {reorderDurationDays > 0 && (
@@ -557,11 +557,11 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade }: { produ
                         { label: "90 Days", value: product.forecast90Days, locked: isFreeTier },
                       ].map((f) => (
                         f.locked ? (
-                          <button key={f.label} onClick={() => onUpgrade("60 & 90-day Forecasts")} className="card-sm p-3 text-center relative overflow-hidden hover:border-[#2DD4BF]/20 transition-colors group">
+                          <button key={f.label} onClick={() => onUpgrade("60 & 90-day Forecasts")} className="card-sm p-3 text-center relative overflow-hidden hover:border-[#22C55E]/20 transition-colors group">
                             <p className="text-base font-bold text-white blur-sm select-none">000</p>
                             <p className="text-xs text-slate-600">{f.label}</p>
                             <div className="absolute inset-0 flex items-center justify-center bg-[#0A1415]/70 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <svg className="w-4 h-4 text-[#2DD4BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+                              <svg className="w-4 h-4 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
                             </div>
                           </button>
                         ) : (
@@ -573,7 +573,7 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade }: { produ
                       ))}
                     </div>
                     {isFreeTier && (
-                      <button onClick={() => onUpgrade("60 & 90-day Forecasts")} className="mt-2 flex items-center gap-1.5 text-[11px] text-[#2DD4BF] hover:text-white transition-colors">
+                      <button onClick={() => onUpgrade("60 & 90-day Forecasts")} className="mt-2 flex items-center gap-1.5 text-[11px] text-[#22C55E] hover:text-white transition-colors">
                         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
                         Unlock 60 & 90-day forecasts with Pro
                       </button>
@@ -583,7 +583,7 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade }: { produ
                   {/* Seasonal note */}
                   {product.seasonalNote && (
                     <div className="sm:col-span-3 flex items-start gap-2 text-xs text-slate-500 bg-white/[0.02] rounded-lg px-3 py-2.5 border border-white/[0.04]">
-                      <svg className="w-3.5 h-3.5 text-[#2DD4BF] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+                      <svg className="w-3.5 h-3.5 text-[#22C55E] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
                       {product.seasonalNote}
                     </div>
                   )}
@@ -684,7 +684,7 @@ function POGenerator({ products }: { products: ProductForecast[] }) {
       onClick={handleGenerate}
       className={`inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 ${
         done
-          ? "bg-[#2DD4BF]/10 border border-[#2DD4BF]/20 text-[#2DD4BF]"
+          ? "bg-[#22C55E]/10 border border-[#22C55E]/20 text-[#22C55E]"
           : "bg-white/[0.05] border border-white/[0.08] text-slate-300 hover:bg-white/[0.08] hover:text-white"
       }`}
     >
@@ -720,17 +720,17 @@ function StepIndicator({ step }: { step: ForecastStep }) {
     <div className="flex items-center gap-2 justify-center mb-6">
       {steps.map((s, i) => (
         <div key={s.key} className="flex items-center gap-2">
-          <div className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${i <= activeIdx ? "text-[#2DD4BF]" : "text-slate-600"}`}>
+          <div className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${i <= activeIdx ? "text-[#22C55E]" : "text-slate-600"}`}>
             <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold border transition-all ${
-              i < activeIdx ? "bg-[#2DD4BF] border-[#2DD4BF] text-[#060C0D]" :
-              i === activeIdx ? "border-[#2DD4BF] text-[#2DD4BF] animate-pulse" :
+              i < activeIdx ? "bg-[#22C55E] border-[#22C55E] text-[#060C0D]" :
+              i === activeIdx ? "border-[#22C55E] text-[#22C55E] animate-pulse" :
               "border-white/10 text-slate-600"
             }`}>
               {i < activeIdx ? "✓" : i + 1}
             </div>
             {s.label}
           </div>
-          {i < steps.length - 1 && <div className={`w-8 h-px transition-colors ${i < activeIdx ? "bg-[#2DD4BF]" : "bg-white/10"}`} />}
+          {i < steps.length - 1 && <div className={`w-8 h-px transition-colors ${i < activeIdx ? "bg-[#22C55E]" : "bg-white/10"}`} />}
         </div>
       ))}
     </div>
@@ -855,7 +855,7 @@ export default function ForecastClient() {
   }) : [];
 
   const SortIcon = ({ col }: { col: SortKey }) => (
-    <span className={`ml-1 ${sortKey === col ? "text-[#2DD4BF]" : "text-slate-700"}`}>
+    <span className={`ml-1 ${sortKey === col ? "text-[#22C55E]" : "text-slate-700"}`}>
       {sortKey === col ? (sortDir === "asc" ? "↑" : "↓") : "↕"}
     </span>
   );
@@ -865,18 +865,18 @@ export default function ForecastClient() {
       <AnimatePresence>
         {upgradeModal && <UpgradeModal feature={upgradeModal} onClose={() => setUpgradeModal(null)} />}
       </AnimatePresence>
-      <div className="absolute top-[-15%] left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#2DD4BF]/[0.05] blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-[-15%] left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#22C55E]/[0.05] blur-[120px] rounded-full pointer-events-none" />
       <div className="orb orb-cyan w-64 h-64 top-1/2 right-0 opacity-10 pointer-events-none" />
 
       {/* Nav */}
-      <nav className="border-b border-[#2DD4BF]/10 px-4 sm:px-6 h-16 flex items-center justify-between sticky top-0 z-40 bg-[#060C0D]/90 backdrop-blur-md">
+      <nav className="border-b border-[#22C55E]/10 px-4 sm:px-6 h-16 flex items-center justify-between sticky top-0 z-40 bg-[#060C0D]/90 backdrop-blur-md">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-[#2DD4BF] flex items-center justify-center shadow-lg shadow-[#2DD4BF]/25">
+          <div className="w-9 h-9 rounded-xl bg-[#22C55E] flex items-center justify-center shadow-lg shadow-[#22C55E]/25">
             <svg className="w-4.5 h-4.5 text-[#060C0D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 20V14M9 20V8M14 20V11M19 20V4" />
             </svg>
           </div>
-          <span className="text-[16px] font-semibold text-white tracking-tight">StockSense<span className="text-[#2DD4BF]">AI</span></span>
+          <span className="text-[16px] font-semibold text-white tracking-tight">StockSense<span className="text-[#22C55E]">AI</span></span>
         </Link>
         {CLERK_READY ? (
           <ForecastNavAuth onReset={reset} showReset={step === "done"} />
@@ -890,7 +890,7 @@ export default function ForecastClient() {
                 New Forecast
               </button>
             )}
-            <Link href="/#pricing" className="text-xs font-semibold bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] px-3.5 py-1.5 rounded-lg transition-colors shadow-lg shadow-[#2DD4BF]/20">
+            <Link href="/#pricing" className="text-xs font-semibold bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] px-3.5 py-1.5 rounded-lg transition-colors shadow-lg shadow-[#22C55E]/20">
               Upgrade to Pro
             </Link>
           </div>
@@ -911,13 +911,13 @@ export default function ForecastClient() {
               {/* Input card */}
               <div className="card p-6 mb-4">
                 {/* Mode tabs */}
-                <div className="flex items-center gap-1 bg-[#0A1415] border border-[#2DD4BF]/10 rounded-lg p-1 w-fit mb-5">
+                <div className="flex items-center gap-1 bg-[#0A1415] border border-[#22C55E]/10 rounded-lg p-1 w-fit mb-5">
                   {(["csv", "manual"] as InputMode[]).map((mode) => (
                     <button
                       key={mode}
                       onClick={() => setInputMode(mode)}
                       className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
-                        inputMode === mode ? "bg-[#0F1C1E] text-white shadow-sm border border-[#2DD4BF]/15" : "text-slate-500 hover:text-slate-300"
+                        inputMode === mode ? "bg-[#0F1C1E] text-white shadow-sm border border-[#22C55E]/15" : "text-slate-500 hover:text-slate-300"
                       }`}
                     >
                       {mode === "csv" ? "Upload CSV" : "Paste Data"}
@@ -932,25 +932,25 @@ export default function ForecastClient() {
                     onDrop={handleDrop}
                     onClick={() => fileRef.current?.click()}
                     className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-all duration-150 ${
-                      dragOver ? "border-[#2DD4BF] bg-[#2DD4BF]/[0.04]" :
-                      fileName ? "border-[#2DD4BF]/40 bg-[#2DD4BF]/[0.04]" :
-                      "border-[#2DD4BF]/15 hover:border-[#2DD4BF]/30 hover:bg-[#2DD4BF]/[0.02]"
+                      dragOver ? "border-[#22C55E] bg-[#22C55E]/[0.04]" :
+                      fileName ? "border-[#22C55E]/40 bg-[#22C55E]/[0.04]" :
+                      "border-[#22C55E]/15 hover:border-[#22C55E]/30 hover:bg-[#22C55E]/[0.02]"
                     }`}
                   >
                     <input ref={fileRef} id="csv-upload" type="file" accept=".csv,text/csv" title="Upload CSV file" aria-label="Upload inventory CSV file" className="hidden" onChange={(e) => { if (e.target.files?.[0]) handleFile(e.target.files[0]); }} />
                     {fileName ? (
                       <>
-                        <div className="w-12 h-12 rounded-xl bg-[#2DD4BF]/10 border border-[#2DD4BF]/20 flex items-center justify-center mx-auto mb-3">
-                          <svg className="w-6 h-6 text-[#2DD4BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <div className="w-12 h-12 rounded-xl bg-[#22C55E]/10 border border-[#22C55E]/20 flex items-center justify-center mx-auto mb-3">
+                          <svg className="w-6 h-6 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                         </div>
-                        <p className="text-[#2DD4BF] font-semibold text-sm">{fileName}</p>
+                        <p className="text-[#22C55E] font-semibold text-sm">{fileName}</p>
                         <p className="text-slate-600 text-xs mt-1">Click to replace</p>
                       </>
                     ) : (
                       <>
-                        <div className="w-12 h-12 rounded-xl bg-[#0A1415] border border-[#2DD4BF]/15 flex items-center justify-center mx-auto mb-3">
+                        <div className="w-12 h-12 rounded-xl bg-[#0A1415] border border-[#22C55E]/15 flex items-center justify-center mx-auto mb-3">
                           <svg className="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                           </svg>
@@ -966,7 +966,7 @@ export default function ForecastClient() {
                     onChange={(e) => setCsvText(e.target.value)}
                     placeholder={`product,sku,date,units_sold,current_stock\nYoga Mat,YM-001,2024-01-01,8,45`}
                     rows={8}
-                    className="w-full bg-[#0A1415] rounded-xl border border-[#2DD4BF]/15 focus:border-[#2DD4BF]/40 outline-none p-4 text-sm text-slate-300 placeholder:text-slate-700 font-mono resize-none transition-colors"
+                    className="w-full bg-[#0A1415] rounded-xl border border-[#22C55E]/15 focus:border-[#22C55E]/40 outline-none p-4 text-sm text-slate-300 placeholder:text-slate-700 font-mono resize-none transition-colors"
                   />
                 )}
 
@@ -977,18 +977,18 @@ export default function ForecastClient() {
                     <input
                       id="lead-time" type="number" value={leadTime} onChange={(e) => setLeadTime(e.target.value)} min={1} max={120}
                       placeholder="14"
-                      className="w-full bg-[#0A1415] rounded-lg border border-[#2DD4BF]/15 focus:border-[#2DD4BF]/40 outline-none px-3 py-2 text-sm text-white transition-colors"
+                      className="w-full bg-[#0A1415] rounded-lg border border-[#22C55E]/15 focus:border-[#22C55E]/40 outline-none px-3 py-2 text-sm text-white transition-colors"
                     />
                   </div>
                   <div>
                     <label htmlFor="ad-spend" className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider flex items-center gap-2">
                       Upcoming Ad Spend
-                      <span className="text-[9px] font-bold text-[#060C0D] bg-[#2DD4BF] px-1.5 py-0.5 rounded-full tracking-wider">PRO</span>
+                      <span className="text-[9px] font-bold text-[#060C0D] bg-[#22C55E] px-1.5 py-0.5 rounded-full tracking-wider">PRO</span>
                     </label>
                     <input
                       id="ad-spend" type="text" value={adSpend} onChange={(e) => setAdSpend(e.target.value)}
                       placeholder="e.g. ₹50,000 Meta campaign starting Apr 1"
-                      className="w-full bg-[#0A1415] rounded-lg border border-[#2DD4BF]/15 focus:border-[#2DD4BF]/40 outline-none px-3 py-2 text-sm text-slate-300 placeholder:text-slate-700 transition-colors"
+                      className="w-full bg-[#0A1415] rounded-lg border border-[#22C55E]/15 focus:border-[#22C55E]/40 outline-none px-3 py-2 text-sm text-slate-300 placeholder:text-slate-700 transition-colors"
                     />
                   </div>
                 </div>
@@ -999,7 +999,7 @@ export default function ForecastClient() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m.75 12l3 3m0 0l3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                   </svg>
                   <span className="text-xs text-slate-600">Not sure of the format?</span>
-                  <button onClick={downloadSampleCSV} className="text-xs text-[#2DD4BF] hover:underline font-medium">
+                  <button onClick={downloadSampleCSV} className="text-xs text-[#22C55E] hover:underline font-medium">
                     Download sample CSV
                   </button>
                 </div>
@@ -1012,7 +1012,7 @@ export default function ForecastClient() {
                       </svg>
                       <span className="font-medium">{error}</span>
                     </div>
-                    <button onClick={downloadSampleCSV} className="text-xs text-[#2DD4BF] hover:underline font-medium ml-6">
+                    <button onClick={downloadSampleCSV} className="text-xs text-[#22C55E] hover:underline font-medium ml-6">
                       ↓ Download sample CSV template
                     </button>
                   </div>
@@ -1029,7 +1029,7 @@ export default function ForecastClient() {
                     <p className="text-sm font-semibold text-amber-400">Free plan: first {FREE_PRODUCT_LIMIT} products only</p>
                     <p className="text-xs text-slate-500 mt-0.5">
                       Your CSV has {productCountInCsv} products. We&apos;ll analyze the first {FREE_PRODUCT_LIMIT}. &nbsp;
-                      <button onClick={() => setUpgradeModal("Unlimited Products")} className="text-[#2DD4BF] hover:underline font-medium">Upgrade to Pro</button>
+                      <button onClick={() => setUpgradeModal("Unlimited Products")} className="text-[#22C55E] hover:underline font-medium">Upgrade to Pro</button>
                       {" "}for the full catalog.
                     </p>
                   </div>
@@ -1040,7 +1040,7 @@ export default function ForecastClient() {
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={() => runForecast()}
-                  className="flex-1 flex items-center justify-center gap-2 bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] font-bold py-3 px-6 rounded-xl transition-all shadow-xl shadow-[#2DD4BF]/20 hover:-translate-y-0.5 text-sm"
+                  className="flex-1 flex items-center justify-center gap-2 bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] font-bold py-3 px-6 rounded-xl transition-all shadow-xl shadow-[#22C55E]/20 hover:-translate-y-0.5 text-sm"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
@@ -1049,7 +1049,7 @@ export default function ForecastClient() {
                 </button>
                 <button
                   onClick={loadDemo}
-                  className="sm:w-auto flex items-center justify-center gap-2 bg-[#0A1415] hover:bg-[#0F1C1E] border border-[#2DD4BF]/15 text-slate-300 hover:text-white font-medium py-3 px-5 rounded-xl transition-all text-sm"
+                  className="sm:w-auto flex items-center justify-center gap-2 bg-[#0A1415] hover:bg-[#0F1C1E] border border-[#22C55E]/15 text-slate-300 hover:text-white font-medium py-3 px-5 rounded-xl transition-all text-sm"
                 >
                   Try Demo Data
                 </button>
@@ -1062,9 +1062,9 @@ export default function ForecastClient() {
           {isLoading && (
             <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center min-h-[55vh] text-center">
               <div className="relative w-16 h-16 mb-8">
-                <div className="absolute inset-0 rounded-full border border-[#2DD4BF]/20 animate-ping" />
-                <div className="absolute inset-2 rounded-full border border-[#2DD4BF]/30 animate-ping" style={{ animationDelay: "0.3s" }} />
-                <div className="absolute inset-4 rounded-full bg-[#2DD4BF] flex items-center justify-center shadow-xl shadow-[#2DD4BF]/30">
+                <div className="absolute inset-0 rounded-full border border-[#22C55E]/20 animate-ping" />
+                <div className="absolute inset-2 rounded-full border border-[#22C55E]/30 animate-ping" style={{ animationDelay: "0.3s" }} />
+                <div className="absolute inset-4 rounded-full bg-[#22C55E] flex items-center justify-center shadow-xl shadow-[#22C55E]/30">
                   <svg className="w-5 h-5 text-[#060C0D] animate-spin" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
@@ -1094,7 +1094,7 @@ export default function ForecastClient() {
               </div>
               <h2 className="text-xl font-bold text-white mb-2">Forecast Failed</h2>
               <p className="text-slate-400 text-sm mb-6 max-w-sm">{error}</p>
-              <button onClick={reset} className="bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] font-bold px-6 py-2.5 rounded-xl transition-all text-sm">Try Again</button>
+              <button onClick={reset} className="bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] font-bold px-6 py-2.5 rounded-xl transition-all text-sm">Try Again</button>
             </motion.div>
           )}
 
@@ -1109,14 +1109,14 @@ export default function ForecastClient() {
                   <p className="text-xs text-slate-500 mt-0.5">{analysis.totalSkuCount} products analyzed</p>
                 </div>
                 <div className="flex items-center gap-2.5">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-[#2DD4BF] bg-[#2DD4BF]/10 border border-[#2DD4BF]/15 px-2.5 py-1.5 rounded-lg">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-[#22C55E] bg-[#22C55E]/10 border border-[#22C55E]/15 px-2.5 py-1.5 rounded-lg">
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     87% accuracy
                   </div>
                   <span className="badge badge-neutral text-xs">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#2DD4BF] inline-block" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] inline-block" />
                     AI Analysis
                   </span>
                 </div>
@@ -1162,8 +1162,8 @@ export default function ForecastClient() {
                 <div className="card p-4 flex flex-col gap-3">
                   <div className="flex items-center justify-between">
                     <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Inventory Health</p>
-                    <div className="w-7 h-7 rounded-lg bg-[#2DD4BF]/10 flex items-center justify-center">
-                      <svg className="w-3.5 h-3.5 text-[#2DD4BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <div className="w-7 h-7 rounded-lg bg-[#22C55E]/10 flex items-center justify-center">
+                      <svg className="w-3.5 h-3.5 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     </div>
                   </div>
                   <div>
@@ -1238,7 +1238,7 @@ export default function ForecastClient() {
                     <ul className="space-y-1.5">
                       {analysis.keyInsights.map((insight, i) => (
                         <li key={i} className="flex items-start gap-2 text-sm text-slate-400">
-                          <span className="text-[#2DD4BF] mt-0.5 flex-shrink-0">•</span>
+                          <span className="text-[#22C55E] mt-0.5 flex-shrink-0">•</span>
                           {insight}
                         </li>
                       ))}
@@ -1249,7 +1249,7 @@ export default function ForecastClient() {
 
               {/* Ad-spend gate — show teaser if no ad spend was entered */}
               {!adSpend.trim() && isFreeTier && (
-                <div className="card p-5 mb-5 border-[#2DD4BF]/10 relative overflow-hidden">
+                <div className="card p-5 mb-5 border-[#22C55E]/10 relative overflow-hidden">
                   <div className="blur-sm pointer-events-none select-none opacity-40">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-7 h-7 rounded-lg bg-purple-500/10 flex items-center justify-center">
@@ -1262,12 +1262,12 @@ export default function ForecastClient() {
                     <p className="text-sm text-slate-400">Your Meta campaign of ₹50,000 will spike demand by +35% on Yoga Mat — stockout 4 days sooner than projected.</p>
                   </div>
                   <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0A1415]/60 backdrop-blur-[1px]">
-                    <span className="text-[10px] font-bold text-[#060C0D] bg-[#2DD4BF] px-2 py-0.5 rounded-full tracking-wider mb-2">PRO FEATURE</span>
+                    <span className="text-[10px] font-bold text-[#060C0D] bg-[#22C55E] px-2 py-0.5 rounded-full tracking-wider mb-2">PRO FEATURE</span>
                     <p className="text-sm font-semibold text-white mb-1">Ad-Spend Impact Forecast</p>
                     <p className="text-xs text-slate-500 mb-3 text-center max-w-[220px]">See how your Meta/Google spend affects stockout dates.</p>
                     <button
                       onClick={() => setUpgradeModal("AI Ad-Spend Correlation")}
-                      className="inline-flex items-center gap-2 bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] font-bold text-xs px-4 py-2 rounded-lg transition-all"
+                      className="inline-flex items-center gap-2 bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] font-bold text-xs px-4 py-2 rounded-lg transition-all"
                     >
                       Unlock with Pro
                     </button>
@@ -1294,9 +1294,9 @@ export default function ForecastClient() {
                       <p className="text-sm font-bold text-white truncate max-w-[120px]">{adSpend || "—"}</p>
                     </div>
                     <span className="text-slate-600 text-lg font-bold">→</span>
-                    <div className="bg-[#2DD4BF]/[0.08] border border-[#2DD4BF]/15 rounded-xl px-3.5 py-2.5 text-center">
+                    <div className="bg-[#22C55E]/[0.08] border border-[#22C55E]/15 rounded-xl px-3.5 py-2.5 text-center">
                       <p className="text-[10px] text-slate-600 uppercase tracking-widest mb-1">Demand Spike</p>
-                      <p className="text-sm font-bold text-[#2DD4BF]">+20–40%</p>
+                      <p className="text-sm font-bold text-[#22C55E]">+20–40%</p>
                     </div>
                     <span className="text-slate-600 text-lg font-bold">→</span>
                     <div className="bg-red-500/[0.08] border border-red-500/15 rounded-xl px-3.5 py-2.5 text-center">
@@ -1364,7 +1364,7 @@ export default function ForecastClient() {
                       critical: "text-red-400 bg-red-500/[0.08] border-red-500/20",
                       high:     "text-orange-400 bg-orange-500/[0.08] border-orange-500/20",
                       medium:   "text-yellow-400 bg-yellow-500/[0.08] border-yellow-500/20",
-                      low:      "text-[#2DD4BF] bg-[#2DD4BF]/[0.08] border-[#2DD4BF]/20",
+                      low:      "text-[#22C55E] bg-[#22C55E]/[0.08] border-[#22C55E]/20",
                     };
                     return (
                       <div key={product.sku || product.productName} className="px-4 py-4">
@@ -1453,7 +1453,7 @@ export default function ForecastClient() {
                         <p className="text-xs text-slate-500 mb-3">Free plan shows {FREE_PRODUCT_LIMIT} SKUs. Upgrade to analyze your full catalog.</p>
                         <button
                           onClick={() => setUpgradeModal("Unlimited Products")}
-                          className="inline-flex items-center gap-2 bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] font-bold text-xs px-4 py-2 rounded-lg transition-all shadow-lg shadow-[#2DD4BF]/20"
+                          className="inline-flex items-center gap-2 bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] font-bold text-xs px-4 py-2 rounded-lg transition-all shadow-lg shadow-[#22C55E]/20"
                         >
                           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
@@ -1476,7 +1476,7 @@ export default function ForecastClient() {
                   <ol className="space-y-3">
                     {analysis.topRecommendations.map((rec, i) => (
                       <li key={i} className="flex items-start gap-3 text-sm text-slate-300">
-                        <span className="w-6 h-6 rounded-full bg-[#2DD4BF]/10 border border-[#2DD4BF]/20 text-[#2DD4BF] text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
+                        <span className="w-6 h-6 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/20 text-[#22C55E] text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
                         {rec}
                       </li>
                     ))}
@@ -1495,7 +1495,7 @@ export default function ForecastClient() {
                     </div>
                     <div className="flex-1 min-w-0">
                       {alertStatus === "sent" ? (
-                        <div className="flex items-center gap-2 text-[#2DD4BF]">
+                        <div className="flex items-center gap-2 text-[#22C55E]">
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
@@ -1511,7 +1511,7 @@ export default function ForecastClient() {
                               value={alertEmail}
                               onChange={e => setAlertEmail(e.target.value)}
                               placeholder="your@email.com"
-                              className="flex-1 bg-[#0A1415] rounded-lg border border-[#2DD4BF]/15 focus:border-[#2DD4BF]/40 outline-none px-3 py-2 text-sm text-white placeholder:text-slate-700 transition-colors min-w-0"
+                              className="flex-1 bg-[#0A1415] rounded-lg border border-[#22C55E]/15 focus:border-[#22C55E]/40 outline-none px-3 py-2 text-sm text-white placeholder:text-slate-700 transition-colors min-w-0"
                             />
                             <button
                               onClick={handleEmailAlert}
@@ -1530,12 +1530,12 @@ export default function ForecastClient() {
               ) : null}
 
               {/* Upsell */}
-              <div className="card p-6 border-[#2DD4BF]/15 bg-gradient-to-r from-[#2DD4BF]/[0.04] to-[#0D9488]/[0.02] text-center">
+              <div className="card p-6 border-[#22C55E]/15 bg-gradient-to-r from-[#22C55E]/[0.04] to-[#0D9488]/[0.02] text-center">
                 <p className="text-white font-semibold mb-1 text-sm">Unlock unlimited forecasts + ad-spend correlation + supplier alerts</p>
                 <p className="text-slate-500 text-xs mb-4">Pro plan — ₹999/mo. 10× cheaper than Prediko. Cancel anytime.</p>
                 <Link
                   href="/#pricing"
-                  className="inline-flex items-center gap-2 bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] font-bold px-5 py-2.5 rounded-xl transition-all text-sm shadow-lg shadow-[#2DD4BF]/20 hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] font-bold px-5 py-2.5 rounded-xl transition-all text-sm shadow-lg shadow-[#22C55E]/20 hover:-translate-y-0.5"
                 >
                   Upgrade to Pro
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>

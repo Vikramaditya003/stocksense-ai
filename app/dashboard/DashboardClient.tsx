@@ -50,66 +50,126 @@ const riskCfg = {
   critical: { bar: "bg-red-500",    text: "text-red-400",    badge: "text-red-400 bg-red-500/10 border-red-500/20",    dot: "bg-red-400",    label: "Critical" },
   high:     { bar: "bg-orange-500", text: "text-orange-400", badge: "text-orange-400 bg-orange-500/10 border-orange-500/20", dot: "bg-orange-400", label: "High" },
   medium:   { bar: "bg-yellow-500", text: "text-yellow-400", badge: "text-yellow-400 bg-yellow-500/10 border-yellow-500/20", dot: "bg-yellow-400", label: "Medium" },
-  low:      { bar: "bg-green-500",  text: "text-green-400",  badge: "text-[#2DD4BF] bg-[#2DD4BF]/10 border-[#2DD4BF]/20",  dot: "bg-green-400",  label: "Safe" },
+  low:      { bar: "bg-green-500",  text: "text-green-400",  badge: "text-[#22C55E] bg-[#22C55E]/10 border-[#22C55E]/20",  dot: "bg-green-400",  label: "Safe" },
 };
 
-// ─── SVG Trend Chart ──────────────────────────────────────────────────────────
+// ─── SVG Trend Chart — dual series: health line + critical count bars ─────────
 function TrendChart({ forecasts }: { forecasts: Omit<SavedForecast, "analysis" | "clerk_user_id">[] }) {
-  const [tip, setTip] = useState<{ x: number; y: number; i: number } | null>(null);
-  const W = 800; const H = 140;
-  const PAD = { top: 12, right: 20, bottom: 32, left: 36 };
+  const [tip, setTip] = useState<{ i: number } | null>(null);
+  const W = 900; const H = 180;
+  const PAD = { top: 16, right: 24, bottom: 36, left: 42 };
   const cW = W - PAD.left - PAD.right;
   const cH = H - PAD.top - PAD.bottom;
+
   if (forecasts.length < 2) return (
-    <div className="flex items-center justify-center h-[140px] text-slate-600 text-sm">
+    <div className="flex items-center justify-center h-[180px] text-slate-600 text-sm">
       Run at least 2 forecasts to see your health trend
     </div>
   );
+
   const pts = [...forecasts].reverse();
-  const xS = cW / (pts.length - 1);
+  const maxCrit = Math.max(...pts.map(f => f.critical_count), 1);
+  const xS = pts.length > 1 ? cW / (pts.length - 1) : cW;
   const xOf = (i: number) => PAD.left + i * xS;
-  const yOf = (s: number) => PAD.top + cH - (s / 100) * cH;
-  const linePts = pts.map((f, i) => `${xOf(i)},${yOf(f.health_score)}`).join(" ");
+  const yHealth = (s: number) => PAD.top + cH - (s / 100) * cH;
+  const barH = (c: number) => (c / maxCrit) * (cH * 0.35);
+  const linePts = pts.map((f, i) => `${xOf(i)},${yHealth(f.health_score)}`).join(" ");
+
   return (
     <div className="relative w-full overflow-x-auto">
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full min-w-[320px]" onMouseLeave={() => setTip(null)}>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full min-w-[340px]" onMouseLeave={() => setTip(null)}>
         <defs>
-          <linearGradient id="tGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#2DD4BF" stopOpacity="0.15" />
-            <stop offset="100%" stopColor="#2DD4BF" stopOpacity="0" />
+          <linearGradient id="hGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#22C55E" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="#22C55E" stopOpacity="0" />
           </linearGradient>
         </defs>
-        {[25, 50, 75].map(g => (
-          <line key={g} x1={PAD.left} y1={yOf(g)} x2={W - PAD.right} y2={yOf(g)} stroke="rgba(255,255,255,0.04)" strokeWidth={1} />
+
+        {/* Grid lines at 25/50/75/100 */}
+        {[25, 50, 75, 100].map(g => (
+          <g key={g}>
+            <line x1={PAD.left} y1={yHealth(g)} x2={W - PAD.right} y2={yHealth(g)}
+              stroke="rgba(255,255,255,0.04)" strokeWidth={g === 50 ? 1.5 : 1} />
+            <text x={PAD.left - 6} y={yHealth(g) + 3.5} fontSize={9} fill="#334155" textAnchor="end">{g}</text>
+          </g>
         ))}
-        <polygon points={`${xOf(0)},${PAD.top + cH} ${linePts} ${xOf(pts.length - 1)},${PAD.top + cH}`} fill="url(#tGrad)" />
-        <polyline points={linePts} fill="none" stroke="#2DD4BF" strokeWidth={1.5} strokeLinejoin="round" />
+
+        {/* Critical count bars (background series) */}
         {pts.map((f, i) => {
-          const cx = xOf(i); const cy = yOf(f.health_score);
+          const bh = barH(f.critical_count);
+          const bw = Math.max(6, xS * 0.35);
+          return (
+            <rect key={`bar-${f.id}`}
+              x={xOf(i) - bw / 2} y={PAD.top + cH - bh} width={bw} height={bh}
+              fill={f.critical_count > 0 ? "rgba(248,113,113,0.25)" : "rgba(74,222,128,0.15)"}
+              rx={2}
+            />
+          );
+        })}
+
+        {/* Health area fill */}
+        <polygon
+          points={`${xOf(0)},${PAD.top + cH} ${linePts} ${xOf(pts.length - 1)},${PAD.top + cH}`}
+          fill="url(#hGrad)"
+        />
+
+        {/* Health line */}
+        <polyline points={linePts} fill="none" stroke="#22C55E" strokeWidth={2} strokeLinejoin="round" />
+
+        {/* Data point circles + hover hit area */}
+        {pts.map((f, i) => {
+          const cx = xOf(i); const cy = yHealth(f.health_score);
+          const isHover = tip?.i === i;
           return (
             <g key={f.id}>
-              <rect x={cx - 14} y={PAD.top} width={28} height={cH} fill="transparent" onMouseEnter={() => setTip({ x: cx, y: cy, i })} />
-              <circle cx={cx} cy={cy} r={tip?.i === i ? 5 : 3} fill={healthColor(f.health_score)} stroke="#060C0D" strokeWidth={1.5} />
-              <text x={cx} y={H - 6} fontSize={8} fill="#475569" textAnchor="middle">
+              <rect x={cx - 16} y={PAD.top} width={32} height={cH}
+                fill="transparent" onMouseEnter={() => setTip({ i })} />
+              {isHover && (
+                <line x1={cx} y1={PAD.top} x2={cx} y2={PAD.top + cH}
+                  stroke="rgba(255,255,255,0.08)" strokeWidth={1} strokeDasharray="3,3" />
+              )}
+              <circle cx={cx} cy={cy} r={isHover ? 5.5 : 3.5}
+                fill={healthColor(f.health_score)} stroke="#060C0D" strokeWidth={2} />
+              <text x={cx} y={H - 8} fontSize={9} fill="#475569" textAnchor="middle">
                 {new Date(f.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
               </text>
             </g>
           );
         })}
-        {tip !== null && (
-          <g>
-            <line x1={tip.x} y1={PAD.top} x2={tip.x} y2={PAD.top + cH} stroke="rgba(255,255,255,0.08)" strokeWidth={1} strokeDasharray="3,3" />
-            <rect x={Math.min(tip.x + 8, W - 130)} y={PAD.top} width={120} height={52} rx={5} fill="#0D1B1D" stroke="rgba(45,212,191,0.2)" strokeWidth={1} />
-            <text x={Math.min(tip.x + 14, W - 124)} y={PAD.top + 14} fontSize={9} fill="#94a3b8">{fmt(pts[tip.i].created_at)}</text>
-            <text x={Math.min(tip.x + 14, W - 124)} y={PAD.top + 28} fontSize={11} fill={healthColor(pts[tip.i].health_score)} fontWeight="bold">
-              {pts[tip.i].health_score}/100 — {healthLabel(pts[tip.i].health_score)}
-            </text>
-            <text x={Math.min(tip.x + 14, W - 124)} y={PAD.top + 42} fontSize={9} fill="#94a3b8">
-              {pts[tip.i].critical_count} critical · {pts[tip.i].sku_count} SKUs
-            </text>
-          </g>
-        )}
+
+        {/* Tooltip */}
+        {tip !== null && (() => {
+          const f = pts[tip.i];
+          const cx = xOf(tip.i);
+          const tipX = Math.min(cx + 10, W - 148);
+          const tipY = PAD.top + 2;
+          return (
+            <g>
+              <rect x={tipX} y={tipY} width={138} height={58} rx={6}
+                fill="#0D1B1D" stroke="rgba(34,197,94,0.25)" strokeWidth={1} />
+              <text x={tipX + 10} y={tipY + 16} fontSize={10} fill="#94a3b8">{fmt(f.created_at)}</text>
+              <text x={tipX + 10} y={tipY + 32} fontSize={12} fill={healthColor(f.health_score)} fontWeight="bold">
+                {f.health_score}/100 — {healthLabel(f.health_score)}
+              </text>
+              <text x={tipX + 10} y={tipY + 48} fontSize={10} fill={f.critical_count > 0 ? "#f87171" : "#4ade80"}>
+                {f.critical_count > 0 ? `${f.critical_count} critical` : "No critical"} · {f.sku_count} SKUs
+              </text>
+            </g>
+          );
+        })()}
       </svg>
+
+      {/* Legend */}
+      <div className="flex items-center gap-4 mt-1 px-1">
+        <div className="flex items-center gap-1.5">
+          <div className="w-6 h-0.5 bg-[#22C55E] rounded-full" />
+          <span className="text-[10px] text-slate-500">Stock health score</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-2.5 rounded-sm bg-red-400/30" />
+          <span className="text-[10px] text-slate-500">Critical SKUs</span>
+        </div>
+      </div>
     </div>
   );
 }
@@ -155,12 +215,12 @@ function UploadPanel({ onClose, onResult }: { onClose: () => void; onResult: (a:
     <motion.div
       initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
       transition={{ type: "spring", damping: 28, stiffness: 280 }}
-      className="fixed right-0 top-0 h-full w-full max-w-[420px] bg-[#0A1415] border-l border-[#2DD4BF]/10 z-50 flex flex-col shadow-2xl"
+      className="fixed right-0 top-0 h-full w-full max-w-[420px] bg-[#0A1415] border-l border-[#22C55E]/10 z-50 flex flex-col shadow-2xl"
     >
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
         <div>
-          <p className="text-[11px] font-semibold text-[#2DD4BF] uppercase tracking-widest">New Forecast</p>
+          <p className="text-[11px] font-semibold text-[#22C55E] uppercase tracking-widest">New Forecast</p>
           <h2 className="text-sm font-semibold text-white mt-0.5">Upload inventory CSV</h2>
         </div>
         <button type="button" onClick={onClose} aria-label="Close" className="text-slate-500 hover:text-white transition-colors">
@@ -176,15 +236,15 @@ function UploadPanel({ onClose, onResult }: { onClose: () => void; onResult: (a:
           onDragLeave={() => setDrag(false)}
           onDrop={(e) => { e.preventDefault(); setDrag(false); const f = e.dataTransfer.files[0]; if (f) handleFile(f); }}
           onClick={() => fileRef.current?.click()}
-          className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${drag ? "border-[#2DD4BF] bg-[#2DD4BF]/[0.04]" : fileName ? "border-[#2DD4BF]/40 bg-[#2DD4BF]/[0.03]" : "border-[#2DD4BF]/15 hover:border-[#2DD4BF]/30"}`}
+          className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${drag ? "border-[#22C55E] bg-[#22C55E]/[0.04]" : fileName ? "border-[#22C55E]/40 bg-[#22C55E]/[0.03]" : "border-[#22C55E]/15 hover:border-[#22C55E]/30"}`}
         >
           <input ref={fileRef} type="file" accept=".csv" className="hidden" aria-label="Upload CSV file" onChange={(e) => { if (e.target.files?.[0]) handleFile(e.target.files[0]); }} />
           {fileName ? (
             <>
-              <div className="w-10 h-10 rounded-xl bg-[#2DD4BF]/10 flex items-center justify-center mx-auto mb-2">
-                <svg className="w-5 h-5 text-[#2DD4BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              <div className="w-10 h-10 rounded-xl bg-[#22C55E]/10 flex items-center justify-center mx-auto mb-2">
+                <svg className="w-5 h-5 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
               </div>
-              <p className="text-sm font-semibold text-[#2DD4BF]">{fileName}</p>
+              <p className="text-sm font-semibold text-[#22C55E]">{fileName}</p>
               <p className="text-xs text-slate-600 mt-0.5">Click to replace</p>
             </>
           ) : (
@@ -200,7 +260,7 @@ function UploadPanel({ onClose, onResult }: { onClose: () => void; onResult: (a:
         <div>
           <label htmlFor="panel-lead-time" className="block text-xs font-medium text-slate-500 uppercase tracking-wider mb-1.5">Supplier Lead Time (days)</label>
           <input id="panel-lead-time" type="number" value={leadTime} onChange={(e) => setLeadTime(e.target.value)} min={1} max={180}
-            className="w-full bg-[#060C0D] border border-[#2DD4BF]/15 focus:border-[#2DD4BF]/40 rounded-lg px-3 py-2 text-sm text-white outline-none transition-colors" />
+            className="w-full bg-[#060C0D] border border-[#22C55E]/15 focus:border-[#22C55E]/40 rounded-lg px-3 py-2 text-sm text-white outline-none transition-colors" />
         </div>
 
         {error && (
@@ -213,7 +273,7 @@ function UploadPanel({ onClose, onResult }: { onClose: () => void; onResult: (a:
         <button
           type="button"
           onClick={run} disabled={loading || !csvText}
-          className="w-full flex items-center justify-center gap-2 bg-[#2DD4BF] hover:bg-[#14B8A6] disabled:opacity-50 text-[#060C0D] font-bold py-3 rounded-xl text-sm transition-all shadow-lg shadow-[#2DD4BF]/20"
+          className="w-full flex items-center justify-center gap-2 bg-[#22C55E] hover:bg-[#16A34A] disabled:opacity-50 text-[#060C0D] font-bold py-3 rounded-xl text-sm transition-all shadow-lg shadow-[#22C55E]/20"
         >
           {loading ? (
             <><svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>Analyzing…</>
@@ -367,40 +427,18 @@ export default function DashboardClient() {
         </div>
       )}
 
-      {/* ── DELTA BANNER — what changed since last forecast ── */}
-      {delta && (
-        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3 flex flex-wrap items-center gap-x-5 gap-y-2">
-          <p className="text-xs font-medium text-slate-400">Since {delta.since}:</p>
-          <span className={`flex items-center gap-1 text-xs font-semibold ${delta.health > 0 ? "text-green-400" : delta.health < 0 ? "text-red-400" : "text-slate-500"}`}>
-            {delta.health > 0 ? "↑" : delta.health < 0 ? "↓" : "→"}
-            {" "}Health {delta.health > 0 ? "+" : ""}{delta.health} pts
-          </span>
-          <span className={`flex items-center gap-1 text-xs font-semibold ${delta.critical > 0 ? "text-red-400" : delta.critical < 0 ? "text-green-400" : "text-slate-500"}`}>
-            {delta.critical > 0 ? "↑" : delta.critical < 0 ? "↓" : "→"}
-            {" "}{Math.abs(delta.critical)} critical SKU{Math.abs(delta.critical) !== 1 ? "s" : ""} {delta.critical > 0 ? "added" : delta.critical < 0 ? "resolved" : "unchanged"}
-          </span>
-          {delta.skus !== 0 && (
-            <span className="text-xs text-slate-500">
-              {delta.skus > 0 ? `+${delta.skus}` : delta.skus} SKUs tracked
-            </span>
-          )}
-        </div>
-      )}
-
-      {/* ── KPI row ── */}
+      {/* ── KPI row — Lifetimely-style: big number + inline delta badge ── */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
+
         {/* Revenue at risk */}
         <div className={`card p-4 border-l-2 ${activeAnalysis?.totalRarAmount ? "border-l-red-500" : "border-l-transparent"}`}>
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-medium text-slate-500">Revenue at Risk</p>
-            <div className="w-7 h-7 rounded-lg bg-red-500/10 flex items-center justify-center flex-shrink-0">
-              <svg className="w-3.5 h-3.5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126z" /></svg>
-            </div>
+          <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-3">Revenue at Risk</p>
+          <div className="flex items-end gap-2 mb-1">
+            <p className={`text-[30px] font-bold tabular-nums tracking-tight leading-none ${activeAnalysis?.totalRarAmount ? "text-red-400" : "text-slate-600"}`}>
+              {activeAnalysis?.totalRarAmount ? activeAnalysis.revenueAtRisk : "₹0"}
+            </p>
           </div>
-          <p className={`text-[28px] font-bold tabular-nums tracking-tight leading-none ${activeAnalysis?.totalRarAmount ? "text-red-400" : "text-slate-600"}`}>
-            {activeAnalysis?.totalRarAmount ? activeAnalysis.revenueAtRisk : "₹0"}
-          </p>
-          <p className="text-xs text-slate-500 mt-2">
+          <p className="text-[11px] text-slate-500">
             {activeAnalysis?.totalRarAmount ? "if you don't reorder now" : "No losses detected"}
           </p>
         </div>
@@ -411,19 +449,26 @@ export default function DashboardClient() {
             ? activeAnalysis.healthScore >= 66 ? "border-l-green-500" : activeAnalysis.healthScore >= 51 ? "border-l-yellow-500" : "border-l-red-500"
             : "border-l-transparent"
         }`}>
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-medium text-slate-500">Stock Health</p>
-            <div className="w-7 h-7 rounded-lg bg-[#2DD4BF]/10 flex items-center justify-center flex-shrink-0">
-              <svg className="w-3.5 h-3.5 text-[#2DD4BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            </div>
+          <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-3">Stock Health</p>
+          <div className="flex items-end gap-2 mb-1">
+            <p className={`text-[30px] font-bold tabular-nums tracking-tight leading-none ${
+              activeAnalysis ? activeAnalysis.healthScore >= 66 ? "text-green-400" : activeAnalysis.healthScore >= 51 ? "text-yellow-400" : "text-red-400" : "text-slate-600"
+            }`}>
+              {activeAnalysis ? activeAnalysis.healthScore : "—"}
+              {activeAnalysis && <span className="text-sm font-normal text-slate-500 ml-0.5">/100</span>}
+            </p>
+            {delta && delta.health !== 0 && (
+              <span className={`mb-1 flex items-center gap-0.5 text-xs font-bold px-1.5 py-0.5 rounded-md ${
+                delta.health > 0 ? "text-green-400 bg-green-500/10" : "text-red-400 bg-red-500/10"
+              }`}>
+                {delta.health > 0 ? "↑" : "↓"} {delta.health > 0 ? "+" : ""}{delta.health}
+              </span>
+            )}
           </div>
-          <p className={`text-[28px] font-bold tabular-nums tracking-tight leading-none ${
-            activeAnalysis ? activeAnalysis.healthScore >= 66 ? "text-green-400" : activeAnalysis.healthScore >= 51 ? "text-yellow-400" : "text-red-400" : "text-slate-600"
-          }`}>
-            {activeAnalysis ? activeAnalysis.healthScore : "—"}
-            {activeAnalysis && <span className="text-sm font-normal text-slate-500 ml-0.5">/100</span>}
-          </p>
-          <p className="text-xs text-slate-500 mt-2">{activeAnalysis ? healthLabel(activeAnalysis.healthScore) : "Run a forecast"}</p>
+          <div className="flex items-center justify-between">
+            <p className="text-[11px] text-slate-500">{activeAnalysis ? healthLabel(activeAnalysis.healthScore) : "Run a forecast"}</p>
+            {delta && <p className="text-[10px] text-slate-600">vs {delta.since}</p>}
+          </div>
           {activeAnalysis && (
             <div className="mt-2.5 h-1 rounded-full bg-white/[0.06] overflow-hidden">
               <div className={`h-full rounded-full transition-all duration-700 ${activeAnalysis.healthScore >= 66 ? "bg-green-400" : activeAnalysis.healthScore >= 51 ? "bg-yellow-400" : "bg-red-400"}`}
@@ -434,33 +479,44 @@ export default function DashboardClient() {
 
         {/* Critical SKUs */}
         <div className={`card p-4 border-l-2 ${(activeAnalysis?.criticalCount ?? 0) > 0 ? "border-l-orange-500" : "border-l-transparent"}`}>
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-medium text-slate-500">Need Reorder</p>
-            <div className="w-7 h-7 rounded-lg bg-orange-500/10 flex items-center justify-center flex-shrink-0">
-              <svg className="w-3.5 h-3.5 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" /></svg>
-            </div>
+          <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-3">Need Reorder</p>
+          <div className="flex items-end gap-2 mb-1">
+            <p className={`text-[30px] font-bold tabular-nums tracking-tight leading-none ${(activeAnalysis?.criticalCount ?? 0) > 0 ? "text-orange-400" : "text-slate-600"}`}>
+              {activeAnalysis ? (activeAnalysis.criticalCount + activeAnalysis.atRiskCount) : "—"}
+              {activeAnalysis && <span className="text-sm font-normal text-slate-500 ml-1">SKUs</span>}
+            </p>
+            {delta && delta.critical !== 0 && (
+              <span className={`mb-1 flex items-center gap-0.5 text-xs font-bold px-1.5 py-0.5 rounded-md ${
+                delta.critical > 0 ? "text-red-400 bg-red-500/10" : "text-green-400 bg-green-500/10"
+              }`}>
+                {delta.critical > 0 ? "↑" : "↓"} {delta.critical > 0 ? "+" : ""}{delta.critical}
+              </span>
+            )}
           </div>
-          <p className={`text-[28px] font-bold tabular-nums tracking-tight leading-none ${(activeAnalysis?.criticalCount ?? 0) > 0 ? "text-orange-400" : "text-slate-600"}`}>
-            {activeAnalysis ? (activeAnalysis.criticalCount + activeAnalysis.atRiskCount) : "—"}
-            {activeAnalysis && <span className="text-sm font-normal text-slate-500 ml-1">SKUs</span>}
-          </p>
-          <p className="text-xs text-slate-500 mt-2">
-            {activeAnalysis ? `${activeAnalysis.criticalCount} critical · ${activeAnalysis.atRiskCount} high` : "No data yet"}
-          </p>
+          <div className="flex items-center justify-between">
+            <p className="text-[11px] text-slate-500">
+              {activeAnalysis ? `${activeAnalysis.criticalCount} critical · ${activeAnalysis.atRiskCount} high` : "No data yet"}
+            </p>
+            {delta && delta.critical !== 0 && <p className="text-[10px] text-slate-600">vs {delta.since}</p>}
+          </div>
         </div>
 
         {/* Inventory value */}
         <div className="card p-4 border-l-2 border-l-transparent">
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-medium text-slate-500">Inventory Value</p>
-            <div className="w-7 h-7 rounded-lg bg-slate-500/10 flex items-center justify-center flex-shrink-0">
-              <svg className="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
-            </div>
+          <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-3">Inventory Value</p>
+          <div className="flex items-end gap-2 mb-1">
+            <p className="text-[30px] font-bold tabular-nums tracking-tight leading-none text-slate-100">
+              {fmtInventoryValue}
+            </p>
+            {delta && delta.skus !== 0 && (
+              <span className={`mb-1 flex items-center gap-0.5 text-xs font-bold px-1.5 py-0.5 rounded-md ${
+                delta.skus > 0 ? "text-[#22C55E] bg-[#22C55E]/10" : "text-slate-400 bg-white/[0.04]"
+              }`}>
+                {delta.skus > 0 ? "+" : ""}{delta.skus} SKUs
+              </span>
+            )}
           </div>
-          <p className="text-[28px] font-bold tabular-nums tracking-tight leading-none text-slate-100">
-            {fmtInventoryValue}
-          </p>
-          <p className="text-xs text-slate-500 mt-2">
+          <p className="text-[11px] text-slate-500">
             {activeAnalysis ? `${activeAnalysis.totalSkuCount} SKUs tracked` : "No data yet"}
           </p>
           {activeAnalysis && (
@@ -495,7 +551,7 @@ export default function DashboardClient() {
               <button
                 type="button"
                 onClick={() => router.push("/dashboard?tab=products")}
-                className="flex-shrink-0 text-xs font-semibold text-[#060C0D] bg-[#2DD4BF] hover:bg-[#14B8A6] px-3 py-1.5 rounded-lg transition-all"
+                className="flex-shrink-0 text-xs font-semibold text-[#060C0D] bg-[#22C55E] hover:bg-[#16A34A] px-3 py-1.5 rounded-lg transition-all"
               >
                 View all {allProducts.length}
               </button>
@@ -506,8 +562,8 @@ export default function DashboardClient() {
           {!activeAnalysis && !histLoading ? (
             <div className="px-5 py-8">
               <div className="max-w-sm mx-auto text-center mb-6">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#2DD4BF]/20 to-[#2DD4BF]/5 border border-[#2DD4BF]/20 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#2DD4BF]/10">
-                  <svg className="w-8 h-8 text-[#2DD4BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" /></svg>
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#22C55E]/20 to-[#22C55E]/5 border border-[#22C55E]/20 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#22C55E]/10">
+                  <svg className="w-8 h-8 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" /></svg>
                 </div>
                 <h3 className="text-base font-bold text-white mb-1">Find out which products are costing you money</h3>
                 <p className="text-sm text-[#475569] leading-relaxed">Upload your Shopify inventory CSV and get exact stockout dates, reorder quantities, and revenue at risk in 30 seconds.</p>
@@ -521,7 +577,7 @@ export default function DashboardClient() {
                   { step: "3", label: "Get your reorder plan", sub: "AI analysis in 30s", done: false },
                 ].map(s => (
                   <div key={s.step} className="flex items-start gap-2.5 bg-white/[0.02] border border-white/[0.05] rounded-xl p-3">
-                    <div className="w-5 h-5 rounded-full bg-[#2DD4BF]/15 border border-[#2DD4BF]/25 text-[#2DD4BF] text-[10px] font-black flex items-center justify-center flex-shrink-0 mt-0.5">{s.step}</div>
+                    <div className="w-5 h-5 rounded-full bg-[#22C55E]/15 border border-[#22C55E]/25 text-[#22C55E] text-[10px] font-black flex items-center justify-center flex-shrink-0 mt-0.5">{s.step}</div>
                     <div>
                       <p className="text-[12px] font-semibold text-white leading-tight">{s.label}</p>
                       <p className="text-[10px] text-[#475569] mt-0.5">{s.sub}</p>
@@ -534,7 +590,7 @@ export default function DashboardClient() {
                 <button
                   type="button"
                   onClick={() => setUploadOpen(true)}
-                  className="inline-flex items-center justify-center gap-2 bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] font-bold text-sm px-6 py-2.5 rounded-xl transition-all shadow-lg shadow-[#2DD4BF]/25"
+                  className="inline-flex items-center justify-center gap-2 bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] font-bold text-sm px-6 py-2.5 rounded-xl transition-all shadow-lg shadow-[#22C55E]/25"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" /></svg>
                   Upload Shopify CSV — Free
@@ -542,7 +598,7 @@ export default function DashboardClient() {
                 <button
                   type="button"
                   onClick={() => setUploadOpen(true)}
-                  className="inline-flex items-center justify-center gap-2 border border-white/10 hover:border-[#2DD4BF]/30 text-slate-400 hover:text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition-all"
+                  className="inline-flex items-center justify-center gap-2 border border-white/10 hover:border-[#22C55E]/30 text-slate-400 hover:text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition-all"
                 >
                   Try with sample data
                 </button>
@@ -580,7 +636,7 @@ export default function DashboardClient() {
                       initial={{ opacity: 0, x: -4 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.12, delay: i * 0.025 }}
-                      className="border-b border-white/[0.03] hover:bg-[#2DD4BF]/[0.02] transition-colors cursor-pointer"
+                      className="border-b border-white/[0.03] hover:bg-[#22C55E]/[0.02] transition-colors cursor-pointer"
                       onClick={() => router.push("/dashboard?tab=products")}
                     >
                       <td className="px-4 py-3">
@@ -633,7 +689,7 @@ export default function DashboardClient() {
             <div className="px-4 py-2.5 border-t border-white/[0.04] flex items-center justify-between">
               <p className="text-[11px] text-[#475569]">+{alertProducts.length - 7} more products need restocking</p>
               <button type="button" onClick={() => router.push("/dashboard?tab=products")}
-                className="text-[11px] font-bold text-[#2DD4BF] hover:text-[#14B8A6] transition-colors">
+                className="text-[11px] font-bold text-[#22C55E] hover:text-[#16A34A] transition-colors">
                 See all & export reorder list →
               </button>
             </div>
@@ -696,7 +752,7 @@ export default function DashboardClient() {
               <ol className="space-y-2.5">
                 {activeAnalysis?.topRecommendations.slice(0, 3).map((r, i) => (
                   <li key={i} className="flex items-start gap-2.5">
-                    <span className="w-5 h-5 rounded-full bg-[#2DD4BF]/10 border border-[#2DD4BF]/20 text-[#2DD4BF] text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
+                    <span className="w-5 h-5 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/20 text-[#22C55E] text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
                     <p className="text-xs text-slate-400 leading-relaxed">{r}</p>
                   </li>
                 ))}
@@ -708,7 +764,7 @@ export default function DashboardClient() {
           <div className="card p-4 flex-1">
             <div className="flex items-center justify-between mb-3">
               <p className="text-xs font-medium text-slate-500">Past analyses</p>
-              <a href="/history" className="text-xs text-[#2DD4BF] hover:text-[#14B8A6] transition-colors">View all</a>
+              <a href="/history" className="text-xs text-[#22C55E] hover:text-[#16A34A] transition-colors">View all</a>
             </div>
             {histLoading ? (
               <div className="space-y-2">{[1,2,3].map(i => <div key={i} className="h-10 rounded-lg shimmer" />)}</div>
@@ -718,7 +774,7 @@ export default function DashboardClient() {
               <div className="space-y-1">
                 {history.slice(0, 4).map((f) => (
                   <button key={f.id} type="button" onClick={() => loadDetail(f.id, f.created_at)}
-                    className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left transition-colors ${activeDate === f.created_at ? "bg-[#2DD4BF]/[0.06] border border-[#2DD4BF]/20" : "hover:bg-white/[0.03] border border-transparent"}`}>
+                    className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left transition-colors ${activeDate === f.created_at ? "bg-[#22C55E]/[0.06] border border-[#22C55E]/20" : "hover:bg-white/[0.03] border border-transparent"}`}>
                     <div className={`w-2 h-2 rounded-full flex-shrink-0 ${f.health_score >= 66 ? "bg-green-400" : f.health_score >= 51 ? "bg-yellow-400" : "bg-red-400"}`} />
                     <div className="min-w-0 flex-1">
                       <p className="text-xs font-medium text-slate-300 leading-tight">{fmt(f.created_at)}</p>
@@ -734,12 +790,12 @@ export default function DashboardClient() {
           </div>
 
           {/* Upsell CTA */}
-          <div className="rounded-xl bg-gradient-to-br from-[#2DD4BF]/10 to-[#2DD4BF]/[0.03] border border-[#2DD4BF]/20 p-4">
-            <p className="text-[11px] font-black text-[#2DD4BF] uppercase tracking-widest mb-1">Upgrade to Pro</p>
+          <div className="rounded-xl bg-gradient-to-br from-[#22C55E]/10 to-[#22C55E]/[0.03] border border-[#22C55E]/20 p-4">
+            <p className="text-[11px] font-black text-[#22C55E] uppercase tracking-widest mb-1">Upgrade to Pro</p>
             <p className="text-[12px] text-slate-300 font-semibold mb-0.5">Get 90-day forecasts — ₹999/mo</p>
             <p className="text-[10px] text-[#475569] mb-3">Cancel anytime. 10× cheaper than Prediko.</p>
             <a href="/#pricing"
-              className="block w-full text-center text-[12px] font-bold bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] py-2 rounded-lg transition-all shadow-md shadow-[#2DD4BF]/20">
+              className="block w-full text-center text-[12px] font-bold bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] py-2 rounded-lg transition-all shadow-md shadow-[#22C55E]/20">
               Protect more revenue →
             </a>
           </div>
@@ -749,14 +805,15 @@ export default function DashboardClient() {
       {/* ── Trend chart ── */}
       {history.length >= 2 && (
         <div className="card p-4">
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-4">
             <div>
-              <p className="text-sm font-bold text-white">Revenue Protection Over Time</p>
-              <p className="text-[11px] text-[#475569] mt-0.5">How your stock health has changed across {history.length} analyses</p>
+              <p className="text-sm font-bold text-white">Stock Health Over Time</p>
+              <p className="text-[11px] text-slate-500 mt-0.5">{history.length} analyses · health score + critical SKUs per run</p>
             </div>
-            <span className="text-[10px] font-semibold text-[#475569] bg-white/[0.03] border border-white/[0.06] px-2 py-1 rounded-lg">
-              {history.length > 0 ? `Last run: ${timeAgo(history[0].created_at)}` : ""}
-            </span>
+            <div className="flex items-center gap-1.5 text-[10px] text-slate-500 bg-white/[0.03] border border-white/[0.05] px-2.5 py-1 rounded-lg">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
+              Last run: {timeAgo(history[0].created_at)}
+            </div>
           </div>
           <TrendChart forecasts={history} />
         </div>
@@ -771,14 +828,14 @@ export default function DashboardClient() {
         <div className="flex items-center gap-1 flex-wrap">
           {(["all", "critical", "high", "medium", "low"] as FilterTab[]).map((tab) => {
             const colors: Record<FilterTab, string> = {
-              all: "text-slate-300 border-[#2DD4BF]",
+              all: "text-slate-300 border-[#22C55E]",
               critical: "text-red-400 border-red-500",
               high: "text-orange-400 border-orange-500",
               medium: "text-yellow-400 border-yellow-500",
               low: "text-green-400 border-green-500",
             };
             const dots: Record<FilterTab, string> = {
-              all: "bg-[#2DD4BF]",
+              all: "bg-[#22C55E]",
               critical: "bg-red-500",
               high: "bg-orange-500",
               medium: "bg-yellow-500",
@@ -919,7 +976,7 @@ export default function DashboardClient() {
                         }
                       </td>
                       <td>
-                        <svg className={`w-4 h-4 text-[#475569] group-hover:text-slate-400 transition-all duration-200 ${isOpen ? "rotate-180 !text-[#2DD4BF]" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                        <svg className={`w-4 h-4 text-[#475569] group-hover:text-slate-400 transition-all duration-200 ${isOpen ? "rotate-180 !text-[#22C55E]" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
                       </td>
                     </motion.tr>
                     <AnimatePresence>
@@ -937,8 +994,8 @@ export default function DashboardClient() {
                                     <p className="text-sm text-slate-300 leading-relaxed">{product.riskReason}</p>
                                   </div>
                                 )}
-                                <div className="bg-[#2DD4BF]/[0.03] border border-[#2DD4BF]/10 rounded-xl p-4">
-                                  <p className="text-[10px] font-bold text-[#2DD4BF] uppercase tracking-wider mb-2">Reorder Action</p>
+                                <div className="bg-[#22C55E]/[0.03] border border-[#22C55E]/10 rounded-xl p-4">
+                                  <p className="text-[10px] font-bold text-[#22C55E] uppercase tracking-wider mb-2">Reorder Action</p>
                                   {product.daysOfStockRemaining <= 0 && product.stockoutDate && product.stockoutDate !== "Safe (90+ days)" && (
                                     <p className="text-xs font-bold text-red-400 mb-1.5">Out of stock since {product.stockoutDate}</p>
                                   )}
@@ -1069,7 +1126,7 @@ export default function DashboardClient() {
       {/* ── Main ── */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top bar */}
-        <header className="border-b border-[#2DD4BF]/[0.08] bg-[#060C0D]/90 backdrop-blur-md sticky top-0 z-20 flex-shrink-0">
+        <header className="border-b border-[#22C55E]/[0.08] bg-[#060C0D]/90 backdrop-blur-md sticky top-0 z-20 flex-shrink-0">
           <div className="flex items-center gap-3 px-5 h-16">
             {/* Welcome greeting */}
             <div className="min-w-0 flex-1">
@@ -1083,7 +1140,7 @@ export default function DashboardClient() {
             {activeDate && (
               <div className="hidden sm:flex items-center gap-2">
                 <div className="flex items-center gap-1.5 text-xs text-slate-500 bg-white/[0.03] border border-white/[0.05] px-2.5 py-1 rounded-lg">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#2DD4BF] animate-pulse" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
                   Updated {timeAgo(activeDate)}
                 </div>
                 {activeAnalysis?.forecastConfidence != null && (
@@ -1104,7 +1161,7 @@ export default function DashboardClient() {
             <button
               type="button"
               onClick={() => setUploadOpen(true)}
-              className="flex items-center gap-1.5 text-xs font-semibold bg-[#2DD4BF] hover:bg-[#14B8A6] text-[#060C0D] px-3.5 py-1.5 rounded-lg transition-all shadow-lg shadow-[#2DD4BF]/20"
+              className="flex items-center gap-1.5 text-xs font-semibold bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] px-3.5 py-1.5 rounded-lg transition-all shadow-lg shadow-[#22C55E]/20"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
               New Forecast

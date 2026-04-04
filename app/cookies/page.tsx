@@ -45,7 +45,7 @@ const COOKIES = [
 ];
 
 const BADGE: Record<string, string> = {
-  "Necessary": "text-[#2DD4BF] bg-[#2DD4BF]/10 border-[#2DD4BF]/20",
+  "Necessary": "text-[#22C55E] bg-[#22C55E]/10 border-[#22C55E]/20",
   "Preference": "text-yellow-400 bg-yellow-500/10 border-yellow-500/20",
   "Analytics": "text-blue-400 bg-blue-500/10 border-blue-500/20",
 };
@@ -54,20 +54,20 @@ export default function CookiePolicyPage() {
   return (
     <div className="min-h-screen bg-[#060C0D] text-slate-300">
       {/* Nav */}
-      <nav className="border-b border-[#2DD4BF]/10 px-6 h-16 flex items-center justify-between max-w-[960px] mx-auto">
+      <nav className="border-b border-[#22C55E]/10 px-6 h-16 flex items-center justify-between max-w-[960px] mx-auto">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[#2DD4BF] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-[#22C55E] flex items-center justify-center">
             <svg className="w-4 h-4 text-[#060C0D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 20V14M9 20V8M14 20V11M19 20V4" />
             </svg>
           </div>
-          <span className="text-[15px] font-semibold text-white">StockSense<span className="text-[#2DD4BF]">AI</span></span>
+          <span className="text-[15px] font-semibold text-white">StockSense<span className="text-[#22C55E]">AI</span></span>
         </Link>
         <Link href="/" className="text-xs text-slate-500 hover:text-white transition-colors">← Back to home</Link>
       </nav>
 
       <div className="max-w-[720px] mx-auto px-6 py-16">
-        <p className="text-xs font-semibold text-[#2DD4BF] uppercase tracking-widest mb-3">Legal</p>
+        <p className="text-xs font-semibold text-[#22C55E] uppercase tracking-widest mb-3">Legal</p>
         <h1 className="text-3xl font-bold text-white mb-2">Cookie Policy</h1>
         <p className="text-sm text-slate-500 mb-12">
           Effective date: 30 March 2026
@@ -86,7 +86,7 @@ export default function CookiePolicyPage() {
             <div className="space-y-4">
               <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xs font-bold px-2 py-0.5 rounded-full border text-[#2DD4BF] bg-[#2DD4BF]/10 border-[#2DD4BF]/20">Necessary</span>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full border text-[#22C55E] bg-[#22C55E]/10 border-[#22C55E]/20">Necessary</span>
                 </div>
                 <p className="text-slate-400">Required for core functionality — authentication, session security, and payment processing. The service cannot function without these. They cannot be disabled.</p>
               </div>
@@ -121,7 +121,7 @@ export default function CookiePolicyPage() {
                 <tbody>
                   {COOKIES.map((c) => (
                     <tr key={c.name} className="bg-white/[0.02] border border-white/[0.04]">
-                      <td className="px-3 py-2.5 rounded-l-lg font-mono text-[#2DD4BF]">{c.name}</td>
+                      <td className="px-3 py-2.5 rounded-l-lg font-mono text-[#22C55E]">{c.name}</td>
                       <td className="px-3 py-2.5 text-slate-300">{c.provider}</td>
                       <td className="px-3 py-2.5 text-slate-400 max-w-[200px]">{c.purpose}</td>
                       <td className="px-3 py-2.5 text-slate-400 whitespace-nowrap">{c.duration}</td>
@@ -168,7 +168,7 @@ export default function CookiePolicyPage() {
               ].map(s => (
                 <div key={s.name} className="flex items-center justify-between bg-white/[0.02] border border-white/[0.04] rounded-lg px-4 py-2.5">
                   <span className="text-slate-300 text-xs font-semibold">{s.name}</span>
-                  <a href={s.url} target="_blank" rel="noopener noreferrer" className="text-[10px] text-[#2DD4BF] hover:underline">Privacy Policy →</a>
+                  <a href={s.url} target="_blank" rel="noopener noreferrer" className="text-[10px] text-[#22C55E] hover:underline">Privacy Policy →</a>
                 </div>
               ))}
             </div>
@@ -183,7 +183,7 @@ export default function CookiePolicyPage() {
             <h2 className="text-base font-semibold text-white mb-3">7. Contact</h2>
             <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 text-slate-400">
               <p><strong className="text-slate-200">StockSense AI</strong></p>
-              <p className="mt-1">Email: <a href="mailto:support@stocksenseai.com" className="text-[#2DD4BF] hover:underline">support@stocksenseai.com</a></p>
+              <p className="mt-1">Email: <a href="mailto:support@stocksenseai.com" className="text-[#22C55E] hover:underline">support@stocksenseai.com</a></p>
               <p>Website: stocksenseai.com</p>
             </div>
           </section>
