@@ -12,10 +12,10 @@ import AppSidebar from "@/components/AppSidebar";
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function fmt(date: string) {
-  return new Date(date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  return new Date(date).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" });
 }
 function fmtTime(date: string) {
-  return new Date(date).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+  return new Date(date).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
 }
 function healthColor(score: number) {
   if (score >= 66) return "#4ade80";
@@ -121,7 +121,7 @@ function TrendChart({ forecasts }: { forecasts: Omit<SavedForecast, "analysis" |
               <circle cx={cx} cy={cy} r={tooltip?.i === i ? 6 : 4} fill={color} stroke="#060C0D" strokeWidth={2} />
               {/* X label */}
               <text x={cx} y={H - 6} fontSize={8} fill="#475569" textAnchor="middle">
-                {new Date(f.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
+                {new Date(f.created_at).toLocaleDateString("en-US", { day: "numeric", month: "short" })}
               </text>
             </g>
           );

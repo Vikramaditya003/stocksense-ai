@@ -2,8 +2,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — StockSense AI",
-  description: "How StockSense AI collects, stores, and protects your inventory and personal data.",
+  title: "Privacy Policy — Forestock",
+  description: "How Forestock collects, stores, and protects your inventory and personal data.",
 };
 
 export default function PrivacyPage() {
@@ -17,7 +17,7 @@ export default function PrivacyPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 20V14M9 20V8M14 20V11M19 20V4" />
             </svg>
           </div>
-          <span className="text-[15px] font-semibold text-white">StockSense<span className="text-[#22C55E]">AI</span></span>
+          <span className="text-[15px] font-semibold text-white">Forestock<span className="text-[#22C55E]">AI</span></span>
         </Link>
         <Link href="/" className="text-xs text-slate-500 hover:text-white transition-colors">← Back to home</Link>
       </nav>
@@ -33,11 +33,11 @@ export default function PrivacyPage() {
           {/* Section 1 */}
           <section>
             <h2 className="text-base font-semibold text-white mb-3">1. Who We Are</h2>
-            <p>StockSense AI (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;) is an AI-powered inventory forecasting service for Shopify merchants, accessible at <strong className="text-slate-200">stocksenseai.com</strong>. This Privacy Policy explains how we collect, process, store, and protect your information when you use our service.</p>
-            <p className="mt-3">By accessing StockSense AI, you agree to the practices described in this policy. If you do not agree, please do not use the service.</p>
+            <p>Forestock (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;) is an AI-powered inventory forecasting service for Shopify merchants, accessible at <strong className="text-slate-200">forestock.app</strong>. This Privacy Policy explains how we collect, process, store, and protect your information when you use our service.</p>
+            <p className="mt-3">By accessing Forestock, you agree to the practices described in this policy. If you do not agree, please do not use the service.</p>
             <div className="mt-4 bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 text-slate-400">
-              <p><strong className="text-slate-200">Data Controller:</strong> StockSense AI</p>
-              <p className="mt-1"><strong className="text-slate-200">Contact:</strong> <a href="mailto:support@stocksenseai.com" className="text-[#22C55E] hover:underline">support@stocksenseai.com</a></p>
+              <p><strong className="text-slate-200">Data Controller:</strong> Forestock</p>
+              <p className="mt-1"><strong className="text-slate-200">Contact:</strong> <a href="mailto:support@forestock.app" className="text-[#22C55E] hover:underline">support@forestock.app</a></p>
             </div>
           </section>
 
@@ -199,13 +199,13 @@ export default function PrivacyPage() {
                 </li>
               ))}
             </ul>
-            <p className="mt-4 text-slate-400">To exercise any of these rights, email <a href="mailto:support@stocksenseai.com" className="text-[#22C55E] hover:underline">support@stocksenseai.com</a>. We will respond within 30 days.</p>
+            <p className="mt-4 text-slate-400">To exercise any of these rights, email <a href="mailto:support@forestock.app" className="text-[#22C55E] hover:underline">support@forestock.app</a>. We will respond within 30 days.</p>
           </section>
 
           {/* Section 10 */}
           <section>
             <h2 className="text-base font-semibold text-white mb-3">10. Children&apos;s Privacy</h2>
-            <p>StockSense AI is a business tool intended for adults (18+). We do not knowingly collect data from anyone under 18 years of age. If you believe a minor has provided us with personal data, contact us immediately and we will delete it.</p>
+            <p>Forestock is a business tool intended for adults (18+). We do not knowingly collect data from anyone under 18 years of age. If you believe a minor has provided us with personal data, contact us immediately and we will delete it.</p>
           </section>
 
           {/* Section 11 */}
@@ -219,8 +219,8 @@ export default function PrivacyPage() {
             <h2 className="text-base font-semibold text-white mb-3">12. Contact &amp; Grievance Officer</h2>
             <p className="mb-3">For privacy questions, data requests, or complaints:</p>
             <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 text-slate-400">
-              <p><strong className="text-slate-200">StockSense AI</strong></p>
-              <p className="mt-1">Email: <a href="mailto:support@stocksenseai.com" className="text-[#22C55E] hover:underline">support@stocksenseai.com</a></p>
+              <p><strong className="text-slate-200">Forestock</strong></p>
+              <p className="mt-1">Email: <a href="mailto:support@forestock.app" className="text-[#22C55E] hover:underline">support@forestock.app</a></p>
               <p>Subject line: <span className="font-mono text-xs text-slate-300">Privacy Request — [Your Name]</span></p>
               <p className="mt-2 text-xs text-slate-500">Response time: within 30 days of receipt</p>
             </div>

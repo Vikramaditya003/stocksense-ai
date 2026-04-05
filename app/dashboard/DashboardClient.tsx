@@ -8,10 +8,11 @@ import { useUser } from "@clerk/nextjs";
 import type { SavedForecast } from "@/lib/db";
 import type { ForecastAnalysis, ProductForecast } from "@/lib/types";
 import AppSidebar from "@/components/AppSidebar";
+import { CURRENCIES, formatMoney, detectCurrencyFromCsv, type Currency } from "@/lib/currency";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function fmt(d: string) {
-  return new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  return new Date(d).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" });
 }
 
 function timeAgo(d: string) {
@@ -131,7 +132,7 @@ function TrendChart({ forecasts }: { forecasts: Omit<SavedForecast, "analysis" |
               <circle cx={cx} cy={cy} r={isHover ? 5.5 : 3.5}
                 fill={healthColor(f.health_score)} stroke="#060C0D" strokeWidth={2} />
               <text x={cx} y={H - 8} fontSize={9} fill="#475569" textAnchor="middle">
-                {new Date(f.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
+                {new Date(f.created_at).toLocaleDateString("en-US", { day: "numeric", month: "short" })}
               </text>
             </g>
           );
@@ -179,6 +180,8 @@ function UploadPanel({ onClose, onResult }: { onClose: () => void; onResult: (a:
   const [csvText, setCsvText] = useState("");
   const [fileName, setFileName] = useState<string | null>(null);
   const [leadTime, setLeadTime] = useState("14");
+  const [currency, setCurrency] = useState<string>("USD");
+  const [autoDetected, setAutoDetected] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [drag, setDrag] = useState(false);
@@ -188,7 +191,15 @@ function UploadPanel({ onClose, onResult }: { onClose: () => void; onResult: (a:
     if (!file.name.endsWith(".csv")) { setError("CSV files only."); return; }
     setFileName(file.name);
     const r = new FileReader();
-    r.onload = (e) => { setCsvText(e.target?.result as string); setError(null); };
+    r.onload = (e) => {
+      const text = e.target?.result as string;
+      setCsvText(text);
+      setError(null);
+      // Auto-detect currency from CSV content
+      const detected = detectCurrencyFromCsv(text);
+      setCurrency(detected);
+      setAutoDetected(true);
+    };
     r.readAsText(file);
   };
 
@@ -199,7 +210,7 @@ function UploadPanel({ onClose, onResult }: { onClose: () => void; onResult: (a:
       const res = await fetch("/api/forecast", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ salesData: csvText.trim(), leadTimeDays: parseInt(leadTime) || 14 }),
+        body: JSON.stringify({ salesData: csvText.trim(), leadTimeDays: parseInt(leadTime) || 14, currency }),
       });
       const json = await res.json();
       if (!json.success) throw new Error(json.error || "Forecast failed.");
@@ -256,11 +267,29 @@ function UploadPanel({ onClose, onResult }: { onClose: () => void; onResult: (a:
           )}
         </div>
 
-        {/* Lead time */}
-        <div>
-          <label htmlFor="panel-lead-time" className="block text-xs font-medium text-slate-500 uppercase tracking-wider mb-1.5">Supplier Lead Time (days)</label>
-          <input id="panel-lead-time" type="number" value={leadTime} onChange={(e) => setLeadTime(e.target.value)} min={1} max={180}
-            className="w-full bg-[#060C0D] border border-[#22C55E]/15 focus:border-[#22C55E]/40 rounded-lg px-3 py-2 text-sm text-white outline-none transition-colors" />
+        {/* Lead time + Currency — side by side */}
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label htmlFor="panel-lead-time" className="block text-xs font-medium text-slate-500 uppercase tracking-wider mb-1.5">Lead Time (days)</label>
+            <input id="panel-lead-time" type="number" value={leadTime} onChange={(e) => setLeadTime(e.target.value)} min={1} max={180}
+              className="w-full bg-[#060C0D] border border-[#22C55E]/15 focus:border-[#22C55E]/40 rounded-lg px-3 py-2 text-sm text-white outline-none transition-colors" />
+          </div>
+          <div>
+            <label htmlFor="panel-currency" className="block text-xs font-medium text-slate-500 uppercase tracking-wider mb-1.5">
+              Currency
+              {autoDetected && <span className="ml-1.5 text-[10px] text-[#22C55E] normal-case font-normal">auto-detected</span>}
+            </label>
+            <select
+              id="panel-currency"
+              value={currency}
+              onChange={(e) => { setCurrency(e.target.value); setAutoDetected(false); }}
+              className="w-full bg-[#060C0D] border border-[#22C55E]/15 focus:border-[#22C55E]/40 rounded-lg px-3 py-2 text-sm text-white outline-none transition-colors"
+            >
+              {CURRENCIES.map((c) => (
+                <option key={c.code} value={c.code}>{c.code} {c.symbol}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {error && (
@@ -352,11 +381,12 @@ export default function DashboardClient() {
     ? [...activeAnalysis.products].sort((a, b) => (RISK_ORDER[a.stockoutRisk] ?? 9) - (RISK_ORDER[b.stockoutRisk] ?? 9))
     : [];
 
+  const activeCurrency = activeAnalysis?.currency ?? "USD";
   const inventoryValue = activeAnalysis?.products
     ? activeAnalysis.products.reduce((sum, p) => sum + p.currentStock * (p.price ?? 0), 0)
     : 0;
   const fmtInventoryValue = inventoryValue > 0
-    ? `₹${inventoryValue.toLocaleString("en-IN")}`
+    ? formatMoney(inventoryValue, activeCurrency)
     : "—";
 
   const filteredProducts = allProducts.filter(p => {
@@ -971,7 +1001,7 @@ export default function DashboardClient() {
                       </td>
                       <td>
                         {product.estimatedRevenueLoss
-                          ? <div><span className="text-red-400 text-sm font-bold">{product.estimatedRevenueLoss}</span>{product.price && <p className="text-[11px] text-[#475569]">{product.avgDailySales.toFixed(1)}/d × ₹{product.price.toLocaleString("en-IN")}</p>}</div>
+                          ? <div><span className="text-red-400 text-sm font-bold">{product.estimatedRevenueLoss}</span>{product.price && <p className="text-[11px] text-[#475569]">{product.avgDailySales.toFixed(1)}/d × ₹{product.price.toLocaleString("en-US")}</p>}</div>
                           : <span className="text-[#475569]">—</span>
                         }
                       </td>

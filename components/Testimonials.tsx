@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const testimonials = [
   {
-    quote: "We were manually tracking reorders in a spreadsheet. StockSense flagged that our best-selling SKU would stock out in 6 days — we had no idea. Saved us from losing at least ₹40,000 that month.",
+    quote: "We were manually tracking reorders in a spreadsheet. Forestock flagged that our best-selling SKU would stock out in 6 days — we had no idea. Saved us from losing at least ₹40,000 that month.",
     name: "Priya M.",
     role: "Founder, wellness brand · Pune",
     initials: "PM",
@@ -18,7 +18,7 @@ const testimonials = [
     color: "#0D9488",
   },
   {
-    quote: "Switched from Stocky after they announced shutdown. StockSense is honestly better — the 90-day forecast helped us plan for a sale campaign without overstocking. Game changer.",
+    quote: "Switched from Stocky after they announced shutdown. Forestock is honestly better — the 90-day forecast helped us plan for a sale campaign without overstocking. Game changer.",
     name: "Ananya K.",
     role: "E-commerce manager · Bengaluru",
     initials: "AK",

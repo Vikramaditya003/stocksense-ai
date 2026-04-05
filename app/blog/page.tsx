@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import { POSTS } from "@/lib/blog-posts";
 
 export const metadata: Metadata = {
-  title: "Blog — StockSense AI",
-  description: "Inventory management tips, demand forecasting guides, and Shopify growth strategies from the StockSense AI team.",
+  title: "Blog — Forestock",
+  description: "Inventory management tips, demand forecasting guides, and Shopify growth strategies from the Forestock team.",
 };
 
 export default function BlogPage() {
@@ -20,7 +20,7 @@ export default function BlogPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 20V14M9 20V8M14 20V11M19 20V4" />
             </svg>
           </div>
-          <span className="text-[15px] font-semibold text-white">StockSense<span className="text-[#22C55E]">AI</span></span>
+          <span className="text-[15px] font-semibold text-white">Forestock<span className="text-[#22C55E]">AI</span></span>
         </Link>
         <Link href="/" className="text-xs text-slate-500 hover:text-white transition-colors">← Back to home</Link>
       </nav>
@@ -31,7 +31,7 @@ export default function BlogPage() {
           <p className="text-xs font-semibold text-[#22C55E] uppercase tracking-widest mb-3">Blog</p>
           <h1 className="text-3xl font-bold text-white mb-3">Inventory Intelligence</h1>
           <p className="text-slate-500 max-w-[480px]">
-            Forecasting guides, reorder strategies, and Shopify growth insights from the StockSense AI team.
+            Forecasting guides, reorder strategies, and Shopify growth insights from the Forestock team.
           </p>
         </div>
 
@@ -54,7 +54,7 @@ export default function BlogPage() {
               {featured.excerpt}
             </p>
             <div className="flex items-center gap-4 text-xs text-[#475569]">
-              <span>StockSense AI Team</span>
+              <span>Forestock Team</span>
               <span>·</span>
               <span>{featured.date}</span>
               <span>·</span>
@@ -113,7 +113,7 @@ export default function BlogPage() {
       {/* Footer */}
       <footer className="border-t border-white/[0.05] mt-8 py-8 text-center">
         <p className="text-xs text-[#475569]">
-          &copy; {new Date().getFullYear()} StockSense AI ·{" "}
+          &copy; {new Date().getFullYear()} Forestock ·{" "}
           <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>{" "}·{" "}
           <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>{" "}·{" "}
           <Link href="/cookies" className="hover:text-white transition-colors">Cookies</Link>

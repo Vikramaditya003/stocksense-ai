@@ -19,13 +19,13 @@ const securityHeaders = [
     value: [
       "default-src 'self'",
       // Scripts: self + Clerk + Razorpay checkout
-      "script-src 'self' 'unsafe-inline' https://checkout.razorpay.com https://*.clerk.accounts.dev https://clerk.stocksenseai.com",
+      "script-src 'self' 'unsafe-inline' https://checkout.razorpay.com https://*.clerk.accounts.dev https://clerk.forestock.app",
       // Styles: self + inline (needed for Tailwind/framer-motion)
       "style-src 'self' 'unsafe-inline'",
       // Images: self + data URIs + Clerk avatar CDN
       "img-src 'self' data: https://img.clerk.com https://*.clerk.accounts.dev",
       // Connections: self + our APIs + Clerk + Supabase + Groq
-      "connect-src 'self' https://api.groq.com https://*.supabase.co https://*.clerk.accounts.dev https://clerk.stocksenseai.com",
+      "connect-src 'self' https://api.groq.com https://*.supabase.co https://*.clerk.accounts.dev https://clerk.forestock.app",
       // Frames: Razorpay opens in iframe
       "frame-src https://api.razorpay.com https://checkout.razorpay.com",
       // Fonts: self only (we use next/font)

@@ -17,13 +17,13 @@ const clerkReady =
   (clerkKey.startsWith("pk_test_") || clerkKey.startsWith("pk_live_")) &&
   clerkKey.length > 30;
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://stocksense.ai";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://forestock.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "StockSense AI — Inventory Forecasting for Shopify",
-    template: "%s | StockSense AI",
+    default: "Forestock — Inventory Forecasting for Shopify",
+    template: "%s | Forestock",
   },
   description:
     "AI-powered demand forecasting and reorder intelligence for Shopify merchants. Know exactly when to reorder, how much to buy, and which products are at risk — before they stock out.",
@@ -41,14 +41,14 @@ export const metadata: Metadata = {
     "AI inventory management",
     "shopify CSV forecast",
   ],
-  authors: [{ name: "StockSense AI" }],
-  creator: "StockSense AI",
+  authors: [{ name: "Forestock" }],
+  creator: "Forestock",
   openGraph: {
     type: "website",
     locale: "en_IN",
     url: SITE_URL,
-    siteName: "StockSense AI",
-    title: "StockSense AI — Inventory Forecasting for Shopify",
+    siteName: "Forestock",
+    title: "Forestock — Inventory Forecasting for Shopify",
     description:
       "AI-powered demand forecasting and reorder intelligence for Shopify merchants. Know exactly when to reorder before you stock out.",
     images: [
@@ -56,13 +56,13 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "StockSense AI — Inventory Forecasting",
+        alt: "Forestock — Inventory Forecasting",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "StockSense AI — Inventory Forecasting for Shopify",
+    title: "Forestock — Inventory Forecasting for Shopify",
     description:
       "AI-powered demand forecasting for Shopify merchants. Never stock out again.",
     images: ["/og-image.png"],
@@ -82,7 +82,7 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "StockSense AI",
+    "name": "Forestock",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Web",
     "url": SITE_URL,

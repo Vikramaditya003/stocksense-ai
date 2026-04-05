@@ -110,7 +110,7 @@ export const POSTS: BlogPost[] = [
       },
       {
         type: "paragraph",
-        text: "This is exactly what StockSense AI automates. Export your Shopify orders as a CSV, upload it, set your lead time, and within 30 seconds you'll see which products are at risk, their exact stockout dates, how much revenue is at stake, and the specific date by which you need to place an order.",
+        text: "This is exactly what Forestock automates. Export your Shopify orders as a CSV, upload it, set your lead time, and within 30 seconds you'll see which products are at risk, their exact stockout dates, how much revenue is at stake, and the specific date by which you need to place an order.",
       },
       {
         type: "callout",
@@ -243,7 +243,7 @@ export const POSTS: BlogPost[] = [
       },
       {
         type: "paragraph",
-        text: "StockSense AI calculates the reorder point for every product in your catalog automatically from your Shopify CSV — and tells you the specific calendar date by which you need to place the order, not just the stock level.",
+        text: "Forestock calculates the reorder point for every product in your catalog automatically from your Shopify CSV — and tells you the specific calendar date by which you need to place the order, not just the stock level.",
       },
     ],
   },
@@ -314,7 +314,7 @@ export const POSTS: BlogPost[] = [
       },
       {
         type: "table",
-        headers: ["Task", "Spreadsheet", "AI (StockSense AI)"],
+        headers: ["Task", "Spreadsheet", "AI (Forestock)"],
         rows: [
           ["Calculate days of stock remaining", "Manual, per SKU", "Automatic, all SKUs in seconds"],
           ["Detect sales trend changes", "Not detected", "Flags growing/declining SKUs with %"],
@@ -338,7 +338,7 @@ export const POSTS: BlogPost[] = [
           "45 min/week × 52 weeks = 39 hours/year on spreadsheet maintenance",
           "If your time is worth ₹500/hour, that's ₹19,500/year in time cost",
           "Add one stockout event on a mid-tier product (say ₹30,000 revenue lost) = ₹49,500 effective cost",
-          "StockSense AI Pro: ₹1,999/month = ₹23,988/year — but prevents the stockout entirely",
+          "Forestock Pro: ₹1,999/month = ₹23,988/year — but prevents the stockout entirely",
         ],
       },
       {
@@ -460,7 +460,7 @@ export const POSTS: BlogPost[] = [
       },
       {
         type: "paragraph",
-        text: "Safety stock is not a set-and-forget number. Review it quarterly, and whenever something changes: a new supplier, a new sales channel, a marketing campaign, or a seasonal shift. StockSense AI recalculates safety stock and reorder points automatically every time you upload fresh data.",
+        text: "Safety stock is not a set-and-forget number. Review it quarterly, and whenever something changes: a new supplier, a new sales channel, a marketing campaign, or a seasonal shift. Forestock recalculates safety stock and reorder points automatically every time you upload fresh data.",
       },
     ],
   },
@@ -533,11 +533,11 @@ export const POSTS: BlogPost[] = [
       },
       {
         type: "heading",
-        text: "The Ideal CSV Format for StockSense AI",
+        text: "The Ideal CSV Format for Forestock",
       },
       {
         type: "paragraph",
-        text: "StockSense AI accepts Shopify's native order export format. For best results, your CSV should have these columns:",
+        text: "Forestock accepts Shopify's native order export format. For best results, your CSV should have these columns:",
       },
       {
         type: "table",
@@ -571,7 +571,7 @@ export const POSTS: BlogPost[] = [
       },
       {
         type: "paragraph",
-        text: "Once your CSV is clean, upload it to StockSense AI, set your supplier lead time in days, and click Run Forecast. Within 30 seconds you'll see every product ranked by stockout risk, with exact dates and reorder quantities.",
+        text: "Once your CSV is clean, upload it to Forestock, set your supplier lead time in days, and click Run Forecast. Within 30 seconds you'll see every product ranked by stockout risk, with exact dates and reorder quantities.",
       },
       {
         type: "callout",
@@ -583,8 +583,8 @@ export const POSTS: BlogPost[] = [
 
   {
     slug: "introducing-stocksense-ai",
-    title: "Introducing StockSense AI: Know When to Reorder Before You Stock Out",
-    excerpt: "We built StockSense AI because we kept seeing Shopify merchants lose revenue to stockouts that were completely predictable. This is why we built it and what it does.",
+    title: "Introducing Forestock: Know When to Reorder Before You Stock Out",
+    excerpt: "We built Forestock because we kept seeing Shopify merchants lose revenue to stockouts that were completely predictable. This is why we built it and what it does.",
     date: "10 February 2026",
     readTime: "3 min read",
     tag: "Company",
@@ -605,7 +605,7 @@ export const POSTS: BlogPost[] = [
       },
       {
         type: "paragraph",
-        text: "StockSense AI takes your Shopify order export (a CSV file) and returns, in under 30 seconds:",
+        text: "Forestock takes your Shopify order export (a CSV file) and returns, in under 30 seconds:",
       },
       {
         type: "list",
@@ -624,7 +624,7 @@ export const POSTS: BlogPost[] = [
       },
       {
         type: "paragraph",
-        text: "StockSense AI is built specifically for Shopify merchants managing physical products — especially D2C brands in India who are growing fast and managing 20–200+ SKUs across categories like wellness, fashion, home, and electronics.",
+        text: "Forestock is built specifically for Shopify merchants managing physical products — especially D2C brands in India who are growing fast and managing 20–200+ SKUs across categories like wellness, fashion, home, and electronics.",
       },
       {
         type: "paragraph",
@@ -649,7 +649,7 @@ export const POSTS: BlogPost[] = [
       },
       {
         type: "paragraph",
-        text: "StockSense AI has a free tier — upload your CSV and run a full forecast with no credit card required. If it saves you one stockout, it has already paid for itself.",
+        text: "Forestock has a free tier — upload your CSV and run a full forecast with no credit card required. If it saves you one stockout, it has already paid for itself.",
       },
     ],
   },

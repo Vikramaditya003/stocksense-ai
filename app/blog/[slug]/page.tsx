@@ -14,7 +14,7 @@ export async function generateMetadata(
   const post = getPost(slug);
   if (!post) return { title: "Not Found" };
   return {
-    title: `${post.title} — StockSense AI Blog`,
+    title: `${post.title} — Forestock Blog`,
     description: post.excerpt,
   };
 }
@@ -144,7 +144,7 @@ export default async function BlogPostPage(
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 20V14M9 20V8M14 20V11M19 20V4" />
             </svg>
           </div>
-          <span className="text-[15px] font-semibold text-white">StockSense<span className="text-[#22C55E]">AI</span></span>
+          <span className="text-[15px] font-semibold text-white">Forestock<span className="text-[#22C55E]">AI</span></span>
         </Link>
         <Link href="/blog" className="text-xs text-slate-500 hover:text-white transition-colors">← All articles</Link>
       </nav>
@@ -224,7 +224,7 @@ export default async function BlogPostPage(
       {/* Footer */}
       <footer className="border-t border-white/[0.05] py-8 text-center">
         <p className="text-xs text-[#475569]">
-          &copy; {new Date().getFullYear()} StockSense AI ·{" "}
+          &copy; {new Date().getFullYear()} Forestock ·{" "}
           <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>{" "}·{" "}
           <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>{" "}·{" "}
           <Link href="/cookies" className="hover:text-white transition-colors">Cookies</Link>

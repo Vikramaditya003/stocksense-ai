@@ -20,7 +20,7 @@ export interface ProductForecast {
   seasonalNote: string;
   riskReason: string;            // WHY this product is at risk — the specific signal
   estimatedRevenueLoss: string | null; // e.g. "₹18,000" if stocked out, or null
-  rarAmount: number | null;            // raw INR number for sorting/calculations
+  rarAmount: number | null;            // raw number for sorting/calculations
 }
 
 export interface ForecastAnalysis {
@@ -35,9 +35,10 @@ export interface ForecastAnalysis {
   safeCount: number;
   topRecommendations: string[];
   adSpendInsight: string;
-  revenueAtRisk: string;         // formatted total, e.g. "₹45,000"
-  totalRarAmount: number;        // raw INR number — sum of rarAmount for critical+high products
+  revenueAtRisk: string;         // formatted total, e.g. "$450" or "₹45,000"
+  totalRarAmount: number;        // raw number — sum of rarAmount for critical+high products
   forecastConfidence?: number;   // 0-100, data quality score from AI
+  currency: string;              // ISO 4217 code, e.g. "USD", "INR", "GBP"
 }
 
 export type ForecastStep =
@@ -54,6 +55,7 @@ export interface ForecastRequest {
   salesData: string;
   adSpendData?: string;
   leadTimeDays?: number;
+  currency?: string;  // ISO 4217, e.g. "USD" — auto-detected if omitted
 }
 
 export interface ForecastResponse {

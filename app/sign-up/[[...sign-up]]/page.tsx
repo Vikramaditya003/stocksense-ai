@@ -17,7 +17,7 @@ export default function SignUpPage() {
           </svg>
         </div>
         <span className="text-[16px] font-semibold text-white tracking-tight">
-          StockSense<span className="text-[#22C55E]">AI</span>
+          Forestock<span className="text-[#22C55E]">AI</span>
         </span>
       </Link>
 

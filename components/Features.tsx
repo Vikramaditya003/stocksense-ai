@@ -127,7 +127,7 @@ export default function Features() {
             <span className="text-slate-500">dashboards</span>
           </h2>
           <p className="text-[16px] text-slate-500 max-w-md mx-auto leading-relaxed tracking-tight">
-            Most tools show data. StockSense tells you what to do, why, and by when — with the revenue impact if you don&apos;t.
+            Most tools show data. Forestock tells you what to do, why, and by when — with the revenue impact if you don&apos;t.
           </p>
         </motion.div>
 
@@ -195,14 +195,14 @@ export default function Features() {
         >
           <div className="px-5 py-4 border-b border-white/[0.05] bg-[#07100F] flex items-center justify-between">
             <h3 className="text-[14px] font-semibold text-white tracking-tight">vs. the alternatives</h3>
-            <span className="text-[11px] text-slate-500 tracking-tight">StockSense AI wins on every metric</span>
+            <span className="text-[11px] text-slate-500 tracking-tight">Forestock wins on every metric</span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-white/[0.04]">
                   <th className="text-left text-[10px] font-medium uppercase tracking-widest text-slate-600 px-5 py-3">Feature</th>
-                  <th className="text-center text-[10px] font-medium uppercase tracking-widest text-[#22C55E] px-4 py-3">StockSense AI</th>
+                  <th className="text-center text-[10px] font-medium uppercase tracking-widest text-[#22C55E] px-4 py-3">Forestock</th>
                   <th className="text-center text-[10px] font-medium uppercase tracking-widest text-slate-600 px-4 py-3 whitespace-nowrap">Stocky (dead)</th>
                   <th className="text-center text-[10px] font-medium uppercase tracking-widest text-slate-600 px-4 py-3 whitespace-nowrap">Prediko / IPlanner</th>
                 </tr>

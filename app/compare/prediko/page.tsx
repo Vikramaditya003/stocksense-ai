@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "StockSense AI vs Prediko — Inventory Forecasting Comparison",
+  title: "Forestock vs Prediko — Inventory Forecasting Comparison",
   description:
-    "Compare StockSense AI vs Prediko for Shopify inventory forecasting. Same AI-powered stockout prevention, 4× cheaper. No setup fee, results in 30 seconds.",
+    "Compare Forestock vs Prediko for Shopify inventory forecasting. Same AI-powered stockout prevention, 4× cheaper. No setup fee, results in 30 seconds.",
 };
 
 const check = (
@@ -31,14 +31,14 @@ const rows: { feature: string; us: React.ReactNode; them: React.ReactNode; note?
   { feature: "Reorder quantity + date", us: check, them: check },
   { feature: "Revenue at risk (₹ impact)", us: check, them: check },
   { feature: "Results in 30 seconds", us: check, them: cross, note: "Prediko requires full Shopify sync (5–15 min setup)" },
-  { feature: "No Shopify install required", us: check, them: cross, note: "StockSense AI works from a CSV upload — no OAuth, no permissions" },
+  { feature: "No Shopify install required", us: check, them: cross, note: "Forestock works from a CSV upload — no OAuth, no permissions" },
   { feature: "Confidence score per forecast", us: check, them: partial, note: "Prediko shows confidence on some plans only" },
   { feature: "Free tier with real forecasts", us: check, them: partial, note: "Prediko free tier is heavily limited — no AI suggestions" },
   { feature: "Health score dashboard", us: check, them: cross },
   { feature: "Delta comparison (vs last forecast)", us: check, them: cross },
-  { feature: "Safe products collapse", us: check, them: cross, note: "StockSense AI hides safe SKUs so you focus on what matters" },
+  { feature: "Safe products collapse", us: check, them: cross, note: "Forestock hides safe SKUs so you focus on what matters" },
   { feature: "Starting price", us: <span className="font-bold text-[#22C55E]">₹999/mo</span>, them: <span className="font-bold text-slate-300">$49/mo (~₹4,100)</span> },
-  { feature: "Shopify App Store listing", us: partial, them: check, note: "Coming soon for StockSense AI" },
+  { feature: "Shopify App Store listing", us: partial, them: check, note: "Coming soon for Forestock" },
   { feature: "WooCommerce / other platforms", us: partial, them: cross, note: "Both currently Shopify-focused; CSV import works for any platform" },
 ];
 
@@ -56,15 +56,15 @@ export default function VsPrediko() {
             <span className="text-[11px] font-bold text-[#22C55E] uppercase tracking-widest">Comparison</span>
           </div>
           <h1 className="text-[48px] sm:text-[64px] font-bold text-white tracking-[-0.035em] leading-[1.0] mb-6">
-            StockSense AI vs<br />
+            Forestock vs<br />
             <span className="text-[#22C55E]">Prediko</span>
           </h1>
           <p className="text-[18px] text-slate-400 max-w-[540px] mx-auto leading-relaxed mb-10">
-            Both tools predict stockouts. StockSense AI does it in <span className="text-white font-semibold">30 seconds</span> with no setup — and costs <span className="text-white font-semibold">4× less</span>.
+            Both tools predict stockouts. Forestock does it in <span className="text-white font-semibold">30 seconds</span> with no setup — and costs <span className="text-white font-semibold">4× less</span>.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button asChild size="lg" className="text-[15px] px-8 gap-2 shadow-xl shadow-[#22C55E]/20">
-              <Link href="/forecast">Try StockSense AI free →</Link>
+              <Link href="/forecast">Try Forestock free →</Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="text-[15px] px-8 border-white/15 text-slate-300">
               <Link href="/#pricing">See pricing</Link>
@@ -97,7 +97,7 @@ export default function VsPrediko() {
           <div className="grid grid-cols-[1fr_120px_120px] border-b border-white/[0.06] bg-white/[0.02]">
             <div className="px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-widest">Feature</div>
             <div className="px-4 py-3.5 text-center">
-              <span className="text-[12px] font-bold text-[#22C55E]">StockSense AI</span>
+              <span className="text-[12px] font-bold text-[#22C55E]">Forestock</span>
             </div>
             <div className="px-4 py-3.5 text-center">
               <span className="text-[12px] font-bold text-slate-400">Prediko</span>
@@ -122,24 +122,24 @@ export default function VsPrediko() {
 
       {/* Why section */}
       <section className="max-w-[860px] mx-auto px-4 mb-20">
-        <h2 className="text-[22px] font-bold text-white mb-8 tracking-tight">When StockSense AI is the better choice</h2>
+        <h2 className="text-[22px] font-bold text-white mb-8 tracking-tight">When Forestock is the better choice</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
             {
               title: "You want results now, not after setup",
-              body: "Prediko requires installing a Shopify app, granting OAuth permissions, and waiting for a full sync. StockSense AI runs from a single CSV export — upload once, get your reorder plan in 30 seconds.",
+              body: "Prediko requires installing a Shopify app, granting OAuth permissions, and waiting for a full sync. Forestock runs from a single CSV export — upload once, get your reorder plan in 30 seconds.",
             },
             {
               title: "Budget is a real constraint",
-              body: "Prediko's paid plans start at $49/month (~₹4,100). StockSense AI Pro is ₹999/month — the same AI-powered stockout predictions for a fraction of the cost.",
+              body: "Prediko's paid plans start at $49/month (~₹4,100). Forestock Pro is ₹999/month — the same AI-powered stockout predictions for a fraction of the cost.",
             },
             {
               title: "You want to see the rupee impact",
-              body: "StockSense AI shows you exactly how much revenue is at risk per SKU in ₹, not just risk categories. Every reorder decision is tied to a specific revenue number.",
+              body: "Forestock shows you exactly how much revenue is at risk per SKU in ₹, not just risk categories. Every reorder decision is tied to a specific revenue number.",
             },
             {
               title: "You're not fully committed to Shopify",
-              body: "Because StockSense AI uses CSV import, it works with any platform — Shopify, WooCommerce, custom systems. No vendor lock-in.",
+              body: "Because Forestock uses CSV import, it works with any platform — Shopify, WooCommerce, custom systems. No vendor lock-in.",
             },
           ].map(c => (
             <div key={c.title} className="card p-5">

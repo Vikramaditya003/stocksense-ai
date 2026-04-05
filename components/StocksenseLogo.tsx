@@ -1,4 +1,4 @@
-// StockSense AI logo mark — Option 1 style:
+// Forestock logo mark — Option 1 style:
 // Green rounded-square badge with a white rising sparkline (4 dots connected).
 // Clean, high-contrast, scales perfectly from 16px favicon to 200px OG image.
 

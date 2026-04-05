@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireEnv, isRateLimited, isUserRateLimited, getClientIp, sanitizeError, logError, logWarn } from "@/lib/security";
 import { auth } from "@clerk/nextjs/server";
 import { saveForecast } from "@/lib/db";
+import { detectCurrencyFromCsv, formatMoney, currencySymbol } from "@/lib/currency";
 
 // Lazy client — created on first request so build-time doesn't fail
 let groq: Groq | null = null;
@@ -84,7 +85,7 @@ function extractPricesFromCsv(csv: string): Map<string, number> {
 
   for (let i = 1; i < lines.length; i++) {
     const cols = lines[i].split(",").map((c) => c.trim());
-    const rawPrice = cols[priceIdx]?.replace(/[₹,\s]/g, "");
+    const rawPrice = cols[priceIdx]?.replace(/[₹$£€A-Z\s,]/g, "");
     const price = parseFloat(rawPrice);
     if (!price || isNaN(price) || price <= 0) continue;
 
@@ -99,10 +100,9 @@ function extractPricesFromCsv(csv: string): Map<string, number> {
 // ── Deterministic RAR formula ────────────────────────────────────────────────
 // RAR = avgDailySales × leadTime × price
 // leadTime is capped at a minimum of 7 days so even fast suppliers show impact.
-function formatInr(amount: number): string {
-  if (amount >= 100000) return `₹${(amount / 100000).toFixed(1)}L`;
-  if (amount >= 1000) return `₹${Math.round(amount / 100) * 100}`.replace(/(\d)(?=(\d{3})+$)/g, "$1,");
-  return `₹${Math.round(amount)}`;
+// formatInr kept as alias; real formatting now goes through formatMoney()
+function formatInr(amount: number, currency = "INR"): string {
+  return formatMoney(amount, currency);
 }
 
 export async function POST(req: NextRequest) {
@@ -129,7 +129,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { salesData, adSpendData, leadTimeDays } = body;
+    const { salesData, adSpendData, leadTimeDays, currency: requestedCurrency } = body;
 
     if (!salesData || typeof salesData !== "string") {
       return NextResponse.json(
@@ -158,7 +158,14 @@ export async function POST(req: NextRequest) {
     const rawLeadTime = typeof leadTimeDays === "number" ? leadTimeDays : 14;
     const leadTime = Math.min(Math.max(Math.round(rawLeadTime), 1), 180);
     const effectiveLeadTime = Math.max(leadTime, 7); // minimum 7 days for RAR calc
-    const today = new Date().toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+    const today = new Date().toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" });
+
+    // Detect currency — user-supplied takes priority, then auto-detect from CSV, then USD
+    const ALLOWED_CURRENCIES = ["USD","INR","GBP","EUR","AUD","CAD","SGD","AED"];
+    const currency = (typeof requestedCurrency === "string" && ALLOWED_CURRENCIES.includes(requestedCurrency))
+      ? requestedCurrency
+      : detectCurrencyFromCsv(trimmed);
+    const sym = currencySymbol(currency);
 
     // Pre-parse prices from CSV so we can override AI-estimated RAR with deterministic values
     const csvPrices = extractPricesFromCsv(trimmed);
@@ -170,9 +177,10 @@ export async function POST(req: NextRequest) {
 
     const userMessage = `Today's date: ${today}
 Lead time for restocking: ${leadTime} days
+Currency: ${currency} (use ${sym} as the symbol for all monetary values)
 ${adSpend ? `Upcoming ad spend: ${adSpend}` : ""}
 
-Analyze this inventory and sales data. Calculate specific stockout dates, reorder-by dates, and estimated revenue loss for each product.
+Analyze this inventory and sales data. Calculate specific stockout dates, reorder-by dates, and estimated revenue loss for each product. Use ${sym} for ALL monetary amounts.
 
 CSV data:
 ${trimmed.substring(0, 40000)}`;
@@ -234,7 +242,7 @@ ${trimmed.substring(0, 40000)}`;
 
           // Only show revenue loss for critical/high risk products
           if (product.stockoutRisk === "critical" || product.stockoutRisk === "high") {
-            product.estimatedRevenueLoss = formatInr(rarAmount);
+            product.estimatedRevenueLoss = formatInr(rarAmount, currency);
             totalRarAmount += rarAmount;
           } else {
             product.estimatedRevenueLoss = null;
@@ -248,7 +256,7 @@ ${trimmed.substring(0, 40000)}`;
 
       // Override the top-level revenueAtRisk if we have deterministic data
       if (totalRarAmount > 0) {
-        analysis.revenueAtRisk = `${formatInr(totalRarAmount)} revenue at risk`;
+        analysis.revenueAtRisk = `${formatInr(totalRarAmount, currency)} revenue at risk`;
       }
     } else {
       // No price column — set rarAmount null on all products so UI knows it's AI-estimated
@@ -260,6 +268,7 @@ ${trimmed.substring(0, 40000)}`;
       }
     }
     analysis.totalRarAmount = totalRarAmount;
+    analysis.currency = currency; // attach detected/chosen currency to result
 
     // Save to DB if user is signed in (best-effort — don't fail the request if DB is down)
     let savedId: string | null = null;

@@ -115,7 +115,7 @@ export default function Navbar() {
         <Link href="/" className="flex items-center gap-2.5 group">
           <LogoMark size={36} />
           <span className="text-[16px] font-semibold text-white tracking-tight">
-            Stock<span className="text-[#22C55E]">Sense AI</span>
+            <span className="text-[#22C55E]">Forestock</span>
           </span>
         </Link>
 

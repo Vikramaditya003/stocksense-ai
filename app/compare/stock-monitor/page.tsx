@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "StockSense AI vs Stock Monitor — Shopify Inventory Comparison",
+  title: "Forestock vs Stock Monitor — Shopify Inventory Comparison",
   description:
-    "Compare StockSense AI vs Stock Monitor for Shopify. AI-powered revenue forecasting, reorder dates, and rupee-level impact — not just out-of-stock alerts.",
+    "Compare Forestock vs Stock Monitor for Shopify. AI-powered revenue forecasting, reorder dates, and rupee-level impact — not just out-of-stock alerts.",
 };
 
 const check = (
@@ -30,15 +30,15 @@ const rows: { feature: string; us: React.ReactNode; them: React.ReactNode; note?
   { feature: "Days of stock remaining", us: check, them: check },
   { feature: "Out-of-stock since date", us: check, them: check },
   { feature: "AI demand forecasting", us: check, them: cross, note: "Stock Monitor tracks stock — it does not forecast future demand with AI" },
-  { feature: "Revenue at risk (₹ impact)", us: check, them: cross, note: "Stock Monitor shows stock levels; StockSense AI shows how much money you'll lose" },
-  { feature: "Reorder quantity recommendation", us: check, them: cross, note: "StockSense AI tells you exactly how many units to order" },
+  { feature: "Revenue at risk (₹ impact)", us: check, them: cross, note: "Stock Monitor shows stock levels; Forestock shows how much money you'll lose" },
+  { feature: "Reorder quantity recommendation", us: check, them: cross, note: "Forestock tells you exactly how many units to order" },
   { feature: "Reorder by date", us: check, them: cross, note: "AI-calculated deadline accounting for your supplier lead time" },
   { feature: "90-day demand forecast per SKU", us: check, them: cross },
   { feature: "Health score dashboard", us: check, them: cross },
   { feature: "Confidence score per forecast", us: check, them: cross },
   { feature: "Trend analysis (growing / declining)", us: check, them: cross },
   { feature: "Works from CSV (no install needed)", us: check, them: cross, note: "Stock Monitor requires full Shopify app install" },
-  { feature: "Native Shopify alerts / notifications", us: partial, them: check, note: "StockSense AI Shopify app coming soon" },
+  { feature: "Native Shopify alerts / notifications", us: partial, them: check, note: "Forestock Shopify app coming soon" },
   { feature: "Free tier", us: check, them: check },
   { feature: "Pro starting price", us: <span className="font-bold text-[#22C55E]">₹999/mo</span>, them: <span className="font-bold text-slate-300">Free–$9/mo</span> },
 ];
@@ -57,16 +57,16 @@ export default function VsStockMonitor() {
             <span className="text-[11px] font-bold text-[#22C55E] uppercase tracking-widest">Comparison</span>
           </div>
           <h1 className="text-[48px] sm:text-[64px] font-bold text-white tracking-[-0.035em] leading-[1.0] mb-6">
-            StockSense AI vs<br />
+            Forestock vs<br />
             <span className="text-[#22C55E]">Stock Monitor</span>
           </h1>
           <p className="text-[18px] text-slate-400 max-w-[560px] mx-auto leading-relaxed mb-10">
             Stock Monitor tells you <span className="text-white font-semibold">when you ran out</span>.
-            StockSense AI tells you <span className="text-white font-semibold">when you will run out, what to order, and how much revenue you&apos;ll lose if you don&apos;t</span>.
+            Forestock tells you <span className="text-white font-semibold">when you will run out, what to order, and how much revenue you&apos;ll lose if you don&apos;t</span>.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button asChild size="lg" className="text-[15px] px-8 gap-2 shadow-xl shadow-[#22C55E]/20">
-              <Link href="/forecast">Try StockSense AI free →</Link>
+              <Link href="/forecast">Try Forestock free →</Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="text-[15px] px-8 border-white/15 text-slate-300">
               <Link href="/#pricing">See pricing</Link>
@@ -87,7 +87,7 @@ export default function VsStockMonitor() {
               </p>
             </div>
             <div>
-              <p className="text-sm font-semibold text-[#22C55E] mb-1">StockSense AI</p>
+              <p className="text-sm font-semibold text-[#22C55E] mb-1">Forestock</p>
               <p className="text-sm text-slate-400 leading-relaxed">
                 Proactive — it forecasts when each SKU will run out based on your sales velocity, calculates the exact rupee loss, and tells you the reorder quantity and deadline before it happens.
               </p>
@@ -103,7 +103,7 @@ export default function VsStockMonitor() {
           <div className="grid grid-cols-[1fr_130px_130px] border-b border-white/[0.06] bg-white/[0.02]">
             <div className="px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-widest">Feature</div>
             <div className="px-4 py-3.5 text-center">
-              <span className="text-[12px] font-bold text-[#22C55E]">StockSense AI</span>
+              <span className="text-[12px] font-bold text-[#22C55E]">Forestock</span>
             </div>
             <div className="px-4 py-3.5 text-center">
               <span className="text-[12px] font-bold text-slate-400">Stock Monitor</span>
@@ -140,7 +140,7 @@ export default function VsStockMonitor() {
             </div>
           </div>
           <div className="card p-6 border-[#22C55E]/15 bg-[#22C55E]/[0.02]">
-            <p className="text-[11px] font-bold text-[#22C55E] uppercase tracking-widest mb-3">With StockSense AI</p>
+            <p className="text-[11px] font-bold text-[#22C55E] uppercase tracking-widest mb-3">With Forestock</p>
             <div className="space-y-2 text-sm text-slate-400 leading-relaxed">
               <p>📊 4 days before stockout, AI flags: <em>"Premium Yoga Mat — 4 days left."</em></p>
               <p>💰 Revenue at risk shown: <strong className="text-white">₹18,000</strong> if you don't act.</p>
@@ -169,7 +169,7 @@ export default function VsStockMonitor() {
           ))}
         </div>
         <p className="text-sm text-slate-500 mt-4">
-          But if you want to <span className="text-white font-semibold">prevent</span> stockouts rather than react to them — and see the rupee impact before it happens — that's StockSense AI.
+          But if you want to <span className="text-white font-semibold">prevent</span> stockouts rather than react to them — and see the rupee impact before it happens — that's Forestock.
         </p>
       </section>
 

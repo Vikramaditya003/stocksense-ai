@@ -2,8 +2,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Refund & Cancellation Policy — StockSense AI",
-  description: "Refund and cancellation terms for StockSense AI subscription plans.",
+  title: "Refund & Cancellation Policy — Forestock",
+  description: "Refund and cancellation terms for Forestock subscription plans.",
 };
 
 export default function RefundsPage() {
@@ -17,7 +17,7 @@ export default function RefundsPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 20V14M9 20V8M14 20V11M19 20V4" />
             </svg>
           </div>
-          <span className="text-[15px] font-semibold text-white">StockSense<span className="text-[#22C55E]">AI</span></span>
+          <span className="text-[15px] font-semibold text-white">Forestock<span className="text-[#22C55E]">AI</span></span>
         </Link>
         <Link href="/" className="text-xs text-slate-500 hover:text-white transition-colors">← Back to home</Link>
       </nav>
@@ -31,7 +31,7 @@ export default function RefundsPage() {
 
           <section>
             <h2 className="text-base font-semibold text-white mb-3">1. Overview</h2>
-            <p>This Refund &amp; Cancellation Policy outlines how StockSense AI handles subscription cancellations and refund requests. We want you to have a positive experience and will handle all requests fairly and promptly.</p>
+            <p>This Refund &amp; Cancellation Policy outlines how Forestock handles subscription cancellations and refund requests. We want you to have a positive experience and will handle all requests fairly and promptly.</p>
           </section>
 
           <section>
@@ -39,7 +39,7 @@ export default function RefundsPage() {
             <div className="space-y-3">
               <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4">
                 <p className="font-semibold text-slate-200 mb-1">How to Cancel</p>
-                <p className="text-slate-400">You may cancel your subscription at any time by emailing us at <strong className="text-slate-300">support@stocksenseai.com</strong> or from your account settings. Cancellations take effect at the end of the current billing period.</p>
+                <p className="text-slate-400">You may cancel your subscription at any time by emailing us at <strong className="text-slate-300">support@forestock.app</strong> or from your account settings. Cancellations take effect at the end of the current billing period.</p>
               </div>
               <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4">
                 <p className="font-semibold text-slate-200 mb-1">Access After Cancellation</p>
@@ -57,7 +57,7 @@ export default function RefundsPage() {
             <div className="space-y-3">
               <div className="bg-[#22C55E]/[0.05] border border-[#22C55E]/20 rounded-xl p-4">
                 <p className="font-semibold text-slate-200 mb-1">7-Day Money-Back Guarantee</p>
-                <p className="text-slate-400">If you are not satisfied with StockSense AI, you may request a full refund within <strong className="text-slate-300">7 days of your initial subscription payment</strong>. This applies to first-time subscribers only.</p>
+                <p className="text-slate-400">If you are not satisfied with Forestock, you may request a full refund within <strong className="text-slate-300">7 days of your initial subscription payment</strong>. This applies to first-time subscribers only.</p>
               </div>
               <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4">
                 <p className="font-semibold text-slate-200 mb-1">Eligibility for Refund</p>
@@ -84,7 +84,7 @@ export default function RefundsPage() {
 
           <section>
             <h2 className="text-base font-semibold text-white mb-3">4. How to Request a Refund</h2>
-            <p>To request a refund, email us at <strong className="text-slate-200">support@stocksenseai.com</strong> with:</p>
+            <p>To request a refund, email us at <strong className="text-slate-200">support@forestock.app</strong> with:</p>
             <ul className="mt-3 space-y-1.5 list-disc list-inside text-slate-400">
               <li>Your registered email address</li>
               <li>The date of payment</li>
@@ -95,7 +95,7 @@ export default function RefundsPage() {
 
           <section>
             <h2 className="text-base font-semibold text-white mb-3">5. Payment Disputes</h2>
-            <p>If you believe you have been charged incorrectly, please contact us at support@stocksenseai.com before filing a chargeback with your bank. We will resolve legitimate billing issues quickly and amicably.</p>
+            <p>If you believe you have been charged incorrectly, please contact us at support@forestock.app before filing a chargeback with your bank. We will resolve legitimate billing issues quickly and amicably.</p>
             <p className="mt-3">Filing a chargeback without contacting us first may result in account suspension while the dispute is investigated.</p>
           </section>
 
@@ -103,10 +103,10 @@ export default function RefundsPage() {
             <h2 className="text-base font-semibold text-white mb-3">6. Contact</h2>
             <p>For refund or cancellation requests, contact us at:</p>
             <div className="mt-3 bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 text-slate-400">
-              <p><strong className="text-slate-200">StockSense AI</strong></p>
-              <p className="mt-1">Email: support@stocksenseai.com</p>
+              <p><strong className="text-slate-200">Forestock</strong></p>
+              <p className="mt-1">Email: support@forestock.app</p>
               <p>Response time: within 1 business day</p>
-              <p>Website: stocksenseai.com</p>
+              <p>Website: forestock.app</p>
             </div>
           </section>
 

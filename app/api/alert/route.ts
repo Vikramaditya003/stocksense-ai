@@ -61,24 +61,24 @@ export async function POST(req: NextRequest) {
       : "• No critical items detected";
 
     await resend.emails.send({
-      from: "StockSense AI <alerts@stocksenseai.com>",
+      from: "Forestock <alerts@forestock.app>",
       to: email,
-      subject: `⚠ ${urgent.length} product${urgent.length !== 1 ? "s" : ""} at risk — StockSense AI`,
+      subject: `⚠ ${urgent.length} product${urgent.length !== 1 ? "s" : ""} at risk — Forestock`,
       text: `Hi there,
 
-Your latest StockSense AI forecast shows ${urgent.length} product${urgent.length !== 1 ? "s" : ""} at risk of stocking out.
+Your latest Forestock forecast shows ${urgent.length} product${urgent.length !== 1 ? "s" : ""} at risk of stocking out.
 
 AT-RISK PRODUCTS:
 ${productRows}
 
-Log in to StockSense AI to see full reorder quantities, exact stockout dates, and download your purchase order.
+Log in to Forestock to see full reorder quantities, exact stockout dates, and download your purchase order.
 
-→ https://stocksenseai.com/forecast
+→ https://forestock.app/forecast
 
-You're receiving this because you signed up for StockSense AI stockout alerts.
+You're receiving this because you signed up for Forestock stockout alerts.
 To unsubscribe, reply STOP.
 
-— StockSense AI Team`,
+— Forestock Team`,
     });
 
     return NextResponse.json({ success: true });

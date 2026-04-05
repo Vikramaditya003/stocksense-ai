@@ -2,8 +2,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Cookie Policy — StockSense AI",
-  description: "How StockSense AI uses cookies and how you can control them.",
+  title: "Cookie Policy — Forestock",
+  description: "How Forestock uses cookies and how you can control them.",
 };
 
 const COOKIES = [
@@ -37,7 +37,7 @@ const COOKIES = [
   },
   {
     name: "theme",
-    provider: "StockSense AI",
+    provider: "Forestock",
     purpose: "Remembers your display preferences",
     duration: "1 year",
     type: "Preference",
@@ -61,7 +61,7 @@ export default function CookiePolicyPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 20V14M9 20V8M14 20V11M19 20V4" />
             </svg>
           </div>
-          <span className="text-[15px] font-semibold text-white">StockSense<span className="text-[#22C55E]">AI</span></span>
+          <span className="text-[15px] font-semibold text-white">Forestock<span className="text-[#22C55E]">AI</span></span>
         </Link>
         <Link href="/" className="text-xs text-slate-500 hover:text-white transition-colors">← Back to home</Link>
       </nav>
@@ -78,7 +78,7 @@ export default function CookiePolicyPage() {
           <section>
             <h2 className="text-base font-semibold text-white mb-3">1. What Are Cookies?</h2>
             <p>Cookies are small text files stored on your device when you visit a website. They allow the site to remember information between page loads — such as keeping you signed in or storing your display preferences.</p>
-            <p className="mt-3">StockSense AI uses cookies only where necessary to operate the service securely and reliably. We do not use advertising or marketing cookies.</p>
+            <p className="mt-3">Forestock uses cookies only where necessary to operate the service securely and reliably. We do not use advertising or marketing cookies.</p>
           </section>
 
           <section>
@@ -100,7 +100,7 @@ export default function CookiePolicyPage() {
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xs font-bold px-2 py-0.5 rounded-full border text-slate-400 bg-slate-500/10 border-slate-500/20">Marketing</span>
                 </div>
-                <p className="text-slate-400">StockSense AI does <strong className="text-white">not</strong> use marketing or advertising cookies. We do not track you across other websites or build advertising profiles.</p>
+                <p className="text-slate-400">Forestock does <strong className="text-white">not</strong> use marketing or advertising cookies. We do not track you across other websites or build advertising profiles.</p>
               </div>
             </div>
           </section>
@@ -153,7 +153,7 @@ export default function CookiePolicyPage() {
                 </div>
               ))}
             </div>
-            <p className="mt-4 text-slate-500">Note: blocking necessary cookies (especially authentication cookies) will prevent you from signing in to StockSense AI.</p>
+            <p className="mt-4 text-slate-500">Note: blocking necessary cookies (especially authentication cookies) will prevent you from signing in to Forestock.</p>
           </section>
 
           <section>
@@ -176,15 +176,15 @@ export default function CookiePolicyPage() {
 
           <section>
             <h2 className="text-base font-semibold text-white mb-3">6. Updates to This Policy</h2>
-            <p>We may update this Cookie Policy as our service evolves or regulations change. When we do, we will update the effective date at the top of this page. Continued use of StockSense AI after changes constitutes acceptance.</p>
+            <p>We may update this Cookie Policy as our service evolves or regulations change. When we do, we will update the effective date at the top of this page. Continued use of Forestock after changes constitutes acceptance.</p>
           </section>
 
           <section>
             <h2 className="text-base font-semibold text-white mb-3">7. Contact</h2>
             <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 text-slate-400">
-              <p><strong className="text-slate-200">StockSense AI</strong></p>
-              <p className="mt-1">Email: <a href="mailto:support@stocksenseai.com" className="text-[#22C55E] hover:underline">support@stocksenseai.com</a></p>
-              <p>Website: stocksenseai.com</p>
+              <p><strong className="text-slate-200">Forestock</strong></p>
+              <p className="mt-1">Email: <a href="mailto:support@forestock.app" className="text-[#22C55E] hover:underline">support@forestock.app</a></p>
+              <p>Website: forestock.app</p>
             </div>
           </section>
 

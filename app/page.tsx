@@ -64,14 +64,14 @@ export default function Home() {
               <div className="flex items-center gap-2.5 mb-4">
                 <LogoMark size={36} />
                 <span className="text-[16px] font-bold text-white tracking-tight">
-                  Stock<span className="text-[#22C55E]">Sense AI</span>
+                  <span className="text-[#22C55E]">Forestock</span>
                 </span>
               </div>
               <p className="text-[12px] text-slate-600 leading-relaxed mb-4">
                 AI-powered inventory forecasting for Shopify merchants.
               </p>
               <p className="text-[11px] text-slate-700">
-                &copy; {new Date().getFullYear()} StockSense AI.
+                &copy; {new Date().getFullYear()} Forestock.
               </p>
             </div>
 
@@ -103,7 +103,7 @@ export default function Home() {
                   { label: "vs Stock Monitor", href: "/compare/stock-monitor" },
                   { label: "Instagram", href: "https://instagram.com/stocksenseai" },
                   { label: "Twitter / X", href: "https://x.com/stocksenseai" },
-                  { label: "Contact Us", href: "mailto:support@stocksenseai.com" },
+                  { label: "Contact Us", href: "mailto:support@forestock.app" },
                 ].map((l) => (
                   <li key={l.label}>
                     <a href={l.href} className="text-[13px] text-slate-500 hover:text-white transition-colors">{l.label}</a>

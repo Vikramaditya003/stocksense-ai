@@ -152,7 +152,7 @@ export default function Hero() {
                   <div key={c} className={`w-2.5 h-2.5 rounded-full ${c}`} />
                 ))}
               </div>
-              <span className="text-[12px] text-slate-600 ml-1 font-mono">stocksenseai.com/forecast</span>
+              <span className="text-[12px] text-slate-600 ml-1 font-mono">forestock.app/forecast</span>
             </div>
             <div className="flex items-center gap-1.5 bg-[#22C55E]/[0.1] border border-[#22C55E]/25 px-2.5 py-1 rounded-full">
               <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
