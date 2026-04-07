@@ -107,8 +107,8 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
         <Link href="/" className="flex items-center gap-2.5 min-w-0 flex-1">
           <LogoMark size={32} />
           {!collapsed && (
-            <span className="text-[15px] font-bold text-white truncate tracking-tight">
-              <span className="text-[#22C55E]">Forestock</span>
+            <span className="text-[15px] font-bold truncate tracking-tight">
+              <span className="text-white">Fore</span><span className="text-[#22C55E]">stock</span>
             </span>
           )}
         </Link>

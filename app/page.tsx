@@ -63,8 +63,8 @@ export default function Home() {
             <div className="col-span-2 sm:col-span-1">
               <div className="flex items-center gap-2.5 mb-4">
                 <LogoMark size={36} />
-                <span className="text-[16px] font-bold text-white tracking-tight">
-                  <span className="text-[#22C55E]">Forestock</span>
+                <span className="text-[16px] font-bold tracking-tight">
+                  <span className="text-white">Fore</span><span className="text-[#22C55E]">stock</span>
                 </span>
               </div>
               <p className="text-[12px] text-slate-600 leading-relaxed mb-4">

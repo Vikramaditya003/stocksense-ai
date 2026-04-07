@@ -107,24 +107,28 @@ function formatInr(amount: number, currency = "INR"): string {
 
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
-  if (isRateLimited(ip)) {
+  if (await isRateLimited(ip)) {
     return NextResponse.json(
       { success: false, error: "Too many requests. Please wait a moment and try again." },
       { status: 429 }
     );
   }
 
-  // Per-user rate limit for signed-in users (20 forecasts/hour)
-  try {
-    const { userId } = await auth();
-    if (userId && isUserRateLimited(userId)) {
-      return NextResponse.json(
-        { success: false, error: "Forecast limit reached. Please wait before running another." },
-        { status: 429 }
-      );
-    }
-  } catch {
-    // auth() can throw if Clerk isn't configured — don't block the request
+  // Auth required — forecast is the core product; unauthenticated calls would burn Groq quota
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json(
+      { success: false, error: "Sign in to run a forecast." },
+      { status: 401 }
+    );
+  }
+
+  // Per-user rate limit: 20 forecasts/hour
+  if (await isUserRateLimited(userId)) {
+    return NextResponse.json(
+      { success: false, error: "Forecast limit reached. Please wait before running another." },
+      { status: 429 }
+    );
   }
 
   try {
@@ -270,16 +274,13 @@ ${trimmed.substring(0, 40000)}`;
     analysis.totalRarAmount = totalRarAmount;
     analysis.currency = currency; // attach detected/chosen currency to result
 
-    // Save to DB if user is signed in (best-effort — don't fail the request if DB is down)
+    // Save to DB — best-effort, don't fail the forecast if DB is down
     let savedId: string | null = null;
     try {
-      const { userId } = await auth();
-      if (userId) {
-        const saved = await saveForecast(userId, analysis);
-        savedId = saved?.id ?? null;
-      }
+      const saved = await saveForecast(userId, analysis);
+      savedId = saved?.id ?? null;
     } catch (dbErr) {
-      logWarn("forecast/save", `DB save failed for userId=${savedId ?? "?"}: ${sanitizeError(dbErr)}`);
+      logWarn("forecast/save", `DB save failed for userId=${userId}: ${sanitizeError(dbErr)}`);
     }
 
     return NextResponse.json({ success: true, analysis, savedId });

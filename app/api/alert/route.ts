@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { isStrictRateLimited, getClientIp, sanitizeError, logError } from "@/lib/security";
 
 const resendKey = process.env.RESEND_API_KEY ?? "";
@@ -12,7 +12,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 export async function POST(req: NextRequest) {
   // Rate limit — 3 alert signups per minute per IP
   const ip = getClientIp(req);
-  if (isStrictRateLimited(ip)) {
+  if (await isStrictRateLimited(ip)) {
     return NextResponse.json({ success: false, error: "Too many requests." }, { status: 429 });
   }
 
@@ -22,19 +22,22 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false, error: "Sign in to set up alerts." }, { status: 401 });
   }
 
+  // Resolve destination from Clerk — never trust a client-supplied email address.
+  // Using the request body email would let any authenticated user send Forestock-branded
+  // emails to arbitrary inboxes (abuse / phishing surface).
+  const clerkUser = await currentUser();
+  const primaryEmailId = clerkUser?.primaryEmailAddressId;
+  const email = clerkUser?.emailAddresses
+    .find((e) => e.id === primaryEmailId)
+    ?.emailAddress ?? "";
+
+  if (!email || !EMAIL_RE.test(email)) {
+    return NextResponse.json({ success: false, error: "No verified email on your account." }, { status: 400 });
+  }
+
   try {
     const body = await req.json();
-    const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
     const analysis = body.analysis;
-
-    if (!email || !EMAIL_RE.test(email)) {
-      return NextResponse.json({ success: false, error: "Valid email required." }, { status: 400 });
-    }
-
-    // Cap email length to prevent abuse
-    if (email.length > 254) {
-      return NextResponse.json({ success: false, error: "Invalid email." }, { status: 400 });
-    }
 
     // Always acknowledge — even if Resend isn't configured yet
     if (!resendReady) {

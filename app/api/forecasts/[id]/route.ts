@@ -10,7 +10,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const ip = getClientIp(req);
-  if (isHistoryRateLimited(ip)) {
+  if (await isHistoryRateLimited(ip)) {
     return NextResponse.json({ error: "Too many requests." }, { status: 429 });
   }
   try {

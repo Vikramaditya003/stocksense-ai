@@ -2,6 +2,7 @@
 
 import { SignIn } from "@clerk/nextjs";
 import Link from "next/link";
+import { LogoMark } from "@/components/StocksenseLogo";
 
 export default function SignInPage() {
   return (
@@ -11,16 +12,26 @@ export default function SignInPage() {
 
       {/* Logo */}
       <Link href="/" className="flex items-center gap-2.5 mb-8 relative z-10">
-        <div className="w-9 h-9 rounded-xl bg-[#22C55E] flex items-center justify-center shadow-lg shadow-[#22C55E]/25">
-          <svg className="w-5 h-5 text-[#060C0D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-          </svg>
-        </div>
-        <span className="text-[16px] font-semibold text-white tracking-tight">
-          Forestock<span className="text-[#22C55E]">AI</span>
+        <LogoMark size={36} />
+        <span className="text-[16px] font-semibold tracking-tight">
+          <span className="text-white">Fore</span><span className="text-[#22C55E]">stock</span>
         </span>
       </Link>
 
+      {/*
+        Password reset is handled entirely by Clerk's pre-built <SignIn> UI.
+        The flow uses strategy='reset_password_email_code':
+          - Clerk generates a CSPRNG 6-digit OTP server-side (never touches this app)
+          - OTP expires in 10 minutes (configurable in Clerk Dashboard → Restrictions)
+          - OTP is single-use; invalidated on first successful attempt
+          - resetPassword() is called with signOutOfOtherSessions: true by the pre-built UI
+          - All existing sessions are terminated before the new session is created
+
+        If you ever replace this with a custom flow, you MUST pass:
+          signIn.resetPassword({ password, signOutOfOtherSessions: true })
+        Omitting signOutOfOtherSessions (it defaults to false) leaves attacker
+        sessions alive after a victim successfully resets their password.
+      */}
       <div className="relative z-10 w-full flex justify-center">
         <SignIn
           appearance={{

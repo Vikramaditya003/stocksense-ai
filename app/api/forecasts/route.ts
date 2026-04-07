@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   const ip = getClientIp(req);
-  if (isHistoryRateLimited(ip)) {
+  if (await isHistoryRateLimited(ip)) {
     return NextResponse.json({ error: "Too many requests." }, { status: 429 });
   }
   try {

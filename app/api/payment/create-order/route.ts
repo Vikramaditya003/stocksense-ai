@@ -15,7 +15,7 @@ const PLANS: Record<string, { amount: number; name: string }> = {
 export async function POST(req: NextRequest) {
   // Rate limit — 5 order creation attempts per minute per IP
   const ip = getClientIp(req);
-  if (isStrictRateLimited(ip)) {
+  if (await isStrictRateLimited(ip)) {
     return NextResponse.json({ success: false, error: "Too many requests." }, { status: 429 });
   }
 

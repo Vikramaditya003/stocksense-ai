@@ -92,3 +92,56 @@ export async function getUserPlan(clerkUserId: string): Promise<UserPlan> {
 
   return ((data as { plan: string } | null)?.plan as UserPlan) ?? "free";
 }
+
+// ── Admin-only DB functions ───────────────────────────────────────────────────
+// These bypass per-user filters intentionally. ONLY call them after requireAdmin()
+// has confirmed the caller holds the admin role.
+
+export interface AdminUserPlanRow {
+  clerk_user_id: string;
+  plan: UserPlan;
+  payment_id: string | null;
+  active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+/** List all user plan records — admin only. */
+export async function getAllUserPlans(
+  limit = 50,
+  offset = 0
+): Promise<AdminUserPlanRow[]> {
+  const { data, error } = await db
+    .from("user_plans")
+    .select("clerk_user_id, plan, payment_id, active, created_at, updated_at")
+    .order("created_at", { ascending: false })
+    .range(offset, offset + limit - 1);
+
+  if (error) throw error;
+  return (data ?? []) as AdminUserPlanRow[];
+}
+
+export interface AdminForecastRow {
+  id: string;
+  clerk_user_id: string;
+  created_at: string;
+  sku_count: number;
+  health_score: number;
+  critical_count: number;
+  summary: string;
+}
+
+/** List all forecasts across all users — admin only. Full analysis blob excluded. */
+export async function getAllForecasts(
+  limit = 50,
+  offset = 0
+): Promise<AdminForecastRow[]> {
+  const { data, error } = await db
+    .from("forecasts")
+    .select("id, clerk_user_id, created_at, sku_count, health_score, critical_count, summary")
+    .order("created_at", { ascending: false })
+    .range(offset, offset + limit - 1);
+
+  if (error) throw error;
+  return (data ?? []) as AdminForecastRow[];
+}

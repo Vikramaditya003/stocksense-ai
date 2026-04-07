@@ -1,9 +1,14 @@
 /**
  * Security utilities for API routes.
- * - Guards against missing API key at startup
- * - In-memory rate limiter (per IP, sliding window)
+ * - Guards against missing API keys at startup
+ * - Rate limiter: Upstash Redis in production (shared across all serverless instances),
+ *   in-memory Maps as fallback for development / single-instance deployments.
+ *   Set UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN to enable distributed limiting.
  * - Sanitized error responses and logs (never leak keys, paths, or stack traces)
  */
+
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
 // ─── API key guard ────────────────────────────────────────────────────────────
 
@@ -19,49 +24,111 @@ export function requireEnv(name: string): string {
 }
 
 // ─── Rate limiter ─────────────────────────────────────────────────────────────
+//
+// Production (Upstash Redis): limits are enforced across ALL serverless instances.
+// Development / fallback (in-memory Maps): limits are per-process only — they reset
+// on cold starts and are NOT shared across concurrent instances. Do not rely on the
+// in-memory fallback as the sole protection in a multi-instance production deployment.
 
 interface RateLimitEntry {
   count: number;
   windowStart: number;
 }
 
-// Separate stores so payment and forecast limits don't share state
+// In-memory fallback stores (used when Upstash is not configured)
 const forecastStore = new Map<string, RateLimitEntry>();
-const strictStore = new Map<string, RateLimitEntry>();
-const historyStore = new Map<string, RateLimitEntry>();
+const strictStore   = new Map<string, RateLimitEntry>();
+const historyStore  = new Map<string, RateLimitEntry>();
+const userStore     = new Map<string, RateLimitEntry>();
 
-function checkLimit(store: Map<string, RateLimitEntry>, key: string, max: number, windowMs: number): boolean {
+function checkLimitSync(
+  store: Map<string, RateLimitEntry>,
+  key: string,
+  max: number,
+  windowMs: number
+): boolean {
   const now = Date.now();
   const entry = store.get(key);
-
   if (!entry || now - entry.windowStart > windowMs) {
     store.set(key, { count: 1, windowStart: now });
     return false;
   }
-
   if (entry.count >= max) return true;
   entry.count++;
   return false;
 }
 
+// Upstash Redis limiters — lazily initialized, null when env vars are absent
+type UpstashLimiters = {
+  forecast: Ratelimit; // 10 req/min per IP
+  strict:   Ratelimit; // 5 req/min per IP  (payment, alert)
+  history:  Ratelimit; // 30 req/min per IP (read endpoints)
+  user:     Ratelimit; // 20 req/hour per userId
+};
+
+let _upstash: UpstashLimiters | null = null;
+let _upstashChecked = false;
+
+function getUpstash(): UpstashLimiters | null {
+  if (_upstashChecked) return _upstash;
+  _upstashChecked = true;
+
+  const url   = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (!url || !token) return null;
+
+  try {
+    const redis = new Redis({ url, token });
+    _upstash = {
+      forecast: new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(10, "1 m"), prefix: "@forestock/forecast" }),
+      strict:   new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(5,  "1 m"), prefix: "@forestock/strict" }),
+      history:  new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(30, "1 m"), prefix: "@forestock/history" }),
+      user:     new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(20, "1 h"), prefix: "@forestock/user" }),
+    };
+    return _upstash;
+  } catch {
+    return null;
+  }
+}
+
 /** Forecast endpoint: 10 requests per minute per IP */
-export function isRateLimited(ip: string): boolean {
-  return checkLimit(forecastStore, ip, 10, 60_000);
+export async function isRateLimited(ip: string): Promise<boolean> {
+  const upstash = getUpstash();
+  if (upstash) {
+    const { success } = await upstash.forecast.limit(ip);
+    return !success;
+  }
+  return checkLimitSync(forecastStore, ip, 10, 60_000);
 }
 
 /** Payment/alert endpoints: 5 requests per minute per IP — stricter */
-export function isStrictRateLimited(ip: string): boolean {
-  return checkLimit(strictStore, ip, 5, 60_000);
+export async function isStrictRateLimited(ip: string): Promise<boolean> {
+  const upstash = getUpstash();
+  if (upstash) {
+    const { success } = await upstash.strict.limit(ip);
+    return !success;
+  }
+  return checkLimitSync(strictStore, ip, 5, 60_000);
 }
 
 /** Forecast history endpoints: 30 requests per minute per IP */
-export function isHistoryRateLimited(ip: string): boolean {
-  return checkLimit(historyStore, ip, 30, 60_000);
+export async function isHistoryRateLimited(ip: string): Promise<boolean> {
+  const upstash = getUpstash();
+  if (upstash) {
+    const { success } = await upstash.history.limit(ip);
+    return !success;
+  }
+  return checkLimitSync(historyStore, ip, 30, 60_000);
 }
 
-/** Per-user rate limit (use userId as key): 20 forecasts per hour */
-export function isUserRateLimited(userId: string): boolean {
-  return checkLimit(forecastStore, `user:${userId}`, 20, 3_600_000);
+/** Per-user rate limit: 20 forecasts per hour */
+export async function isUserRateLimited(userId: string): Promise<boolean> {
+  const upstash = getUpstash();
+  if (upstash) {
+    const { success } = await upstash.user.limit(userId);
+    return !success;
+  }
+  return checkLimitSync(userStore, `user:${userId}`, 20, 3_600_000);
 }
 
 /**
@@ -70,14 +137,12 @@ export function isUserRateLimited(userId: string): boolean {
  * Security note: x-forwarded-for is a comma-separated list where the LEFTMOST
  * entry is set by the client (easily spoofed). On Vercel, x-real-ip is set by
  * the edge and cannot be forged by the client — prefer it.
- * Fallback: use the RIGHTMOST x-forwarded-for entry (added by our proxy, not client).
+ * Fallback: use the RIGHTMOST x-forwarded-for entry (added by our proxy, not the client).
  */
 export function getClientIp(req: Request): string {
-  // x-real-ip is set by Vercel's edge infrastructure — unmodifiable by client
   const realIp = req.headers.get("x-real-ip");
   if (realIp) return realIp.trim();
 
-  // Rightmost x-forwarded-for entry is added by the last trusted proxy, not the client
   const forwarded = req.headers.get("x-forwarded-for");
   if (forwarded) {
     const parts = forwarded.split(",");
@@ -136,10 +201,8 @@ export function sanitizeError(err: unknown): string {
 export function logError(context: string, err: unknown): void {
   const isDev = process.env.NODE_ENV === "development";
   if (isDev) {
-    // Full error in dev — useful for debugging
     console.error(`[${context}]`, err);
   } else {
-    // Production: only log a sanitized one-liner, never the stack
     const safe = sanitizeError(err);
     console.error(`[${context}] ${safe}`);
   }
@@ -147,7 +210,6 @@ export function logError(context: string, err: unknown): void {
 
 /** Safe warning logger */
 export function logWarn(context: string, message: string): void {
-  // Sanitize in case message contains user-supplied data with injection chars
   const safe = message.replace(/[\r\n]/g, " ").substring(0, 200);
   console.warn(`[${context}] ${safe}`);
 }

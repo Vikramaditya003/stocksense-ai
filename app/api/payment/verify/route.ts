@@ -10,7 +10,7 @@ const VALID_PLANS = new Set<UserPlan>(["pro"]);
 export async function POST(req: NextRequest) {
   // Rate limit — prevent brute-force signature guessing
   const ip = getClientIp(req);
-  if (isStrictRateLimited(ip)) {
+  if (await isStrictRateLimited(ip)) {
     return NextResponse.json({ success: false, error: "Too many requests." }, { status: 429 });
   }
 
@@ -39,6 +39,15 @@ export async function POST(req: NextRequest) {
       typeof razorpay_payment_id !== "string" ||
       typeof razorpay_signature !== "string"
     ) {
+      return NextResponse.json({ success: false, error: "Invalid payment fields." }, { status: 400 });
+    }
+
+    // Validate Razorpay ID formats — defense-in-depth alongside HMAC verification.
+    // A forged ID won't survive the HMAC check below, but this prevents garbage from
+    // ever reaching the DB even if the signature check logic were somehow bypassed.
+    const RAZORPAY_ORDER_RE = /^order_[A-Za-z0-9]{14,}$/;
+    const RAZORPAY_PAY_RE = /^pay_[A-Za-z0-9]{14,}$/;
+    if (!RAZORPAY_ORDER_RE.test(razorpay_order_id) || !RAZORPAY_PAY_RE.test(razorpay_payment_id)) {
       return NextResponse.json({ success: false, error: "Invalid payment fields." }, { status: 400 });
     }
 

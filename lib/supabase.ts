@@ -14,7 +14,11 @@ export function getSupabase(): SupabaseClient {
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!url || !key) throw new Error("Supabase env vars not configured.");
   _client = createClient(url, key, {
-    auth: { persistSession: true, autoRefreshToken: true },
+    auth: {
+      persistSession: false,     // App uses Clerk for auth, not Supabase Auth — nothing to persist
+      autoRefreshToken: false,   // No Supabase Auth session to refresh
+      detectSessionInUrl: false, // Prevents Supabase from parsing auth tokens out of URL hash fragments
+    },
   });
   return _client;
 }

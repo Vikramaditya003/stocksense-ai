@@ -2,6 +2,7 @@
 
 import { SignUp } from "@clerk/nextjs";
 import Link from "next/link";
+import { LogoMark } from "@/components/StocksenseLogo";
 
 export default function SignUpPage() {
   return (
@@ -11,13 +12,9 @@ export default function SignUpPage() {
 
       {/* Logo */}
       <Link href="/" className="flex items-center gap-2.5 mb-8 relative z-10">
-        <div className="w-9 h-9 rounded-xl bg-[#22C55E] flex items-center justify-center shadow-lg shadow-[#22C55E]/25">
-          <svg className="w-5 h-5 text-[#060C0D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-          </svg>
-        </div>
-        <span className="text-[16px] font-semibold text-white tracking-tight">
-          Forestock<span className="text-[#22C55E]">AI</span>
+        <LogoMark size={36} />
+        <span className="text-[16px] font-semibold tracking-tight">
+          <span className="text-white">Fore</span><span className="text-[#22C55E]">stock</span>
         </span>
       </Link>
 
