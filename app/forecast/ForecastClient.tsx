@@ -754,7 +754,6 @@ export default function ForecastClient() {
   const [sortKey, setSortKey] = useState<SortKey>("stockoutRisk");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
   const [upgradeModal, setUpgradeModal] = useState<string | null>(null);
-  const [alertEmail, setAlertEmail] = useState("");
   const [alertStatus, setAlertStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
   const fileRef = useRef<HTMLInputElement>(null);
@@ -795,13 +794,12 @@ export default function ForecastClient() {
   }, [handleFile]);
 
   const handleEmailAlert = async () => {
-    if (!alertEmail.trim() || !alertEmail.includes("@")) return;
     setAlertStatus("sending");
     try {
       const res = await fetch("/api/alert", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: alertEmail, analysis }),
+        body: JSON.stringify({ analysis }),
       });
       setAlertStatus(res.ok ? "sent" : "error");
     } catch {
@@ -828,7 +826,15 @@ export default function ForecastClient() {
         body: JSON.stringify({ salesData: data, adSpendData: adSpend.trim() || undefined, leadTimeDays: parseInt(leadTime) || 14, currency }),
       });
       const json = await res.json();
-      if (!json.success) throw new Error(json.error || "Forecast failed.");
+      if (!json.success) {
+        // Plan limit hit — show upgrade modal instead of generic error screen
+        if (json.planLimitReached) {
+          setStep("idle");
+          setUpgradeModal("Unlimited SKU forecasting");
+          return;
+        }
+        throw new Error(json.error || "Forecast failed.");
+      }
       setAnalysis(json.analysis);
       setStep("done");
     } catch (e) {
@@ -1511,23 +1517,14 @@ export default function ForecastClient() {
                       ) : (
                         <>
                           <p className="text-sm font-semibold text-white mb-0.5">Get weekly stockout alerts by email</p>
-                          <p className="text-xs text-slate-500 mb-3">We'll email you every Monday with your top at-risk SKUs. Free, no spam.</p>
-                          <div className="flex gap-2">
-                            <input
-                              type="email"
-                              value={alertEmail}
-                              onChange={e => setAlertEmail(e.target.value)}
-                              placeholder="your@email.com"
-                              className="flex-1 bg-[#0A1415] rounded-lg border border-[#22C55E]/15 focus:border-[#22C55E]/40 outline-none px-3 py-2 text-sm text-white placeholder:text-slate-700 transition-colors min-w-0"
-                            />
-                            <button
-                              onClick={handleEmailAlert}
-                              disabled={alertStatus === "sending"}
-                              className="flex-shrink-0 bg-orange-500/80 hover:bg-orange-500 text-white font-semibold text-xs px-4 py-2 rounded-lg transition-all disabled:opacity-60"
-                            >
-                              {alertStatus === "sending" ? "Sending..." : "Notify me"}
-                            </button>
-                          </div>
+                          <p className="text-xs text-slate-500 mb-3">We'll send your top at-risk SKUs to your account email every Monday. Free, no spam.</p>
+                          <button
+                            onClick={handleEmailAlert}
+                            disabled={alertStatus === "sending"}
+                            className="bg-orange-500/80 hover:bg-orange-500 text-white font-semibold text-xs px-4 py-2 rounded-lg transition-all disabled:opacity-60"
+                          >
+                            {alertStatus === "sending" ? "Sending..." : "Notify me"}
+                          </button>
                           {alertStatus === "error" && <p className="text-xs text-red-400 mt-1.5">Something went wrong. Try again.</p>}
                         </>
                       )}
