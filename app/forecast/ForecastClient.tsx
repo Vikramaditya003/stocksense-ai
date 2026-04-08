@@ -216,7 +216,7 @@ function UpgradeModal({ feature, onClose }: { feature: string; onClose: () => vo
     setPaying(true); setPayError(false);
     startRazorpayCheckout(
       "pro",
-      () => { setPaying(false); setPaySuccess(true); },
+      () => { setPaying(false); setPaySuccess(true); setTimeout(() => window.location.reload(), 1500); },
       () => { setPaying(false); setPayError(true); }
     );
   };
