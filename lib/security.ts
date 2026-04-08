@@ -10,6 +10,48 @@
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
+// ─── CORS enforcement ─────────────────────────────────────────────────────────
+//
+// All API routes are BFF (backend-for-frontend) — they are NOT a public API
+// and should only be called from the app's own origin. Cross-origin requests
+// from unknown origins are rejected with 403 before any processing.
+//
+// ALLOWED_ORIGINS: add your production domain and any preview domains.
+// In development, localhost is allowed. Origin header is absent for same-origin
+// requests (browser doesn't send it) so absent origin is treated as allowed.
+
+const ALLOWED_ORIGINS = new Set([
+  "https://getforestock.com",
+  "https://www.getforestock.com",
+  "https://forestock.app",
+  "https://www.forestock.app",
+  // Vercel preview deployments
+  ...(process.env.NEXT_PUBLIC_SITE_URL ? [process.env.NEXT_PUBLIC_SITE_URL] : []),
+]);
+
+/**
+ * Returns true if the request Origin is from an unknown external domain.
+ * Same-origin requests (no Origin header) are always allowed.
+ * Localhost is allowed in development.
+ */
+export function isCrossOriginBlocked(req: Request): boolean {
+  const origin = req.headers.get("origin");
+  if (!origin) return false; // same-origin request — no Origin header sent by browser
+
+  // Allow localhost in development
+  if (
+    process.env.NODE_ENV === "development" &&
+    (origin.startsWith("http://localhost:") || origin.startsWith("http://127.0.0.1:"))
+  ) {
+    return false;
+  }
+
+  // Allow Vercel preview deployments (*.vercel.app)
+  if (origin.endsWith(".vercel.app")) return false;
+
+  return !ALLOWED_ORIGINS.has(origin);
+}
+
 // ─── API key guard ────────────────────────────────────────────────────────────
 
 export function requireEnv(name: string): string {
@@ -64,6 +106,7 @@ type UpstashLimiters = {
   strict:   Ratelimit; // 5 req/min per IP  (payment, alert)
   history:  Ratelimit; // 30 req/min per IP (read endpoints)
   user:     Ratelimit; // 20 req/hour per userId
+  admin:    Ratelimit; // 30 req/min per IP (admin endpoints)
 };
 
 let _upstash: UpstashLimiters | null = null;
@@ -84,6 +127,7 @@ function getUpstash(): UpstashLimiters | null {
       strict:   new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(5,  "1 m"), prefix: "@forestock/strict" }),
       history:  new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(30, "1 m"), prefix: "@forestock/history" }),
       user:     new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(20, "1 h"), prefix: "@forestock/user" }),
+      admin:    new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(30, "1 m"), prefix: "@forestock/admin" }),
     };
     return _upstash;
   } catch {
@@ -119,6 +163,16 @@ export async function isHistoryRateLimited(ip: string): Promise<boolean> {
     return !success;
   }
   return checkLimitSync(historyStore, ip, 30, 60_000);
+}
+
+/** Admin endpoints: 30 requests per minute per IP */
+export async function isAdminRateLimited(ip: string): Promise<boolean> {
+  const upstash = getUpstash();
+  if (upstash) {
+    const { success } = await upstash.admin.limit(ip);
+    return !success;
+  }
+  return checkLimitSync(strictStore, `admin:${ip}`, 30, 60_000);
 }
 
 /** Per-user rate limit: 20 forecasts per hour */

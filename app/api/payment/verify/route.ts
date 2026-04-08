@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { auth } from "@clerk/nextjs/server";
-import { isStrictRateLimited, getClientIp, sanitizeError, logError, logWarn } from "@/lib/security";
+import { isStrictRateLimited, isCrossOriginBlocked, getClientIp, sanitizeError, logError, logWarn } from "@/lib/security";
 import { updateUserPlan, type UserPlan } from "@/lib/db";
 
 // Allowlist of purchasable plans — never trust the client's plan value
 const VALID_PLANS = new Set<UserPlan>(["pro"]);
 
 export async function POST(req: NextRequest) {
+  if (isCrossOriginBlocked(req)) {
+    return NextResponse.json({ success: false, error: "Forbidden." }, { status: 403 });
+  }
+
   // Rate limit — prevent brute-force signature guessing
   const ip = getClientIp(req);
   if (await isStrictRateLimited(ip)) {

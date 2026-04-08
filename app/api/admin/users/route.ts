@@ -9,14 +9,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/roles";
 import { getAllUserPlans } from "@/lib/db";
-import { isStrictRateLimited, getClientIp, logError, sanitizeError } from "@/lib/security";
+import { isAdminRateLimited, isCrossOriginBlocked, getClientIp, logError, sanitizeError } from "@/lib/security";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
-  // Rate limit — admin endpoints warrant the same strict cap as payment routes
+  // Block cross-origin requests — admin API should never be called from external origins
+  if (isCrossOriginBlocked(req)) {
+    return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+  }
+
   const ip = getClientIp(req);
-  if (await isStrictRateLimited(ip)) {
+  if (await isAdminRateLimited(ip)) {
     return NextResponse.json({ error: "Too many requests." }, { status: 429 });
   }
 

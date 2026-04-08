@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Razorpay from "razorpay";
 import { auth } from "@clerk/nextjs/server";
-import { isStrictRateLimited, getClientIp, sanitizeError, logError } from "@/lib/security";
+import { isStrictRateLimited, isCrossOriginBlocked, getClientIp, sanitizeError, logError } from "@/lib/security";
 
 const rzpKey = process.env.RAZORPAY_KEY_ID ?? "";
 const rzpSecret = process.env.RAZORPAY_KEY_SECRET ?? "";
@@ -13,6 +13,10 @@ const PLANS: Record<string, { amount: number; name: string }> = {
 };
 
 export async function POST(req: NextRequest) {
+  if (isCrossOriginBlocked(req)) {
+    return NextResponse.json({ success: false, error: "Forbidden." }, { status: 403 });
+  }
+
   // Rate limit — 5 order creation attempts per minute per IP
   const ip = getClientIp(req);
   if (await isStrictRateLimited(ip)) {

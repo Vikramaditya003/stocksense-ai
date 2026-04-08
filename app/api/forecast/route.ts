@@ -1,6 +1,6 @@
 import Groq from "groq-sdk";
 import { NextRequest, NextResponse } from "next/server";
-import { requireEnv, isRateLimited, isUserRateLimited, getClientIp, sanitizeError, logError, logWarn } from "@/lib/security";
+import { requireEnv, isRateLimited, isUserRateLimited, isCrossOriginBlocked, getClientIp, sanitizeError, logError, logWarn } from "@/lib/security";
 import { auth } from "@clerk/nextjs/server";
 import { saveForecast, getUserPlan } from "@/lib/db";
 import { detectCurrencyFromCsv, formatMoney, currencySymbol } from "@/lib/currency";
@@ -106,6 +106,10 @@ function formatInr(amount: number, currency = "INR"): string {
 }
 
 export async function POST(req: NextRequest) {
+  if (isCrossOriginBlocked(req)) {
+    return NextResponse.json({ success: false, error: "Forbidden." }, { status: 403 });
+  }
+
   const ip = getClientIp(req);
   if (await isRateLimited(ip)) {
     return NextResponse.json(
