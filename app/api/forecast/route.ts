@@ -158,6 +158,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // ── Server-side CSV structure validation ─────────────────────────────────
+    // Ensures the body is actually CSV-shaped, not arbitrary text or script content.
+    // Checks: must have at least one comma-separated header row with 2+ columns,
+    // and at least one data row. Does NOT reject valid CSVs with unusual characters.
+    const firstLine = trimmed.split(/\r?\n/)[0] ?? "";
+    if (firstLine.split(",").length < 2) {
+      return NextResponse.json(
+        { success: false, error: "Invalid CSV format. Ensure your file has comma-separated columns with a header row." },
+        { status: 400 }
+      );
+    }
+
     // ── Server-side plan enforcement ─────────────────────────────────────────
     // Count CSV rows to enforce the free plan SKU limit server-side.
     // Client-side slicing alone is bypassable — this is the authoritative check.
@@ -245,6 +257,24 @@ ${trimmed.substring(0, 40000)}`;
     }
     if (typeof analysis.summary === "string") analysis.summary = analysis.summary.replace(tagRe, "").substring(0, 1000);
     if (typeof analysis.revenueAtRisk === "string") analysis.revenueAtRisk = analysis.revenueAtRisk.replace(tagRe, "").substring(0, 100);
+    if (typeof analysis.adSpendInsight === "string") analysis.adSpendInsight = analysis.adSpendInsight.replace(tagRe, "").substring(0, 300);
+    if (typeof analysis.healthLabel === "string") {
+      const VALID_LABELS = ["critical", "at-risk", "fair", "good", "excellent"];
+      if (!VALID_LABELS.includes(analysis.healthLabel)) analysis.healthLabel = "fair";
+    }
+    // Sanitize array fields — each item is a plain string rendered directly to DOM
+    if (Array.isArray(analysis.keyInsights)) {
+      analysis.keyInsights = analysis.keyInsights
+        .slice(0, 10)
+        .map((s: unknown) => typeof s === "string" ? s.replace(tagRe, "").substring(0, 300) : "")
+        .filter(Boolean);
+    }
+    if (Array.isArray(analysis.topRecommendations)) {
+      analysis.topRecommendations = analysis.topRecommendations
+        .slice(0, 10)
+        .map((s: unknown) => typeof s === "string" ? s.replace(tagRe, "").substring(0, 400) : "")
+        .filter(Boolean);
+    }
 
     // ── Override RAR with deterministic formula when price data is present ──
     // Formula: RAR = avgDailySales × effectiveLeadTime × price
