@@ -6,10 +6,10 @@ import { motion } from "framer-motion";
 const plans = [
   {
     name: "Free",
-    price: "₹0",
+    price: "$0",
     period: "forever",
     description: "Try it risk-free. No credit card.",
-    features: ["5 products/month", "30-day forecast", "Stockout alerts", "Health score", "CSV upload"],
+    features: ["5 products/forecast", "30-day forecast", "Stockout alerts", "Health score", "CSV upload"],
     out: ["Unlimited products", "Up to 90-day forecasts", "Ad-spend correlation", "Reorder automation"],
     cta: "Start free",
     href: "/forecast",
@@ -18,7 +18,7 @@ const plans = [
   },
   {
     name: "Pro",
-    price: "₹999",
+    price: "$9",
     period: "/mo",
     description: "For stores that can't afford stockouts.",
     features: [
@@ -33,7 +33,7 @@ const plans = [
     ],
     out: [],
     cta: "Get Pro",
-    href: "/forecast",
+    href: "/upgrade",
     highlight: true,
     badge: "Most popular",
   },
@@ -60,7 +60,7 @@ export default function Pricing() {
             <span className="text-slate-500">honest pricing</span>
           </h2>
           <p className="text-[16px] text-slate-500 max-w-sm mx-auto leading-relaxed tracking-tight">
-            Prediko starts at ₹4,000/mo. We&apos;re ₹999 — with features they don&apos;t have.
+            Start free. Upgrade when you need more. Cancel anytime.
           </p>
         </motion.div>
 

@@ -249,7 +249,7 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
       {!collapsed && (
         <div className="px-3 pb-3">
           <Link
-            href="/#pricing"
+            href="/upgrade"
             className="flex items-center gap-2.5 bg-gradient-to-r from-[#22C55E]/10 to-cyan-500/5 border border-[#22C55E]/20 px-3 py-2.5 rounded-xl hover:border-[#22C55E]/35 transition-all group"
           >
             <div className="w-7 h-7 rounded-lg bg-[#22C55E]/15 flex items-center justify-center flex-shrink-0">

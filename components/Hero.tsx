@@ -36,25 +36,25 @@ export default function Hero() {
 
       <div className="relative z-10 flex flex-col items-center text-center w-full max-w-[900px] mx-auto px-4 sm:px-6">
 
-        {/* Urgency tag */}
+        {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="inline-flex items-center gap-2 bg-orange-500/[0.1] border border-orange-500/25 px-4 py-1.5 rounded-full mb-10"
+          className="inline-flex items-center gap-2 bg-[#22C55E]/[0.08] border border-[#22C55E]/20 px-4 py-1.5 rounded-full mb-10"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
-          <span className="text-[12px] font-semibold text-orange-400 tracking-widest uppercase">
-            Shopify Stocky shutting down August 2026
+          <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
+          <span className="text-[12px] font-semibold text-[#22C55E] tracking-widest uppercase">
+            AI-powered · Results in 30 seconds
           </span>
         </motion.div>
 
-        {/* Headline — bold and impactful */}
+        {/* Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.05, ease: "easeOut" }}
-          className="text-[60px] sm:text-[80px] lg:text-[100px] font-bold text-white leading-[0.9] tracking-[-0.04em] mb-6"
+          className="text-[64px] sm:text-[88px] lg:text-[110px] font-bold text-white leading-[0.88] tracking-[-0.04em] mb-8"
         >
           Inventory that
           <br />
@@ -66,13 +66,13 @@ export default function Hero() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.32, delay: 0.1, ease: "easeOut" }}
-          className="text-[18px] text-slate-400 max-w-[540px] leading-relaxed mb-10 tracking-tight"
+          className="text-[19px] text-slate-400 max-w-[560px] leading-relaxed mb-10 tracking-tight"
         >
-          AI tells you{" "}
+          Upload your Shopify CSV and get{" "}
           <span className="text-slate-200 font-semibold">
-            Stockout in 5 days, order 120 units, you&apos;ll lose ₹18k
+            exact stockout dates, reorder quantities, and revenue at risk
           </span>{" "}
-          — not just &ldquo;medium risk&rdquo;. Replace Stocky before August 2026.
+          — in under 60 seconds.
         </motion.p>
 
         {/* CTAs */}
@@ -121,8 +121,8 @@ export default function Hero() {
         >
           {[
             { value: "87%", label: "forecast accuracy", sub: null },
-            { value: "4×", label: "cheaper than Prediko", sub: "same features" },
-            { value: "30s", label: "to first insight", sub: "vs 10 min avg" },
+            { value: "$9", label: "per month", sub: "cancel anytime" },
+            { value: "30s", label: "to first insight", sub: "no setup needed" },
           ].map((s) => (
             <div key={s.label} className="flex-1 text-center px-6 py-5">
               <div className="text-[28px] font-bold text-white tracking-tight tabular-nums">{s.value}</div>

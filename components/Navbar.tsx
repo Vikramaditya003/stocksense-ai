@@ -96,7 +96,6 @@ export default function Navbar() {
     { label: "How it works", href: "#how-it-works" },
     { label: "Features", href: "#features" },
     { label: "Pricing", href: "#pricing" },
-    { label: "vs Prediko", href: "/compare/prediko" },
   ];
 
   return (

@@ -211,6 +211,7 @@ function UpgradeModal({ feature, onClose }: { feature: string; onClose: () => vo
   const [paying, setPaying] = useState(false);
   const [paySuccess, setPaySuccess] = useState(false);
   const [payError, setPayError] = useState(false);
+  const { isSignedIn, isLoaded } = useUser();
 
   const handleUpgrade = () => {
     setPaying(true); setPayError(false);
@@ -269,10 +270,11 @@ function UpgradeModal({ feature, onClose }: { feature: string; onClose: () => vo
               </li>
             ))}
           </ul>
-          <div className="flex items-baseline gap-1.5 mb-4">
-            <span className="text-[28px] font-semibold text-white tracking-tight">₹999</span>
+          <div className="flex items-baseline gap-1.5 mb-1">
+            <span className="text-[28px] font-semibold text-white tracking-tight">$9</span>
             <span className="text-slate-500 text-sm">/month · cancel anytime</span>
           </div>
+          <p className="text-xs text-slate-600 mb-4">Billed in INR · approx ₹749/mo</p>
           {paySuccess ? (
             <div className="flex flex-col items-center gap-2 py-2">
               <div className="w-10 h-10 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/20 flex items-center justify-center">
@@ -282,6 +284,23 @@ function UpgradeModal({ feature, onClose }: { feature: string; onClose: () => vo
               </div>
               <p className="text-sm font-semibold text-[#22C55E]">Payment successful! Refreshing your access...</p>
             </div>
+          ) : isLoaded && !isSignedIn ? (
+            <>
+              <div className="flex items-center gap-2.5 bg-amber-500/10 border border-amber-500/20 rounded-xl px-4 py-3 mb-4">
+                <svg className="w-4 h-4 text-amber-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+                <p className="text-xs text-amber-300">Sign in to your account to purchase a plan.</p>
+              </div>
+              <SignInButton mode="redirect" fallbackRedirectUrl="/forecast?upgrade=1">
+                <button className="block w-full text-center bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] font-bold py-3 rounded-xl transition-all text-sm shadow-lg shadow-[#22C55E]/20 hover:-translate-y-0.5">
+                  Sign in to upgrade
+                </button>
+              </SignInButton>
+              <button onClick={onClose} className="block w-full text-center text-slate-600 hover:text-slate-400 text-xs mt-3 transition-colors">
+                Continue with free plan
+              </button>
+            </>
           ) : (
             <>
               <button
@@ -291,7 +310,7 @@ function UpgradeModal({ feature, onClose }: { feature: string; onClose: () => vo
               >
                 {paying ? "Opening payment..." : "Upgrade to Pro — ₹999/mo"}
               </button>
-              {payError && <p className="text-xs text-red-400 text-center mt-2">Payment failed. Try again or <Link href="/#pricing" className="underline">pay on pricing page</Link>.</p>}
+              {payError && <p className="text-xs text-red-400 text-center mt-2">Payment failed. Try again.</p>}
               <button onClick={onClose} className="block w-full text-center text-slate-600 hover:text-slate-400 text-xs mt-3 transition-colors">
                 Continue with free plan
               </button>
@@ -763,13 +782,18 @@ export default function ForecastClient() {
   // Using window.location directly to avoid useSearchParams (requires Suspense in Next.js 16)
   useEffect(() => {
     if (demoRan.current) return;
-    if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("demo") === "true") {
+    const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+    if (params?.get("demo") === "true") {
       demoRan.current = true;
       setCsvText(DEMO_CSV);
       setFileName("demo-inventory.csv");
       setInputMode("csv");
       setError(null);
       runForecast(DEMO_CSV);
+    }
+    // Auto-open upgrade modal if ?upgrade=1 (e.g. from sidebar "Upgrade to Pro" button)
+    if (params?.get("upgrade") === "1") {
+      setUpgradeModal("Forestock Pro");
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

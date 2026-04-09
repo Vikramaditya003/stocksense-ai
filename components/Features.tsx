@@ -99,14 +99,6 @@ const features = [
   },
 ];
 
-const rows = [
-  ["Monthly cost",        "₹999/mo",  "Free (dead Aug '26)", "₹4k–25k/mo"],
-  ["Exact stockout date", "✓",           "✗",                   "✓"],
-  ["Ad-spend forecast",   "✓ Unique",    "✗",                   "✗"],
-  ["Lead time alerts",    "✓ Auto",      "✗",                   "Partial"],
-  ["Cash flow / overstock","✓",          "✗",                   "Partial"],
-  ["Setup time",          "2 minutes",   "Hours",               "Days"],
-];
 
 export default function Features() {
   return (
@@ -185,7 +177,7 @@ export default function Features() {
           ))}
         </div>
 
-        {/* Comparison */}
+        {/* Trust strip */}
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -193,31 +185,18 @@ export default function Features() {
           transition={{ duration: 0.3, delay: 0.1 }}
           className="rounded-2xl border border-[#22C55E]/10 bg-[#0A1415] overflow-hidden"
         >
-          <div className="px-5 py-4 border-b border-white/[0.05] bg-[#07100F] flex items-center justify-between">
-            <h3 className="text-[14px] font-semibold text-white tracking-tight">vs. the alternatives</h3>
-            <span className="text-[11px] text-slate-500 tracking-tight">Forestock wins on every metric</span>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-white/[0.04]">
-                  <th className="text-left text-[10px] font-medium uppercase tracking-widest text-slate-600 px-5 py-3">Feature</th>
-                  <th className="text-center text-[10px] font-medium uppercase tracking-widest text-[#22C55E] px-4 py-3">Forestock</th>
-                  <th className="text-center text-[10px] font-medium uppercase tracking-widest text-slate-600 px-4 py-3 whitespace-nowrap">Stocky (dead)</th>
-                  <th className="text-center text-[10px] font-medium uppercase tracking-widest text-slate-600 px-4 py-3 whitespace-nowrap">Prediko / IPlanner</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map(([feat, us, stocky, comp], i) => (
-                  <tr key={feat as string} className={i < rows.length - 1 ? "border-b border-white/[0.03]" : ""}>
-                    <td className="px-5 py-3 text-[13px] text-slate-300 font-medium tracking-tight">{feat}</td>
-                    <td className="px-4 py-3 text-center text-[13px] text-[#22C55E] font-medium tracking-tight">{us}</td>
-                    <td className="px-4 py-3 text-center text-[13px] text-slate-600 tracking-tight">{stocky}</td>
-                    <td className="px-4 py-3 text-center text-[13px] text-slate-600 tracking-tight">{comp}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-white/[0.05]">
+            {[
+              { value: "87%", label: "Forecast accuracy" },
+              { value: "30s", label: "Time to first insight" },
+              { value: "$9", label: "Per month, cancel anytime" },
+              { value: "2 min", label: "Setup — just upload CSV" },
+            ].map((s) => (
+              <div key={s.label} className="px-6 py-5 text-center">
+                <div className="text-[28px] font-bold text-white tracking-tight">{s.value}</div>
+                <div className="text-[12px] text-slate-500 mt-1 tracking-tight">{s.label}</div>
+              </div>
+            ))}
           </div>
         </motion.div>
       </div>
