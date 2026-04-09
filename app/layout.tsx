@@ -11,6 +11,8 @@ const inter = Inter({
   weight: ["300", "400", "500", "600", "700"],
 });
 import { ClerkProvider } from "@clerk/nextjs";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const clerkKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ?? "";
 const clerkReady =
@@ -207,6 +209,8 @@ export default function RootLayout({
           {children}
         </ClerkProvider>
       ) : children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
