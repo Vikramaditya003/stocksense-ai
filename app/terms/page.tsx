@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { LogoMark } from "@/components/StocksenseLogo";
 
 export const metadata: Metadata = {
   title: "Terms of Service — Forestock",
@@ -12,12 +13,8 @@ export default function TermsPage() {
       {/* Nav */}
       <nav className="border-b border-[#22C55E]/10 px-6 h-16 flex items-center justify-between max-w-[960px] mx-auto">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[#22C55E] flex items-center justify-center">
-            <svg className="w-4 h-4 text-[#060C0D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 20V14M9 20V8M14 20V11M19 20V4" />
-            </svg>
-          </div>
-          <span className="text-[15px] font-semibold text-white">Forestock<span className="text-[#22C55E]">AI</span></span>
+          <LogoMark size={28} />
+          <span className="text-[15px] font-semibold tracking-tight"><span className="text-white">Fore</span><span className="text-[#22C55E]">stock</span></span>
         </Link>
         <Link href="/" className="text-xs text-slate-500 hover:text-white transition-colors">← Back to home</Link>
       </nav>
@@ -31,7 +28,7 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-base font-semibold text-white mb-3">1. Agreement to Terms</h2>
-            <p>By accessing or using Forestock (&quot;Service&quot;) at forestock.app, you agree to be bound by these Terms of Service. If you do not agree, do not use the Service.</p>
+            <p>By accessing or using Forestock (&quot;Service&quot;) at getforestock.com, you agree to be bound by these Terms of Service. If you do not agree, do not use the Service.</p>
             <p className="mt-3">These Terms apply to all users, including Shopify merchants, businesses, and individuals who access the Service.</p>
           </section>
 
@@ -48,7 +45,7 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-base font-semibold text-white mb-3">4. User Accounts</h2>
-            <p>You are responsible for maintaining the confidentiality of your account credentials and for all activity that occurs under your account. Notify us immediately at support@forestock.app if you suspect unauthorised access.</p>
+            <p>You are responsible for maintaining the confidentiality of your account credentials and for all activity that occurs under your account. Notify us immediately at support@getforestock.com if you suspect unauthorised access.</p>
             <p className="mt-3">You agree not to share your account with others or create accounts on behalf of third parties without authorisation.</p>
           </section>
 
@@ -124,8 +121,8 @@ export default function TermsPage() {
             <p>For questions about these Terms, contact us at:</p>
             <div className="mt-3 bg-white/[0.02] border border-white/[0.05] rounded-xl p-4 text-slate-400">
               <p><strong className="text-slate-200">Forestock</strong></p>
-              <p className="mt-1">Email: support@forestock.app</p>
-              <p>Website: forestock.app</p>
+              <p className="mt-1">Email: support@getforestock.com</p>
+              <p>Website: getforestock.com</p>
             </div>
           </section>
 
