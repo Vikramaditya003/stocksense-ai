@@ -19,7 +19,7 @@ const clerkReady =
   (clerkKey.startsWith("pk_test_") || clerkKey.startsWith("pk_live_")) &&
   clerkKey.length > 30;
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://forestock.app";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://getforestock.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

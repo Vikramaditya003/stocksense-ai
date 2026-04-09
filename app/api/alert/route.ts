@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
       : "• No critical items detected";
 
     await resend.emails.send({
-      from: "Forestock <alerts@forestock.app>",
+      from: "Forestock <hello@getforestock.com>",
       to: email,
       subject: `⚠ ${urgent.length} product${urgent.length !== 1 ? "s" : ""} at risk — Forestock`,
       text: `Hi there,
@@ -76,7 +76,7 @@ ${productRows}
 
 Log in to Forestock to see full reorder quantities, exact stockout dates, and download your purchase order.
 
-→ https://forestock.app/forecast
+→ https://getforestock.com/forecast
 
 You're receiving this because you signed up for Forestock stockout alerts.
 To unsubscribe, reply STOP.
