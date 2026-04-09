@@ -23,7 +23,7 @@ export default function BlogPage() {
             <span className="w-1 h-1 rounded-full bg-[#22C55E]" />
             Blog
           </span>
-          <h1 className="!text-[26px] !font-semibold text-white !leading-tight tracking-tight mt-3 mb-2">
+          <h1 className="text-[26px] font-semibold text-white leading-tight tracking-tight mt-3 mb-2">
             Inventory Intelligence
           </h1>
           <p className="text-[13px] text-slate-500 max-w-[420px] leading-relaxed">
@@ -44,7 +44,7 @@ export default function BlogPage() {
                 </span>
                 <span className="text-[10px] font-semibold text-[#22C55E] bg-[#22C55E]/10 border border-[#22C55E]/20 px-2 py-0.5 rounded-full">Featured</span>
               </div>
-              <h2 className="!text-[17px] !font-semibold text-white mb-2.5 group-hover:text-[#22C55E] transition-colors !leading-snug tracking-tight">
+              <h2 className="text-[17px] font-semibold text-white mb-2.5 group-hover:text-[#22C55E] transition-colors leading-snug tracking-tight">
                 {featured.title}
               </h2>
               <p className="text-[12px] text-slate-500 leading-relaxed mb-4 max-w-[560px]">
@@ -77,7 +77,7 @@ export default function BlogPage() {
                   {post.tag}
                 </span>
               </div>
-              <h3 className="!text-[13px] !font-semibold text-white mb-2 group-hover:text-[#22C55E] transition-colors !leading-snug tracking-tight">
+              <h3 className="text-[13px] font-semibold text-white mb-2 group-hover:text-[#22C55E] transition-colors leading-snug tracking-tight">
                 {post.title}
               </h3>
               <p className="text-[11px] text-slate-500 leading-relaxed mb-4 line-clamp-2">
@@ -95,7 +95,7 @@ export default function BlogPage() {
         <div className="border border-[#22C55E]/15 rounded-2xl p-8 bg-[#0A1415] flex flex-col sm:flex-row items-center justify-between gap-6">
           <div>
             <p className="text-[10px] font-bold text-[#22C55E] uppercase tracking-widest mb-2">Try it free</p>
-            <h2 className="!text-[18px] !font-semibold text-white mb-1.5 tracking-tight">Stop guessing. Start forecasting.</h2>
+            <h2 className="text-[18px] font-semibold text-white mb-1.5 tracking-tight">Stop guessing. Start forecasting.</h2>
             <p className="text-[12px] text-slate-500 max-w-[380px] leading-relaxed">
               Upload your Shopify CSV and get exact stockout dates, reorder quantities, and revenue-at-risk in 30 seconds.
             </p>
