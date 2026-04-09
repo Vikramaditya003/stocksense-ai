@@ -99,9 +99,7 @@ export default function Home() {
               <ul className="space-y-2.5">
                 {[
                   { label: "Blog", href: "/blog" },
-                  { label: "Instagram", href: "https://instagram.com/stocksenseai" },
-                  { label: "Twitter / X", href: "https://x.com/stocksenseai" },
-                  { label: "Contact Us", href: "mailto:support@forestock.app" },
+                  { label: "Contact Us", href: "mailto:support@getforestock.com" },
                 ].map((l) => (
                   <li key={l.label}>
                     <a href={l.href} className="text-[13px] text-slate-500 hover:text-white transition-colors">{l.label}</a>
