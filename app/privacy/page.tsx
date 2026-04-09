@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { LogoMark } from "@/components/StocksenseLogo";
+import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
   title: "Privacy Policy — Forestock",
@@ -10,16 +10,9 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-[#060C0D] text-slate-300">
-      {/* Nav */}
-      <nav className="border-b border-[#22C55E]/10 px-6 h-16 flex items-center justify-between max-w-[960px] mx-auto">
-        <Link href="/" className="flex items-center gap-2.5">
-          <LogoMark size={28} />
-          <span className="text-[15px] font-semibold tracking-tight"><span className="text-white">Fore</span><span className="text-[#22C55E]">stock</span></span>
-        </Link>
-        <Link href="/" className="text-xs text-slate-500 hover:text-white transition-colors">← Back to home</Link>
-      </nav>
+      <Navbar />
 
-      <div className="max-w-[720px] mx-auto px-6 py-16">
+      <div className="max-w-[720px] mx-auto px-6 pt-28 pb-16">
         <p className="text-xs font-semibold text-[#22C55E] uppercase tracking-widest mb-3">Legal</p>
         <h1 className="text-3xl font-bold text-white mb-2">Privacy Policy</h1>
         <p className="text-sm text-slate-500 mb-2">Effective date: 30 March 2026</p>
