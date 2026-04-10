@@ -5,22 +5,22 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
 const mockProducts = [
-  { name: "Premium Yoga Mat", stock: 12, days: 4, risk: "critical", trend: "+34%", loss: "₹18,000" },
-  { name: "Water Bottle XL", stock: 34, days: 11, risk: "high", trend: "+51%", loss: "₹8,500" },
-  { name: "Resistance Bands Set", stock: 87, days: 29, risk: "medium", trend: "+12%", loss: null },
-  { name: "Foam Roller Pro", stock: 203, days: 68, risk: "low", trend: "-5%", loss: null },
+  { name: "Premium Yoga Mat",    stock: 12,  days: 4,  risk: "critical", trend: "+34%", loss: "$220" },
+  { name: "Water Bottle XL",     stock: 34,  days: 11, risk: "high",     trend: "+51%", loss: "$104" },
+  { name: "Resistance Bands Set",stock: 87,  days: 29, risk: "medium",   trend: "+12%", loss: null   },
+  { name: "Foam Roller Pro",     stock: 203, days: 68, risk: "low",      trend: "-5%",  loss: null   },
 ];
 
 const riskStyle: Record<string, { pill: string; days: string }> = {
-  critical: { pill: "text-red-400 bg-red-500/[0.08] border-red-500/20", days: "text-red-400" },
-  high:     { pill: "text-orange-400 bg-orange-500/[0.08] border-orange-500/20", days: "text-orange-400" },
-  medium:   { pill: "text-yellow-400 bg-yellow-500/[0.08] border-yellow-500/20", days: "text-slate-400" },
-  low:      { pill: "text-[#22C55E] bg-[#22C55E]/[0.08] border-[#22C55E]/20", days: "text-slate-500" },
+  critical: { pill: "text-red-400 bg-red-500/[0.08] border-red-500/20",         days: "text-red-400"      },
+  high:     { pill: "text-orange-400 bg-orange-500/[0.08] border-orange-500/20", days: "text-orange-400"   },
+  medium:   { pill: "text-yellow-400 bg-yellow-500/[0.08] border-yellow-500/20", days: "text-slate-400"    },
+  low:      { pill: "text-[#22C55E] bg-[#22C55E]/[0.08] border-[#22C55E]/20",   days: "text-slate-500"    },
 };
 
 function orderByLabel() {
   const d = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000);
-  return d.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+  return d.toLocaleDateString("en-US", { day: "numeric", month: "short" });
 }
 
 export default function Hero() {
@@ -36,7 +36,7 @@ export default function Hero() {
 
       <div className="relative z-10 flex flex-col items-center text-center w-full max-w-[900px] mx-auto px-4 sm:px-6">
 
-        {/* Badge */}
+        {/* Badge — Shopify Stocky urgency */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -45,20 +45,22 @@ export default function Hero() {
         >
           <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
           <span className="text-[12px] font-semibold text-[#22C55E] tracking-widest uppercase">
-            AI-powered · Results in 30 seconds
+            For Shopify merchants · No app install required
           </span>
         </motion.div>
 
-        {/* Headline */}
+        {/* Headline — Shopify is in the first line */}
         <motion.h1
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.05, ease: "easeOut" }}
-          className="text-[64px] sm:text-[88px] lg:text-[110px] font-bold text-white leading-[0.88] tracking-[-0.04em] mb-8"
+          className="text-[58px] sm:text-[80px] lg:text-[100px] font-bold text-white leading-[0.9] tracking-[-0.04em] mb-8"
         >
-          Inventory that
+          Know exactly when
           <br />
-          <span className="text-[#22C55E]">never runs out</span>
+          your <span className="text-[#22C55E]">Shopify stock</span>
+          <br />
+          runs out
         </motion.h1>
 
         {/* Sub */}
@@ -66,13 +68,13 @@ export default function Hero() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.32, delay: 0.1, ease: "easeOut" }}
-          className="text-[19px] text-slate-400 max-w-[560px] leading-relaxed mb-10 tracking-tight"
+          className="text-[18px] text-slate-400 max-w-[520px] leading-relaxed mb-10 tracking-tight"
         >
-          Upload your Shopify CSV and get{" "}
+          Upload your Shopify CSV. In 30 seconds, see{" "}
           <span className="text-slate-200 font-semibold">
-            exact stockout dates, reorder quantities, and revenue at risk
+            which products will run out, when to reorder, and how much revenue you'll lose
           </span>{" "}
-          — in under 60 seconds.
+          if you don't act.
         </motion.p>
 
         {/* CTAs */}
@@ -85,7 +87,7 @@ export default function Hero() {
           <Button asChild size="lg"
             className="text-[16px] px-8 h-13 gap-2 w-full sm:w-auto font-semibold shadow-xl shadow-[#22C55E]/20 hover:shadow-[#22C55E]/30 transition-shadow">
             <Link href="/forecast">
-              Analyze free
+              Run free forecast
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
               </svg>
@@ -102,17 +104,29 @@ export default function Hero() {
           </Button>
         </motion.div>
 
-        {/* Trust note */}
-        <motion.p
+        {/* Trust signals — specific and scannable */}
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.25, delay: 0.18 }}
-          className="text-[13px] text-slate-600 mb-14"
+          className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 mb-14"
         >
-          No credit card · Results in 30 seconds · Shopify CSV compatible
-        </motion.p>
+          {[
+            "No credit card",
+            "No Shopify install",
+            "Results in 30 seconds",
+            "Works with any store",
+          ].map((t) => (
+            <span key={t} className="flex items-center gap-1.5 text-[12px] text-slate-600">
+              <svg className="w-3 h-3 text-[#22C55E] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
+              {t}
+            </span>
+          ))}
+        </motion.div>
 
-        {/* Stats — competitive positioning */}
+        {/* Stats */}
         <motion.div
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
@@ -120,9 +134,9 @@ export default function Hero() {
           className="flex items-stretch justify-center gap-0 mb-20 rounded-2xl border border-white/[0.07] bg-[#0A1415] overflow-hidden divide-x divide-white/[0.07]"
         >
           {[
-            { value: "87%", label: "forecast accuracy", sub: null },
-            { value: "$9", label: "per month", sub: "cancel anytime" },
-            { value: "30s", label: "to first insight", sub: "no setup needed" },
+            { value: "87%",  label: "forecast accuracy",  sub: "across all SKU types"  },
+            { value: "30s",  label: "to first insight",   sub: "no setup required"     },
+            { value: "10×",  label: "cheaper than Prediko", sub: "same-day results"   },
           ].map((s) => (
             <div key={s.label} className="flex-1 text-center px-6 py-5">
               <div className="text-[28px] font-bold text-white tracking-tight tabular-nums">{s.value}</div>
@@ -152,7 +166,7 @@ export default function Hero() {
                   <div key={c} className={`w-2.5 h-2.5 rounded-full ${c}`} />
                 ))}
               </div>
-              <span className="text-[12px] text-slate-600 ml-1 font-mono">forestock.app/forecast</span>
+              <span className="text-[12px] text-slate-600 ml-1 font-mono">getforestock.com/forecast</span>
             </div>
             <div className="flex items-center gap-1.5 bg-[#22C55E]/[0.1] border border-[#22C55E]/25 px-2.5 py-1 rounded-full">
               <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
@@ -168,7 +182,7 @@ export default function Hero() {
               <span className="font-semibold text-red-400">Premium Yoga Mat</span>
               {" "}— stockout in <span className="font-semibold text-red-300">4 days</span>
               <span className="text-slate-700 mx-2">·</span>
-              <span className="text-red-400 font-semibold">lose ₹18,000</span>
+              <span className="text-red-400 font-semibold">lose $220</span>
             </span>
             <span className="ml-auto text-[12px] font-semibold text-orange-300 bg-orange-500/10 border border-orange-500/20 px-2.5 py-1 rounded-lg flex-shrink-0">
               Order by {orderBy}
@@ -190,9 +204,9 @@ export default function Hero() {
             </div>
             <div className="flex items-center gap-4 text-[12px]">
               {[
-                { label: "2 critical", color: "text-red-400", dot: "bg-red-500" },
-                { label: "1 at risk", color: "text-orange-400", dot: "bg-orange-500" },
-                { label: "1 safe", color: "text-[#22C55E]", dot: "bg-[#22C55E]" },
+                { label: "2 critical", color: "text-red-400",    dot: "bg-red-500"    },
+                { label: "1 at risk",  color: "text-orange-400", dot: "bg-orange-500" },
+                { label: "1 safe",     color: "text-[#22C55E]",  dot: "bg-[#22C55E]"  },
               ].map(s => (
                 <span key={s.label} className={`flex items-center gap-1.5 ${s.color}`}>
                   <span className={`w-1.5 h-1.5 rounded-full ${s.dot}`} />
