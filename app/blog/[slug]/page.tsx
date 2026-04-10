@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import { BookOpen, GraduationCap, BarChart2, Settings2, TreePine, FileText } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { getPost, POSTS, type Section } from "@/lib/blog-posts";
 
@@ -20,14 +22,14 @@ export async function generateMetadata(
   };
 }
 
-const TAG_COVER: Record<string, { bgClass: string; icon: string; badgeClass: string }> = {
-  Guide:     { bgClass: "bg-[#C4714A]", badgeClass: "bg-[#C4714A]/10 text-[#C4714A]", icon: "📋" },
-  Education: { bgClass: "bg-[#3D8A6A]", badgeClass: "bg-[#3D8A6A]/10 text-[#3D8A6A]", icon: "🎓" },
-  Analysis:  { bgClass: "bg-[#5567A4]", badgeClass: "bg-[#5567A4]/10 text-[#5567A4]", icon: "📊" },
-  Tutorial:  { bgClass: "bg-[#7C5C8C]", badgeClass: "bg-[#7C5C8C]/10 text-[#7C5C8C]", icon: "⚙️" },
-  Company:   { bgClass: "bg-[#2E7D52]", badgeClass: "bg-[#2E7D52]/10 text-[#2E7D52]", icon: "🌲" },
+const TAG_COVER: Record<string, { bgClass: string; icon: ReactNode; badgeClass: string }> = {
+  Guide:     { bgClass: "bg-[#C4714A]", badgeClass: "bg-[#C4714A]/10 text-[#C4714A]", icon: <BookOpen    className="w-6 h-6 text-white" strokeWidth={1.75} /> },
+  Education: { bgClass: "bg-[#3D8A6A]", badgeClass: "bg-[#3D8A6A]/10 text-[#3D8A6A]", icon: <GraduationCap className="w-6 h-6 text-white" strokeWidth={1.75} /> },
+  Analysis:  { bgClass: "bg-[#5567A4]", badgeClass: "bg-[#5567A4]/10 text-[#5567A4]", icon: <BarChart2    className="w-6 h-6 text-white" strokeWidth={1.75} /> },
+  Tutorial:  { bgClass: "bg-[#7C5C8C]", badgeClass: "bg-[#7C5C8C]/10 text-[#7C5C8C]", icon: <Settings2    className="w-6 h-6 text-white" strokeWidth={1.75} /> },
+  Company:   { bgClass: "bg-[#2E7D52]", badgeClass: "bg-[#2E7D52]/10 text-[#2E7D52]", icon: <TreePine     className="w-6 h-6 text-white" strokeWidth={1.75} /> },
 };
-const FALLBACK_COVER = { bgClass: "bg-[#4A6B5C]", badgeClass: "bg-[#4A6B5C]/10 text-[#4A6B5C]", icon: "📝" };
+const FALLBACK_COVER = { bgClass: "bg-[#4A6B5C]", badgeClass: "bg-[#4A6B5C]/10 text-[#4A6B5C]", icon: <FileText className="w-6 h-6 text-white" strokeWidth={1.75} /> };
 
 function renderSection(s: Section, i: number) {
   switch (s.type) {
@@ -150,7 +152,9 @@ export default async function BlogPostPage(
             All articles
           </Link>
           <div className="flex items-center gap-3 mb-4">
-            <span className="text-2xl" role="img" aria-label={post.tag}>{cover.icon}</span>
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/20">
+              {cover.icon}
+            </div>
             <span className="text-[12px] font-bold text-white/80 uppercase tracking-wider">{post.tag}</span>
           </div>
           <div className="text-[26px] sm:text-[32px] font-bold text-white leading-tight tracking-tight mb-4 max-w-[680px]">
@@ -213,7 +217,7 @@ export default async function BlogPostPage(
                       href={`/blog/${p.slug}`}
                       className="group flex items-start gap-3"
                     >
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-sm ${rc.bgClass}`}>
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${rc.bgClass}`}>
                         {rc.icon}
                       </div>
                       <div className="min-w-0">

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Package, BarChart2, CircleDollarSign, ClipboardList, Bell, HelpCircle } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import type { Metadata } from "next";
@@ -132,20 +133,20 @@ export default function VsStockMonitor() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="card p-6 border-red-500/15">
             <p className="text-[11px] font-bold text-red-400 uppercase tracking-widest mb-3">With Stock Monitor</p>
-            <div className="space-y-2 text-sm text-slate-400 leading-relaxed">
-              <p>📦 Stock hits 0 on your Yoga Mat SKU.</p>
-              <p>🔔 You get a notification: <em>"Premium Yoga Mat is out of stock."</em></p>
-              <p>❓ You don't know how long it's been out. You don't know how much you lost. You order reactively.</p>
-              <p className="text-red-400 font-medium">You lost ₹18,000 before you even saw the alert.</p>
+            <div className="space-y-3 text-sm text-slate-400 leading-relaxed">
+              <div className="flex items-start gap-2.5"><Package className="w-4 h-4 text-red-400/60 flex-shrink-0 mt-0.5" /><p>Stock hits 0 on your Yoga Mat SKU.</p></div>
+              <div className="flex items-start gap-2.5"><Bell    className="w-4 h-4 text-red-400/60 flex-shrink-0 mt-0.5" /><p>You get a notification: <em>"Premium Yoga Mat is out of stock."</em></p></div>
+              <div className="flex items-start gap-2.5"><HelpCircle className="w-4 h-4 text-red-400/60 flex-shrink-0 mt-0.5" /><p>You don't know how long it's been out. You don't know how much you lost. You order reactively.</p></div>
+              <p className="text-red-400 font-medium pl-6">You lost ₹18,000 before you even saw the alert.</p>
             </div>
           </div>
           <div className="card p-6 border-[#22C55E]/15 bg-[#22C55E]/[0.02]">
             <p className="text-[11px] font-bold text-[#22C55E] uppercase tracking-widest mb-3">With Forestock</p>
-            <div className="space-y-2 text-sm text-slate-400 leading-relaxed">
-              <p>📊 4 days before stockout, AI flags: <em>"Premium Yoga Mat — 4 days left."</em></p>
-              <p>💰 Revenue at risk shown: <strong className="text-white">₹18,000</strong> if you don't act.</p>
-              <p>📋 Reorder plan: <strong className="text-white">Order 150 units by Apr 9.</strong></p>
-              <p className="text-[#22C55E] font-medium">You order in time. Revenue protected.</p>
+            <div className="space-y-3 text-sm text-slate-400 leading-relaxed">
+              <div className="flex items-start gap-2.5"><BarChart2       className="w-4 h-4 text-[#22C55E]/70 flex-shrink-0 mt-0.5" /><p>4 days before stockout, AI flags: <em>"Premium Yoga Mat — 4 days left."</em></p></div>
+              <div className="flex items-start gap-2.5"><CircleDollarSign className="w-4 h-4 text-[#22C55E]/70 flex-shrink-0 mt-0.5" /><p>Revenue at risk shown: <strong className="text-white">₹18,000</strong> if you don't act.</p></div>
+              <div className="flex items-start gap-2.5"><ClipboardList   className="w-4 h-4 text-[#22C55E]/70 flex-shrink-0 mt-0.5" /><p>Reorder plan: <strong className="text-white">Order 150 units by Apr 9.</strong></p></div>
+              <p className="text-[#22C55E] font-medium pl-6">You order in time. Revenue protected.</p>
             </div>
           </div>
         </div>

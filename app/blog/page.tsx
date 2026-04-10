@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import { BookOpen, GraduationCap, BarChart2, Settings2, TreePine, FileText } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { POSTS } from "@/lib/blog-posts";
 
@@ -13,20 +15,20 @@ const TAG_COVER: Record<string, {
   bgClass: string;
   patternFill: string;
   badgeClass: string;
-  icon: string;
+  icon: ReactNode;
 }> = {
-  Guide:     { bgClass: "bg-[#C4714A]", patternFill: "fill-white/10",   badgeClass: "bg-[#C4714A]/10 text-[#C4714A]", icon: "📋" },
-  Education: { bgClass: "bg-[#3D8A6A]", patternFill: "fill-white/10",   badgeClass: "bg-[#3D8A6A]/10 text-[#3D8A6A]", icon: "🎓" },
-  Analysis:  { bgClass: "bg-[#5567A4]", patternFill: "fill-white/10",   badgeClass: "bg-[#5567A4]/10 text-[#5567A4]", icon: "📊" },
-  Tutorial:  { bgClass: "bg-[#7C5C8C]", patternFill: "fill-white/10",   badgeClass: "bg-[#7C5C8C]/10 text-[#7C5C8C]", icon: "⚙️" },
-  Company:   { bgClass: "bg-[#2E7D52]", patternFill: "fill-white/10",   badgeClass: "bg-[#2E7D52]/10 text-[#2E7D52]", icon: "🌲" },
+  Guide:     { bgClass: "bg-[#C4714A]", patternFill: "fill-white/10", badgeClass: "bg-[#C4714A]/10 text-[#C4714A]", icon: <BookOpen    className="w-6 h-6 text-white" strokeWidth={1.75} /> },
+  Education: { bgClass: "bg-[#3D8A6A]", patternFill: "fill-white/10", badgeClass: "bg-[#3D8A6A]/10 text-[#3D8A6A]", icon: <GraduationCap className="w-6 h-6 text-white" strokeWidth={1.75} /> },
+  Analysis:  { bgClass: "bg-[#5567A4]", patternFill: "fill-white/10", badgeClass: "bg-[#5567A4]/10 text-[#5567A4]", icon: <BarChart2    className="w-6 h-6 text-white" strokeWidth={1.75} /> },
+  Tutorial:  { bgClass: "bg-[#7C5C8C]", patternFill: "fill-white/10", badgeClass: "bg-[#7C5C8C]/10 text-[#7C5C8C]", icon: <Settings2    className="w-6 h-6 text-white" strokeWidth={1.75} /> },
+  Company:   { bgClass: "bg-[#2E7D52]", patternFill: "fill-white/10", badgeClass: "bg-[#2E7D52]/10 text-[#2E7D52]", icon: <TreePine     className="w-6 h-6 text-white" strokeWidth={1.75} /> },
 };
 
 const FALLBACK_COVER = {
   bgClass: "bg-[#4A6B5C]",
   patternFill: "fill-white/10",
   badgeClass: "bg-[#4A6B5C]/10 text-[#4A6B5C]",
-  icon: "📝",
+  icon: <FileText className="w-6 h-6 text-white" strokeWidth={1.75} />,
 };
 
 function CoverCard({ post, featured = false }: { post: typeof POSTS[number]; featured?: boolean }) {
@@ -62,7 +64,7 @@ function CoverCard({ post, featured = false }: { post: typeof POSTS[number]; fea
         </svg>
         {/* Icon badge */}
         <div className="relative z-10 flex items-center justify-center w-14 h-14 rounded-2xl bg-white/20">
-          <span className="text-2xl" role="img" aria-label={post.tag}>{cover.icon}</span>
+          {cover.icon}
         </div>
       </div>
 

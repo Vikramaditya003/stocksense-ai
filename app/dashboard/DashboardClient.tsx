@@ -465,7 +465,7 @@ export default function DashboardClient() {
           <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-3">Revenue at Risk</p>
           <div className="flex items-end gap-2 mb-1">
             <p className={`text-[30px] font-bold tabular-nums tracking-tight leading-none ${activeAnalysis?.totalRarAmount ? "text-red-400" : "text-slate-600"}`}>
-              {activeAnalysis?.totalRarAmount ? activeAnalysis.revenueAtRisk : "₹0"}
+              {activeAnalysis?.totalRarAmount ? activeAnalysis.revenueAtRisk : formatMoney(0, activeCurrency)}
             </p>
           </div>
           <p className="text-[11px] text-slate-500">
@@ -1001,7 +1001,7 @@ export default function DashboardClient() {
                       </td>
                       <td>
                         {product.estimatedRevenueLoss
-                          ? <div><span className="text-red-400 text-sm font-bold">{product.estimatedRevenueLoss}</span>{product.price && <p className="text-[11px] text-[#475569]">{product.avgDailySales.toFixed(1)}/d × ₹{product.price.toLocaleString("en-US")}</p>}</div>
+                          ? <div><span className="text-red-400 text-sm font-bold">{product.estimatedRevenueLoss}</span>{product.price && <p className="text-[11px] text-[#475569]">{product.avgDailySales.toFixed(1)}/d × {formatMoney(product.price, activeCurrency)}</p>}</div>
                           : <span className="text-[#475569]">—</span>
                         }
                       </td>
