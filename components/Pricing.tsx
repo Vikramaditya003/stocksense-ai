@@ -117,10 +117,11 @@ export default function Pricing() {
             className="relative rounded-2xl bg-[#0A1415] p-7 flex flex-col overflow-hidden"
             style={{ boxShadow: "0 0 0 1.5px #22C55E40, 0 24px 60px -12px rgba(34,197,94,0.12)" }}
           >
-            {/* Popular badge */}
+            {/* Launching soon badge */}
             <div className="absolute top-5 right-5">
-              <span className="bg-[#22C55E] text-[#060C0D] text-[10px] font-bold px-2.5 py-1 rounded-full tracking-widest uppercase">
-                Most popular
+              <span className="flex items-center gap-1.5 bg-[#22C55E]/10 border border-[#22C55E]/30 text-[#22C55E] text-[10px] font-bold px-2.5 py-1 rounded-full tracking-widest uppercase">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
+                Launching soon
               </span>
             </div>
 
@@ -137,12 +138,15 @@ export default function Pricing() {
               <p className="text-[12px] text-slate-600">Billed in INR · approx ₹749/mo</p>
             </div>
 
-            <Link
-              href="/upgrade"
-              className="block w-full text-center text-[13px] font-semibold py-2.5 px-4 rounded-xl mb-7 transition-all bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] shadow-lg shadow-[#22C55E]/25"
+            <a
+              href="mailto:support@getforestock.com?subject=Notify me when Pro launches&body=Hi, please notify me when the Forestock Pro plan goes live."
+              className="block w-full text-center text-[13px] font-semibold py-2.5 px-4 rounded-xl mb-2 transition-all bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] shadow-lg shadow-[#22C55E]/25"
             >
-              Get Pro Plan →
-            </Link>
+              Notify me when it&apos;s live →
+            </a>
+            <p className="text-[11px] text-slate-600 text-center mb-5">
+              We&apos;ll email you at launch — with an early-bird discount.
+            </p>
 
             <div className="border-t border-[#22C55E]/[0.12] pt-6">
               <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4">Everything in Starter, plus</p>

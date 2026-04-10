@@ -821,12 +821,16 @@ export default function DashboardClient() {
 
           {/* Upsell CTA */}
           <div className="rounded-xl bg-gradient-to-br from-[#22C55E]/10 to-[#22C55E]/[0.03] border border-[#22C55E]/20 p-4">
-            <p className="text-[11px] font-black text-[#22C55E] uppercase tracking-widest mb-1">Upgrade to Pro</p>
-            <p className="text-[12px] text-slate-300 font-semibold mb-0.5">Get 90-day forecasts — ₹999/mo</p>
-            <p className="text-[10px] text-[#475569] mb-3">Cancel anytime. 10× cheaper than Prediko.</p>
-            <a href="/#pricing"
+            <div className="flex items-center gap-1.5 mb-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
+              <p className="text-[11px] font-black text-[#22C55E] uppercase tracking-widest">Pro · Launching soon</p>
+            </div>
+            <p className="text-[12px] text-slate-300 font-semibold mb-0.5">90-day forecasts · Unlimited SKUs</p>
+            <p className="text-[10px] text-[#475569] mb-3">Get notified at launch — early-bird discount included.</p>
+            <a
+              href="mailto:support@getforestock.com?subject=Notify me when Pro launches&body=Hi, please notify me when the Forestock Pro plan goes live."
               className="block w-full text-center text-[12px] font-bold bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] py-2 rounded-lg transition-all shadow-md shadow-[#22C55E]/20">
-              Protect more revenue →
+              Notify me when live →
             </a>
           </div>
         </div>
