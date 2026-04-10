@@ -1,10 +1,7 @@
-"use client";
-
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { type ReactNode } from "react";
 
-const steps = [
+const steps: { step: string; title: string; description: string; icon: ReactNode }[] = [
   {
     step: "01",
     title: "Upload your sales data",
@@ -42,13 +39,7 @@ export default function HowItWorks() {
     <section id="how-it-works" className="py-28 relative section-alt">
       <div className="max-w-[960px] mx-auto px-4 sm:px-6">
 
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.1 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-          className="text-center mb-16"
-        >
+        <div className="text-center mb-16 animate-in fade-in-0 slide-in-from-bottom-4 duration-300 fill-mode-both">
           <p className="section-label mb-5">Process</p>
           <h2 className="text-4xl sm:text-[52px] font-semibold text-white tracking-[-0.03em] leading-tight mb-4 mt-4">
             Forecasts in{" "}
@@ -57,23 +48,18 @@ export default function HowItWorks() {
           <p className="text-[16px] text-slate-500 max-w-md mx-auto leading-relaxed tracking-tight">
             No Shopify app install. No API keys. Just your CSV.
           </p>
-        </motion.div>
+        </div>
 
         {/* Steps with connector */}
         <div className="relative grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Connector line (desktop only) */}
           <div className="hidden md:block absolute top-[2.75rem] left-[calc(16.66%+1.5rem)] right-[calc(16.66%+1.5rem)] h-px bg-gradient-to-r from-[#22C55E]/30 via-[#22C55E]/15 to-[#22C55E]/30 z-0" />
 
-          {steps.map((step, i) => (
-            <motion.div
+          {steps.map((step) => (
+            <div
               key={step.step}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
-              transition={{ duration: 0.3, delay: i * 0.08 }}
-              className="relative z-10 rounded-2xl border border-[#22C55E]/10 bg-[#0A1415] p-6 hover:border-[#22C55E]/25 hover:shadow-lg hover:shadow-[#22C55E]/[0.05] transition-all duration-250 group"
+              className="relative z-10 rounded-2xl border border-[#22C55E]/10 bg-[#0A1415] p-6 hover:border-[#22C55E]/25 hover:shadow-lg hover:shadow-[#22C55E]/[0.05] transition-all duration-250 group animate-in fade-in-0 slide-in-from-bottom-4 duration-300 fill-mode-both"
             >
-              {/* Step icon + number */}
               <div className="flex items-start justify-between mb-6">
                 <div className="w-11 h-11 rounded-xl bg-[#22C55E]/10 border border-[#22C55E]/20 flex items-center justify-center text-[#22C55E] group-hover:bg-[#22C55E]/15 group-hover:border-[#22C55E]/30 transition-colors">
                   {step.icon}
@@ -82,18 +68,12 @@ export default function HowItWorks() {
               </div>
               <h3 className="text-[17px] font-semibold text-white mb-2.5 tracking-tight">{step.title}</h3>
               <p className="text-[14px] text-slate-500 leading-relaxed tracking-tight">{step.description}</p>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         {/* CTA strip */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.1 }}
-          transition={{ duration: 0.3, delay: 0.18 }}
-          className="mt-4 rounded-2xl border border-[#22C55E]/15 bg-[#0A1415] px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4"
-        >
+        <div className="mt-4 rounded-2xl border border-[#22C55E]/15 bg-[#0A1415] px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4 animate-in fade-in-0 slide-in-from-bottom-2 duration-300 fill-mode-both">
           <div>
             <p className="text-[17px] font-semibold text-white tracking-tight mb-0.5">
               Shopify Stocky shuts down August 2026.
@@ -102,15 +82,16 @@ export default function HowItWorks() {
               Switch before your next peak season. Start free, no credit card.
             </p>
           </div>
-          <Button asChild className="flex-shrink-0 gap-2 font-semibold shadow-lg shadow-[#22C55E]/15">
-            <Link href="/forecast">
-              Start free
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-              </svg>
-            </Link>
-          </Button>
-        </motion.div>
+          <Link
+            href="/forecast"
+            className="flex-shrink-0 inline-flex items-center gap-2 text-[13px] font-semibold text-[#060C0D] bg-[#22C55E] hover:bg-[#16A34A] px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-[#22C55E]/15"
+          >
+            Start free
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            </svg>
+          </Link>
+        </div>
       </div>
     </section>
   );

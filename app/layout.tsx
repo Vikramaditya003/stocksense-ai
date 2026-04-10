@@ -8,7 +8,7 @@ const inter = Inter({
   variable: "--font-inter",
   display: "swap",
   preload: true,
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
 });
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/next";
@@ -110,6 +110,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${GeistMono.variable}`}>
       <head>
+        {/* Preconnect to third-party origins to shorten first-request latency */}
+        <link rel="preconnect" href="https://clerk.getforestock.com" />
+        <link rel="preconnect" href="https://api.groq.com" />
         <script
           type="application/ld+json"
           // JSON.stringify with replacer ensures no </script> injection via untrusted values.

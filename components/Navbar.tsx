@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { LogoMark } from "@/components/StocksenseLogo";
-import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
 
@@ -12,7 +11,6 @@ const CLERK_READY =
   (_clerkKey.startsWith("pk_test_") || _clerkKey.startsWith("pk_live_")) &&
   _clerkKey.length > 30;
 
-// Thin wrapper so hooks are always called unconditionally within a component
 function AuthButtons() {
   const { isSignedIn, isLoaded } = useUser();
   if (!isLoaded) return null;
@@ -88,24 +86,21 @@ export default function Navbar() {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const links = [
     { label: "How it works", href: "#how-it-works" },
-    { label: "Features", href: "#features" },
-    { label: "Pricing", href: "#pricing" },
-    { label: "Blog", href: "/blog" },
+    { label: "Features",     href: "#features"     },
+    { label: "Pricing",      href: "#pricing"      },
+    { label: "Blog",         href: "/blog"         },
   ];
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-4">
-      <motion.nav
-        initial={{ opacity: 0, y: -8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, ease: "easeOut" }}
-        className={`w-full max-w-[1000px] flex items-center justify-between px-6 h-16 rounded-2xl transition-all duration-300 ${
+      <nav
+        className={`w-full max-w-[1000px] flex items-center justify-between px-6 h-16 rounded-2xl transition-all duration-300 animate-in fade-in-0 slide-in-from-top-2 duration-350 fill-mode-both ${
           scrolled
             ? "bg-[#0A1415]/95 backdrop-blur-2xl border border-[#22C55E]/15 shadow-2xl shadow-black/60"
             : "bg-[#0A1415]/70 backdrop-blur-xl border border-white/[0.07]"
@@ -161,35 +156,32 @@ export default function Navbar() {
               : <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />}
           </svg>
         </button>
-      </motion.nav>
+      </nav>
 
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -4, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -4, scale: 0.98 }}
-            transition={{ duration: 0.14 }}
-            className="absolute top-[4.75rem] left-4 right-4 bg-[#0A1415] border border-[#22C55E]/15 rounded-2xl p-3 shadow-2xl shadow-black/70 md:hidden"
-          >
-            <div className="space-y-0.5 mb-3">
-              {links.map((link) => (
-                <a key={link.label} href={link.href} onClick={() => setMobileOpen(false)}
-                  className="block text-[15px] text-slate-400 hover:text-white px-3 py-2.5 rounded-xl hover:bg-white/[0.05] transition-all tracking-tight">
-                  {link.label}
-                </a>
-              ))}
-            </div>
-            {CLERK_READY ? (
-              <MobileAuthButton />
-            ) : (
-              <Button asChild className="w-full">
-                <Link href="/forecast">Get started free</Link>
-              </Button>
-            )}
-          </motion.div>
+      {/* Mobile menu — CSS transition, no framer-motion */}
+      <div
+        className={`absolute top-[4.75rem] left-4 right-4 bg-[#0A1415] border border-[#22C55E]/15 rounded-2xl p-3 shadow-2xl shadow-black/70 md:hidden transition-all duration-150 origin-top ${
+          mobileOpen
+            ? "opacity-100 scale-100 pointer-events-auto"
+            : "opacity-0 scale-[0.98] pointer-events-none"
+        }`}
+      >
+        <div className="space-y-0.5 mb-3">
+          {links.map((link) => (
+            <a key={link.label} href={link.href} onClick={() => setMobileOpen(false)}
+              className="block text-[15px] text-slate-400 hover:text-white px-3 py-2.5 rounded-xl hover:bg-white/[0.05] transition-all tracking-tight">
+              {link.label}
+            </a>
+          ))}
+        </div>
+        {CLERK_READY ? (
+          <MobileAuthButton />
+        ) : (
+          <Button asChild className="w-full">
+            <Link href="/forecast">Get started free</Link>
+          </Button>
         )}
-      </AnimatePresence>
+      </div>
     </header>
   );
 }

@@ -1,8 +1,14 @@
-"use client";
+import { type ReactNode } from "react";
 
-import { motion } from "framer-motion";
-
-const features = [
+const features: {
+  icon: ReactNode;
+  tag: string; tagStyle: string;
+  iconStyle: string;
+  title: string;
+  before?: string; after?: string; afterStyle?: string;
+  formula?: string[];
+  desc: string;
+}[] = [
   {
     icon: (
       <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -12,7 +18,6 @@ const features = [
     tag: "Non-negotiable",
     tagStyle: "text-red-400 bg-red-500/[0.08] border-red-500/20",
     iconStyle: "text-red-400 bg-red-500/[0.07] border-red-500/15",
-    hoverBorder: "hover:border-red-500/15",
     title: "Exact stockout countdown",
     before: '"Medium risk"',
     after: "Stockout in 5 days → lose ₹12,000",
@@ -28,7 +33,6 @@ const features = [
     tag: "Smart reorder",
     tagStyle: "text-emerald-400 bg-emerald-500/[0.08] border-emerald-500/20",
     iconStyle: "text-emerald-400 bg-emerald-500/[0.07] border-emerald-500/15",
-    hoverBorder: "hover:border-emerald-500/15",
     title: "Reorder with duration",
     before: '"Reorder 120 units"',
     after: "Order 120 units → lasts 18 days",
@@ -44,7 +48,6 @@ const features = [
     tag: "Unique to us",
     tagStyle: "text-cyan-400 bg-cyan-500/[0.08] border-cyan-500/20",
     iconStyle: "text-cyan-400 bg-cyan-500/[0.07] border-cyan-500/15",
-    hoverBorder: "hover:border-cyan-500/15",
     title: "Ad-spend forecasting",
     formula: ["Ad spend +20%", "→", "Demand +35%", "→", "Stockout 3 days sooner"],
     desc: "No competitor offers this. Stop stocking out the week after your biggest Meta push.",
@@ -58,7 +61,6 @@ const features = [
     tag: "Supplier-aware",
     tagStyle: "text-[#22C55E] bg-[#22C55E]/[0.08] border-[#22C55E]/20",
     iconStyle: "text-[#22C55E] bg-[#22C55E]/[0.07] border-[#22C55E]/15",
-    hoverBorder: "hover:border-blue-500/15",
     title: "Lead time planning",
     before: "Lead time: 10d. Days left: 8.",
     after: "⚠ Already late — order immediately",
@@ -74,7 +76,6 @@ const features = [
     tag: "Cash flow",
     tagStyle: "text-amber-400 bg-amber-500/[0.08] border-amber-500/20",
     iconStyle: "text-amber-400 bg-amber-500/[0.07] border-amber-500/15",
-    hoverBorder: "hover:border-amber-500/15",
     title: "Overstock detection",
     before: "203 units in stock",
     after: "~₹4,200 tied up → reduce next order",
@@ -90,7 +91,6 @@ const features = [
     tag: "One-click",
     tagStyle: "text-slate-400 bg-white/[0.05] border-white/10",
     iconStyle: "text-slate-400 bg-white/[0.05] border-white/10",
-    hoverBorder: "hover:border-zinc-500/20",
     title: "Generate purchase orders",
     before: "Copy-paste into email manually",
     after: "Download formatted PO instantly",
@@ -99,20 +99,13 @@ const features = [
   },
 ];
 
-
 export default function Features() {
   return (
     <section id="features" className="py-28 bg-[#060C0D] relative overflow-hidden">
       <div className="max-w-[960px] mx-auto px-4 sm:px-6">
 
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.08 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-          className="text-center mb-14"
-        >
+        <div className="text-center mb-14 animate-in fade-in-0 slide-in-from-bottom-4 duration-300 fill-mode-both">
           <p className="section-label mb-5">Why teams switch</p>
           <h2 className="text-4xl sm:text-[52px] font-semibold text-white tracking-[-0.03em] leading-tight mb-4 mt-4">
             Decisions, not{" "}
@@ -121,18 +114,14 @@ export default function Features() {
           <p className="text-[16px] text-slate-500 max-w-md mx-auto leading-relaxed tracking-tight">
             Most tools show data. Forestock tells you what to do, why, and by when — with the revenue impact if you don&apos;t.
           </p>
-        </motion.div>
+        </div>
 
         {/* Feature grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
-          {features.map((f, i) => (
-            <motion.div
+          {features.map((f) => (
+            <div
               key={f.title}
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.08 }}
-              transition={{ duration: 0.26, delay: i * 0.04 }}
-              className="rounded-2xl border border-[#22C55E]/10 bg-[#0A1415] p-5 transition-all duration-200 hover:border-[#22C55E]/25 hover:bg-[#0F1C1E] hover:-translate-y-1 hover:shadow-lg hover:shadow-[#22C55E]/[0.06]"
+              className="rounded-2xl border border-[#22C55E]/10 bg-[#0A1415] p-5 transition-all duration-200 hover:border-[#22C55E]/25 hover:bg-[#0F1C1E] hover:-translate-y-1 hover:shadow-lg hover:shadow-[#22C55E]/[0.06] animate-in fade-in-0 slide-in-from-bottom-4 duration-300 fill-mode-both"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className={`w-8 h-8 rounded-lg border flex items-center justify-center flex-shrink-0 ${f.iconStyle}`}>
@@ -145,8 +134,7 @@ export default function Features() {
 
               <h3 className="text-[14px] font-semibold text-white mb-2 tracking-tight">{f.title}</h3>
 
-              {/* Formula (ad-spend) */}
-              {"formula" in f && f.formula && (
+              {f.formula && (
                 <div className="flex flex-wrap items-center gap-1 mb-3">
                   {f.formula.map((part, j) => (
                     part === "→" ? (
@@ -162,8 +150,7 @@ export default function Features() {
                 </div>
               )}
 
-              {/* Before/after */}
-              {"before" in f && f.before && (
+              {f.before && (
                 <div className="space-y-1.5 mb-3">
                   <p className="text-[11px] text-slate-600 line-through">{f.before}</p>
                   <div className={`inline-flex items-center text-[11px] font-medium px-2 py-1 rounded-md border ${f.afterStyle}`}>
@@ -173,18 +160,12 @@ export default function Features() {
               )}
 
               <p className="text-[12px] text-slate-500 leading-relaxed tracking-tight">{f.desc}</p>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         {/* Trust strip */}
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.08 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
-          className="rounded-2xl border border-[#22C55E]/10 bg-[#0A1415] overflow-hidden"
-        >
+        <div className="rounded-2xl border border-[#22C55E]/10 bg-[#0A1415] overflow-hidden animate-in fade-in-0 duration-300 fill-mode-both">
           <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-white/[0.05]">
             {[
               { value: "87%", label: "Forecast accuracy" },
@@ -198,7 +179,7 @@ export default function Features() {
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

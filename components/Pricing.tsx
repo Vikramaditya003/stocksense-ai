@@ -1,7 +1,4 @@
-"use client";
-
 import Link from "next/link";
-import { motion } from "framer-motion";
 
 const freeFeatures = [
   "5 products per forecast",
@@ -21,6 +18,22 @@ const proFeatures = [
   "Priority email support",
 ];
 
+const Check = () => (
+  <div className="w-4 h-4 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/25 flex items-center justify-center flex-shrink-0">
+    <svg className="w-2.5 h-2.5 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+    </svg>
+  </div>
+);
+
+const Cross = () => (
+  <div className="w-4 h-4 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center flex-shrink-0">
+    <svg className="w-2.5 h-2.5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </div>
+);
+
 export default function Pricing() {
   return (
     <section id="pricing" className="py-28 bg-[#060C0D] relative overflow-hidden">
@@ -29,13 +42,7 @@ export default function Pricing() {
       <div className="max-w-[860px] mx-auto px-4 sm:px-6 relative z-10">
 
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.1 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-          className="text-center mb-14"
-        >
+        <div className="text-center mb-14 animate-in fade-in-0 slide-in-from-bottom-4 duration-300 fill-mode-both">
           <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#22C55E] uppercase tracking-widest bg-[#22C55E]/10 border border-[#22C55E]/20 px-3 py-1 rounded-full mb-5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]" />
             Pricing
@@ -46,19 +53,13 @@ export default function Pricing() {
           <p className="text-[15px] text-slate-500 max-w-sm mx-auto leading-relaxed">
             Start free. Upgrade when you need more. Cancel anytime.
           </p>
-        </motion.div>
+        </div>
 
         {/* Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-10">
 
           {/* Free */}
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.28 }}
-            className="rounded-2xl border border-white/[0.08] bg-[#0A1415] p-7 flex flex-col"
-          >
+          <div className="rounded-2xl border border-white/[0.08] bg-[#0A1415] p-7 flex flex-col animate-in fade-in-0 slide-in-from-bottom-4 duration-300 fill-mode-both">
             <div className="mb-6">
               <p className="text-[13px] font-semibold text-slate-300 mb-1">Starter</p>
               <p className="text-[13px] text-slate-600 mb-5">Try it free. No credit card needed.</p>
@@ -80,43 +81,24 @@ export default function Pricing() {
               <ul className="space-y-3">
                 {freeFeatures.map((f) => (
                   <li key={f} className="flex items-center gap-2.5">
-                    <div className="w-4 h-4 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/20 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-2.5 h-2.5 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
+                    <Check />
                     <span className="text-[13px] text-slate-400">{f}</span>
                   </li>
                 ))}
                 <li className="flex items-center gap-2.5 opacity-30">
-                  <div className="w-4 h-4 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-2.5 h-2.5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </div>
+                  <Cross />
                   <span className="text-[13px] text-slate-600">Unlimited products</span>
                 </li>
                 <li className="flex items-center gap-2.5 opacity-30">
-                  <div className="w-4 h-4 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-2.5 h-2.5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </div>
+                  <Cross />
                   <span className="text-[13px] text-slate-600">90-day forecasts</span>
                 </li>
               </ul>
             </div>
-          </motion.div>
+          </div>
 
           {/* Pro */}
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.28, delay: 0.06 }}
-            className="relative rounded-2xl bg-[#0A1415] p-7 flex flex-col overflow-hidden"
-            style={{ boxShadow: "0 0 0 1.5px #22C55E40, 0 24px 60px -12px rgba(34,197,94,0.12)" }}
-          >
+          <div className="relative rounded-2xl bg-[#0A1415] p-7 flex flex-col overflow-hidden animate-in fade-in-0 slide-in-from-bottom-4 duration-300 delay-75 fill-mode-both pro-card-border">
             {/* Launching soon badge */}
             <div className="absolute top-5 right-5">
               <span className="flex items-center gap-1.5 bg-[#22C55E]/10 border border-[#22C55E]/30 text-[#22C55E] text-[10px] font-bold px-2.5 py-1 rounded-full tracking-widest uppercase">
@@ -153,27 +135,17 @@ export default function Pricing() {
               <ul className="space-y-3">
                 {proFeatures.map((f) => (
                   <li key={f} className="flex items-center gap-2.5">
-                    <div className="w-4 h-4 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/25 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-2.5 h-2.5 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
+                    <Check />
                     <span className="text-[13px] text-slate-300">{f}</span>
                   </li>
                 ))}
               </ul>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Trust strip */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, amount: 0.1 }}
-          transition={{ duration: 0.25, delay: 0.14 }}
-          className="flex flex-wrap items-center justify-center gap-6 text-[12px] text-slate-600"
-        >
+        <div className="flex flex-wrap items-center justify-center gap-6 text-[12px] text-slate-600 animate-in fade-in-0 duration-300 fill-mode-both">
           {["No credit card for Free plan", "Cancel anytime", "Instant forecasts", "Shopify CSV compatible"].map(t => (
             <span key={t} className="flex items-center gap-1.5">
               <svg className="w-3 h-3 text-[#22C55E]/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -182,7 +154,7 @@ export default function Pricing() {
               {t}
             </span>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
