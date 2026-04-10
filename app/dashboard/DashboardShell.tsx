@@ -12,7 +12,7 @@ function DashboardSkeleton() {
     <div className="min-h-screen bg-[#060C0D] flex">
 
       {/* Sidebar ghost — matches AppSidebar collapsed=false width */}
-      <div className="flex-shrink-0 w-[240px] bg-[#07100F] border-r border-[#22C55E]/[0.08] h-screen sticky top-0 flex flex-col p-4 gap-3 overflow-hidden">
+      <div className="flex-shrink-0 w-[210px] bg-[#07100F] border-r border-[#22C55E]/[0.08] h-screen sticky top-0 flex flex-col p-4 gap-3 overflow-hidden">
         <S className="h-9 w-36 mb-2" />
         <S className="h-8 w-full rounded-xl" />
         <div className="mt-1 space-y-1.5">
@@ -27,8 +27,8 @@ function DashboardSkeleton() {
       {/* Main column */}
       <div className="flex-1 flex flex-col min-w-0">
 
-        {/* Header — h-16 matches the real sticky header */}
-        <div className="h-16 border-b border-[#22C55E]/[0.08] flex items-center px-5 gap-4 flex-shrink-0">
+        {/* Header — h-12 matches the real sticky header */}
+        <div className="h-12 border-b border-[#22C55E]/[0.08] flex items-center px-4 gap-4 flex-shrink-0">
           <S className="h-4 w-44" />
           <div className="ml-auto flex items-center gap-2">
             <S className="h-7 w-28 hidden sm:block rounded-lg" />

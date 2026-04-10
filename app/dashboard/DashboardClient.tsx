@@ -427,7 +427,7 @@ export default function DashboardClient() {
   const alreadyOut      = alertProducts.filter(p => p.daysOfStockRemaining <= 0);
 
   const renderOverview = () => (
-    <div className="space-y-4">
+    <div className="space-y-3">
 
       {/* ── URGENCY BANNER (only when there's an active threat) ── */}
       {activeAnalysis && alertProducts.length > 0 && (
@@ -458,7 +458,7 @@ export default function DashboardClient() {
       )}
 
       {/* ── KPI row — Lifetimely-style: big number + inline delta badge ── */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
 
         {/* Revenue at risk */}
         <div className={`card p-4 border-l-2 ${activeAnalysis?.totalRarAmount ? "border-l-red-500" : "border-l-transparent"}`}>
@@ -560,7 +560,7 @@ export default function DashboardClient() {
       </div>
 
       {/* ── Main two-column ── */}
-      <div className="grid grid-cols-1 xl:grid-cols-[1fr_272px] gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_256px] gap-2.5">
 
         {/* LEFT: action table */}
         <div className="card overflow-hidden">
@@ -1157,51 +1157,67 @@ export default function DashboardClient() {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top bar */}
         <header className="border-b border-[#22C55E]/[0.08] bg-[#060C0D]/90 backdrop-blur-md sticky top-0 z-20 flex-shrink-0">
-          <div className="flex items-center gap-3 px-5 h-16">
-            {/* Welcome greeting */}
-            <div className="min-w-0 flex-1">
-              <p className="text-[15px] font-semibold text-white leading-tight">
-                Welcome back{user?.firstName ? `, ${user.firstName}` : ""}
-                <span className="ml-1">👋</span>
+          <div className="flex items-center gap-2 px-4 h-12">
+            {/* Page title + breadcrumb */}
+            <div className="min-w-0 flex-1 flex items-center gap-2">
+              <p className="text-[13px] font-semibold text-white truncate">
+                {section === "overview" ? "Overview" : section === "products" ? "Products" : "Alerts"}
               </p>
+              {activeAnalysis && (
+                <span className="hidden sm:inline text-[11px] text-slate-600">·</span>
+              )}
+              {activeAnalysis && (
+                <span className="hidden sm:inline text-[11px] text-slate-500 truncate">
+                  {activeAnalysis.totalSkuCount} SKUs · {activeAnalysis.criticalCount + activeAnalysis.atRiskCount} need action
+                </span>
+              )}
             </div>
 
-            {/* Last updated + confidence pills */}
-            {activeDate && (
-              <div className="hidden sm:flex items-center gap-2">
-                <div className="flex items-center gap-1.5 text-xs text-slate-500 bg-white/[0.03] border border-white/[0.05] px-2.5 py-1 rounded-lg">
+            {/* Status pills row */}
+            <div className="hidden md:flex items-center gap-1.5">
+              {activeDate && (
+                <div className="flex items-center gap-1.5 text-[11px] text-slate-500 bg-white/[0.03] border border-white/[0.05] px-2 py-1 rounded-md">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
-                  Updated {timeAgo(activeDate)}
+                  {timeAgo(activeDate)}
                 </div>
-                {activeAnalysis?.forecastConfidence != null && (
-                  <div className={`flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-lg border ${
-                    activeAnalysis.forecastConfidence >= 75
-                      ? "text-green-400 bg-green-500/[0.06] border-green-500/20"
-                      : activeAnalysis.forecastConfidence >= 50
-                      ? "text-yellow-400 bg-yellow-500/[0.06] border-yellow-500/20"
-                      : "text-slate-400 bg-white/[0.03] border-white/[0.05]"
-                  }`}>
-                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    {activeAnalysis.forecastConfidence}% confidence
-                  </div>
-                )}
-              </div>
-            )}
+              )}
+              {activeAnalysis?.forecastConfidence != null && (
+                <div className={`flex items-center gap-1 text-[11px] px-2 py-1 rounded-md border ${
+                  activeAnalysis.forecastConfidence >= 75
+                    ? "text-green-400 bg-green-500/[0.06] border-green-500/20"
+                    : activeAnalysis.forecastConfidence >= 50
+                    ? "text-yellow-400 bg-yellow-500/[0.06] border-yellow-500/20"
+                    : "text-slate-400 bg-white/[0.03] border-white/[0.05]"
+                }`}>
+                  {activeAnalysis.forecastConfidence}% conf.
+                </div>
+              )}
+              {activeAnalysis && (
+                <div className={`flex items-center gap-1 text-[11px] px-2 py-1 rounded-md border ${
+                  activeAnalysis.healthScore >= 66
+                    ? "text-green-400 bg-green-500/[0.06] border-green-500/20"
+                    : activeAnalysis.healthScore >= 51
+                    ? "text-yellow-400 bg-yellow-500/[0.06] border-yellow-500/20"
+                    : "text-red-400 bg-red-500/[0.06] border-red-500/20"
+                }`}>
+                  Health {activeAnalysis.healthScore}/100
+                </div>
+              )}
+            </div>
 
             <button
               type="button"
               onClick={() => setUploadOpen(true)}
-              className="flex items-center gap-1.5 text-xs font-semibold bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] px-3.5 py-1.5 rounded-lg transition-all shadow-lg shadow-[#22C55E]/20"
+              className="flex items-center gap-1.5 text-[11px] font-semibold bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] px-3 py-1.5 rounded-lg transition-all shadow-lg shadow-[#22C55E]/20 flex-shrink-0"
             >
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
               New Forecast
             </button>
           </div>
-
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-5 sm:p-6">
+        <main className="flex-1 overflow-y-auto p-3 sm:p-4">
           <AnimatePresence mode="wait">
             <motion.div
               key={section}

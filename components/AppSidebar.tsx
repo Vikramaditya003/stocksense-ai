@@ -72,7 +72,7 @@ const BOTTOM_NAV = [
   },
   {
     label: "Help",
-    href: "mailto:support@forestock.app",
+    href: "mailto:support@getforestock.com",
     icon: (
       <svg className="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
@@ -100,10 +100,10 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
 
   return (
     <aside
-      className={`flex-shrink-0 ${collapsed ? "w-[64px]" : "w-[240px]"} transition-all duration-200 bg-[#07100F] border-r border-[#22C55E]/[0.08] flex flex-col h-screen sticky top-0 z-30 overflow-hidden`}
+      className={`flex-shrink-0 ${collapsed ? "w-[52px]" : "w-[210px]"} transition-all duration-200 bg-[#07100F] border-r border-[#22C55E]/[0.08] flex flex-col h-screen sticky top-0 z-30 overflow-hidden`}
     >
       {/* ── Logo ── */}
-      <div className="h-16 flex items-center gap-3 px-4 border-b border-[#22C55E]/[0.07] flex-shrink-0">
+      <div className="h-12 flex items-center gap-3 px-3 border-b border-[#22C55E]/[0.07] flex-shrink-0">
         <Link href="/" className="flex items-center gap-2.5 min-w-0 flex-1">
           <LogoMark size={32} />
           {!collapsed && (

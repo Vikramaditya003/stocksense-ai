@@ -20,32 +20,41 @@ export async function generateMetadata(
   };
 }
 
+const TAG_COVER: Record<string, { bgClass: string; icon: string; badgeClass: string }> = {
+  Guide:     { bgClass: "bg-[#C4714A]", badgeClass: "bg-[#C4714A]/10 text-[#C4714A]", icon: "📋" },
+  Education: { bgClass: "bg-[#3D8A6A]", badgeClass: "bg-[#3D8A6A]/10 text-[#3D8A6A]", icon: "🎓" },
+  Analysis:  { bgClass: "bg-[#5567A4]", badgeClass: "bg-[#5567A4]/10 text-[#5567A4]", icon: "📊" },
+  Tutorial:  { bgClass: "bg-[#7C5C8C]", badgeClass: "bg-[#7C5C8C]/10 text-[#7C5C8C]", icon: "⚙️" },
+  Company:   { bgClass: "bg-[#2E7D52]", badgeClass: "bg-[#2E7D52]/10 text-[#2E7D52]", icon: "🌲" },
+};
+const FALLBACK_COVER = { bgClass: "bg-[#4A6B5C]", badgeClass: "bg-[#4A6B5C]/10 text-[#4A6B5C]", icon: "📝" };
+
 function renderSection(s: Section, i: number) {
   switch (s.type) {
     case "heading":
       return (
-        <div key={i} className="text-[15px] font-semibold text-white mt-8 mb-2.5 tracking-tight leading-snug">
+        <div key={i} className="text-[18px] font-bold text-[#1a1a1a] mt-10 mb-3 tracking-tight leading-snug">
           {s.text}
         </div>
       );
     case "subheading":
       return (
-        <div key={i} className="text-[13px] font-semibold text-slate-200 mt-5 mb-2 tracking-tight">
+        <div key={i} className="text-[15px] font-semibold text-[#2a2a2a] mt-6 mb-2 tracking-tight">
           {s.text}
         </div>
       );
     case "paragraph":
       return (
-        <p key={i} className="text-[13px] text-slate-400 leading-relaxed">
+        <p key={i} className="text-[15px] text-[#444] leading-[1.75]">
           {s.text}
         </p>
       );
     case "list":
       return (
-        <ul key={i} className="space-y-2">
+        <ul key={i} className="space-y-2.5">
           {s.items?.map((item, j) => (
-            <li key={j} className="flex items-start gap-2.5 text-[13px] text-slate-400">
-              <span className="text-[#22C55E] mt-0.5 flex-shrink-0">→</span>
+            <li key={j} className="flex items-start gap-3 text-[15px] text-[#444] leading-relaxed">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] flex-shrink-0 mt-2.5" />
               <span>{item}</span>
             </li>
           ))}
@@ -53,53 +62,56 @@ function renderSection(s: Section, i: number) {
       );
     case "steps":
       return (
-        <ol key={i} className="space-y-3">
+        <ol key={i} className="space-y-4">
           {s.items?.map((item, j) => (
-            <li key={j} className="flex items-start gap-3 text-[13px] text-slate-400">
-              <span className="w-5 h-5 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/20 text-[#22C55E] text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+            <li key={j} className="flex items-start gap-4 text-[15px] text-[#444] leading-relaxed">
+              <span className="w-6 h-6 rounded-full bg-[#22C55E] text-[#060C0D] text-[11px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
                 {j + 1}
               </span>
-              <span>{item}</span>
+              <span className="pt-0.5">{item}</span>
             </li>
           ))}
         </ol>
       );
     case "formula":
       return (
-        <div key={i} className="bg-[#22C55E]/[0.04] border border-[#22C55E]/20 rounded-xl px-5 py-4 font-mono text-[13px] text-[#22C55E] text-center tracking-tight">
+        <div key={i} className="bg-[#F0EDE8] border border-[#1a1a1a]/[0.08] rounded-xl px-5 py-4 font-mono text-[13px] text-[#2a2a2a] text-center tracking-tight">
           {s.text}
         </div>
       );
     case "callout": {
       const cfg = {
-        tip:     { border: "border-[#22C55E]/20",  bg: "bg-[#22C55E]/[0.04]",  icon: "💡", label: "Tip",     labelColor: "text-[#22C55E]" },
-        warning: { border: "border-orange-500/20", bg: "bg-orange-500/[0.04]", icon: "⚠",  label: "Warning", labelColor: "text-orange-400" },
-        info:    { border: "border-blue-500/20",   bg: "bg-blue-500/[0.04]",   icon: "ℹ",  label: "Note",    labelColor: "text-blue-400"  },
+        tip:     { border: "border-[#22C55E]/30",  bg: "bg-[#22C55E]/[0.06]",  dot: "bg-[#22C55E]",   label: "Tip",     labelColor: "text-[#166534]" },
+        warning: { border: "border-orange-400/30", bg: "bg-orange-50",          dot: "bg-orange-400",  label: "Warning", labelColor: "text-orange-700" },
+        info:    { border: "border-blue-400/30",   bg: "bg-blue-50",            dot: "bg-blue-400",    label: "Note",    labelColor: "text-blue-700"  },
       };
       const c = cfg[s.variant ?? "info"];
       return (
         <div key={i} className={`border rounded-xl px-5 py-4 ${c.border} ${c.bg}`}>
-          <p className={`text-[10px] font-bold uppercase tracking-wider mb-1.5 ${c.labelColor}`}>{c.icon} {c.label}</p>
-          <p className="text-[13px] text-slate-300 leading-relaxed">{s.text}</p>
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className={`w-2 h-2 rounded-full flex-shrink-0 ${c.dot}`} />
+            <p className={`text-[11px] font-bold uppercase tracking-wider ${c.labelColor}`}>{c.label}</p>
+          </div>
+          <p className="text-[14px] text-[#333] leading-relaxed">{s.text}</p>
         </div>
       );
     }
     case "table":
       return (
-        <div key={i} className="overflow-x-auto">
-          <table className="w-full text-xs border-separate border-spacing-y-1">
-            <thead>
+        <div key={i} className="overflow-x-auto rounded-xl border border-black/[0.07]">
+          <table className="w-full text-sm">
+            <thead className="bg-[#F0EDE8]">
               <tr>
                 {s.headers?.map((h) => (
-                  <th key={h} className="text-left text-slate-600 uppercase tracking-wider font-semibold pb-2 pr-4 text-[10px]">{h}</th>
+                  <th key={h} className="text-left text-[#555] font-semibold py-2.5 px-4 text-[12px] uppercase tracking-wider">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-black/[0.05] bg-white">
               {s.rows?.map((row, j) => (
-                <tr key={j} className="bg-white/[0.02]">
+                <tr key={j} className="hover:bg-[#FAF8F5] transition-colors">
                   {row.map((cell, k) => (
-                    <td key={k} className={`px-3 py-2.5 text-[12px] text-slate-400 ${k === 0 ? "font-medium text-slate-300 rounded-l-lg" : ""} ${k === row.length - 1 ? "rounded-r-lg" : ""}`}>
+                    <td key={k} className={`px-4 py-3 text-[14px] text-[#444] ${k === 0 ? "font-medium text-[#1a1a1a]" : ""}`}>
                       {cell}
                     </td>
                   ))}
@@ -122,53 +134,60 @@ export default async function BlogPostPage(
   if (!post) notFound();
 
   const related = POSTS.filter((p) => p.slug !== post.slug).slice(0, 3);
+  const cover = TAG_COVER[post.tag] ?? FALLBACK_COVER;
 
   return (
-    <div className="min-h-screen bg-[#060C0D] text-slate-300">
+    <div className="min-h-screen bg-[#F5F1EC]">
       <Navbar />
 
-      <div className="max-w-[1100px] mx-auto px-4 sm:px-6 pt-28 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-10">
+      {/* Hero header — colored banner */}
+      <div className={`pt-28 pb-12 px-4 sm:px-6 ${cover.bgClass}`}>
+        <div className="max-w-[800px] mx-auto">
+          <Link href="/blog" className="inline-flex items-center gap-1.5 text-[12px] text-white/70 hover:text-white transition-colors mb-6">
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+            All articles
+          </Link>
+          <div className="flex items-center gap-3 mb-4">
+            <span className="text-2xl" role="img" aria-label={post.tag}>{cover.icon}</span>
+            <span className="text-[12px] font-bold text-white/80 uppercase tracking-wider">{post.tag}</span>
+          </div>
+          <div className="text-[26px] sm:text-[32px] font-bold text-white leading-tight tracking-tight mb-4 max-w-[680px]">
+            {post.title}
+          </div>
+          <div className="flex items-center gap-3 text-[12px] text-white/60">
+            <span>Forestock Team</span>
+            <span>·</span>
+            <span>{post.date}</span>
+            <span>·</span>
+            <span>{post.readTime}</span>
+          </div>
+        </div>
+      </div>
 
-          {/* Main article */}
-          <article>
-            {/* Back */}
-            <Link href="/blog" className="inline-flex items-center gap-1.5 text-[11px] text-slate-600 hover:text-slate-400 transition-colors mb-7">
-              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-              </svg>
-              All articles
-            </Link>
+      {/* Body */}
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8">
 
-            {/* Meta */}
-            <div className="flex items-center gap-2.5 mb-4">
-              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${post.tagColor}`}>{post.tag}</span>
-              <span className="text-[11px] text-slate-600">{post.date}</span>
-              <span className="text-[11px] text-slate-600">·</span>
-              <span className="text-[11px] text-slate-600">{post.readTime}</span>
-            </div>
-
-            {/* Title — using div to bypass global h1 CSS */}
-            <div className="text-[22px] sm:text-[26px] font-semibold text-white leading-snug tracking-tight mb-4">
-              {post.title}
-            </div>
-
+          {/* Article */}
+          <article className="bg-white rounded-2xl shadow-sm p-8 sm:p-10">
             {/* Lead */}
-            <p className="text-[14px] text-slate-400 leading-relaxed mb-8 pb-8 border-b border-white/[0.06]">
+            <p className="text-[16px] text-[#555] leading-[1.75] mb-8 pb-8 border-b border-black/[0.06] font-medium">
               {post.excerpt}
             </p>
 
-            {/* Body */}
+            {/* Body sections */}
             <div className="space-y-5">
               {post.content.map((section, i) => renderSection(section, i))}
             </div>
 
-            {/* CTA */}
-            <div className="mt-12 border border-[#22C55E]/15 rounded-2xl p-6 bg-[#0A1415] flex flex-col sm:flex-row items-center gap-5">
+            {/* Article CTA */}
+            <div className="mt-12 rounded-2xl p-6 bg-[#1a1a1a] flex flex-col sm:flex-row items-center gap-5">
               <div className="flex-1">
-                <p className="text-[10px] font-bold text-[#22C55E] uppercase tracking-widest mb-1.5">Try it free</p>
-                <div className="text-[16px] font-semibold text-white mb-1 tracking-tight">Ready to stop guessing?</div>
-                <p className="text-[12px] text-slate-500 leading-relaxed">Upload your CSV and see which products are at risk in 30 seconds.</p>
+                <p className="text-[11px] font-bold text-[#22C55E] uppercase tracking-widest mb-1.5">Try it free</p>
+                <div className="text-[17px] font-bold text-white mb-1 tracking-tight">Ready to stop guessing?</div>
+                <p className="text-[13px] text-[#888] leading-relaxed">Upload your CSV and see which products are at risk in 30 seconds.</p>
               </div>
               <Link
                 href="/forecast"
@@ -180,56 +199,82 @@ export default async function BlogPostPage(
           </article>
 
           {/* Sidebar */}
-          <aside className="hidden lg:block space-y-4">
+          <aside className="hidden lg:flex flex-col gap-4">
+
             {/* More articles */}
-            <div className="bg-[#0A1415] border border-white/[0.07] rounded-xl p-5">
-              <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4">More articles</p>
+            <div className="bg-white rounded-2xl shadow-sm p-5">
+              <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#aaa] mb-4">More articles</p>
               <div className="space-y-4">
-                {related.map((p) => (
-                  <Link
-                    key={p.slug}
-                    href={`/blog/${p.slug}`}
-                    className="group block"
-                  >
-                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full border ${p.tagColor} mb-1.5 inline-block`}>
-                      {p.tag}
-                    </span>
-                    <p className="text-[12px] font-medium text-slate-300 group-hover:text-[#22C55E] transition-colors leading-snug tracking-tight">
-                      {p.title}
-                    </p>
-                    <p className="text-[10px] text-slate-600 mt-1">{p.readTime}</p>
-                  </Link>
-                ))}
+                {related.map((p) => {
+                  const rc = TAG_COVER[p.tag] ?? FALLBACK_COVER;
+                  return (
+                    <Link
+                      key={p.slug}
+                      href={`/blog/${p.slug}`}
+                      className="group flex items-start gap-3"
+                    >
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-sm ${rc.bgClass}`}>
+                        {rc.icon}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-[13px] font-medium text-[#1a1a1a] group-hover:underline underline-offset-2 leading-snug line-clamp-2">
+                          {p.title}
+                        </p>
+                        <p className="text-[11px] text-[#aaa] mt-1">{p.readTime}</p>
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
 
             {/* Quick links */}
-            <div className="bg-[#0A1415] border border-white/[0.07] rounded-xl p-5">
-              <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-3">Quick links</p>
-              <div className="space-y-2">
+            <div className="bg-white rounded-2xl shadow-sm p-5">
+              <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#aaa] mb-3">Quick links</p>
+              <div className="space-y-1">
                 {[
                   { label: "Run a forecast", href: "/forecast" },
                   { label: "Pricing", href: "/#pricing" },
                   { label: "Contact us", href: "mailto:support@getforestock.com" },
                 ].map(l => (
-                  <a key={l.label} href={l.href} className="block text-[12px] text-slate-500 hover:text-white transition-colors">
-                    {l.label} →
+                  <a
+                    key={l.label}
+                    href={l.href}
+                    className="flex items-center justify-between py-2 text-[13px] text-[#555] hover:text-[#1a1a1a] transition-colors border-b border-black/[0.04] last:border-0"
+                  >
+                    <span>{l.label}</span>
+                    <svg className="w-3.5 h-3.5 text-[#aaa]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    </svg>
                   </a>
                 ))}
               </div>
             </div>
-          </aside>
 
+            {/* Sticky CTA */}
+            <div className="rounded-2xl p-5 bg-[#22C55E]/[0.08] border border-[#22C55E]/20">
+              <p className="text-[12px] font-bold text-[#166534] mb-1">Free forecast</p>
+              <p className="text-[13px] text-[#333] mb-3 leading-relaxed">
+                See which SKUs will stock out and when — in 30 seconds.
+              </p>
+              <Link
+                href="/forecast"
+                className="block text-center text-[13px] font-semibold text-[#060C0D] bg-[#22C55E] hover:bg-[#16A34A] px-4 py-2 rounded-lg transition-all"
+              >
+                Try it free →
+              </Link>
+            </div>
+          </aside>
         </div>
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-white/[0.05] py-6 text-center">
-        <p className="text-[11px] text-slate-600">
+      <footer className="border-t border-black/[0.07] py-6 text-center bg-[#F5F1EC]">
+        <p className="text-[11px] text-[#aaa]">
           &copy; {new Date().getFullYear()} Forestock ·{" "}
-          <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>{" "}·{" "}
-          <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>{" "}·{" "}
-          <a href="mailto:support@getforestock.com" className="hover:text-white transition-colors">Contact</a>
+          <Link href="/privacy" className="hover:text-[#1a1a1a] transition-colors">Privacy</Link>{" "}·{" "}
+          <Link href="/terms" className="hover:text-[#1a1a1a] transition-colors">Terms</Link>{" "}·{" "}
+          <a href="mailto:support@getforestock.com" className="hover:text-[#1a1a1a] transition-colors">Contact</a>
         </p>
       </footer>
     </div>
