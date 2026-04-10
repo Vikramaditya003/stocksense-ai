@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { auth } from "@clerk/nextjs/server";
 import { isStrictRateLimited, isCrossOriginBlocked, getClientIp, sanitizeError, logError, logWarn } from "@/lib/security";
 import { updateUserPlan, type UserPlan } from "@/lib/db";
+import { logger } from "@/lib/logger";
 
 // Allowlist of purchasable plans — never trust the client's plan value
 const VALID_PLANS = new Set<UserPlan>(["pro"]);
@@ -76,9 +77,11 @@ export async function POST(req: NextRequest) {
       crypto.timingSafeEqual(sigBuffer, expectedBuffer);
 
     if (!sigValid) {
-      // Sanitize orderId before logging — user-supplied, could contain log injection chars
       const safeOrderId = String(razorpay_order_id).replace(/[^\w_-]/g, "").substring(0, 40);
-      logWarn("payment/verify", `Invalid signature for userId=${userId} orderId=${safeOrderId}`);
+      logger.warn("payment.signature_invalid", "Invalid Razorpay signature", {
+        ip, userId, path: "/api/payment/verify",
+        meta: { orderId: safeOrderId },
+      });
       return NextResponse.json({ success: false, error: "Payment verification failed." }, { status: 400 });
     }
 
@@ -87,7 +90,10 @@ export async function POST(req: NextRequest) {
 
     const safePlan = validPlan.replace(/[^\w-]/g, "").substring(0, 20);
     const safePayId = String(razorpay_payment_id).replace(/[^\w_-]/g, "").substring(0, 40);
-    console.log(`[payment/verify] success userId=${userId} plan=${safePlan} paymentId=${safePayId}`);
+    logger.info("payment.verified", "Payment verified and plan activated", {
+      ip, userId, path: "/api/payment/verify",
+      meta: { plan: safePlan, paymentId: safePayId },
+    });
 
     return NextResponse.json({ success: true, plan: validPlan, paymentId: razorpay_payment_id });
   } catch (error) {

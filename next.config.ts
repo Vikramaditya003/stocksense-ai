@@ -19,13 +19,13 @@ const securityHeaders = [
     value: [
       "default-src 'self'",
       // Scripts: self + Clerk + Razorpay checkout; unsafe-eval needed by React in dev mode only
-      `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""} https://checkout.razorpay.com https://*.clerk.accounts.dev https://clerk.forestock.app`,
+      `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""} https://checkout.razorpay.com https://*.clerk.accounts.dev https://clerk.getforestock.com`,
       // Styles: self + inline (needed for Tailwind/framer-motion)
       "style-src 'self' 'unsafe-inline'",
       // Images: self + data URIs + Clerk avatar CDN + Razorpay bank/card logos
       "img-src 'self' data: https://img.clerk.com https://*.clerk.accounts.dev https://checkout.razorpay.com https://cdn.razorpay.com",
       // Connections: self + our APIs + Clerk + Supabase + Groq + Razorpay
-      "connect-src 'self' https://api.groq.com https://*.supabase.co https://*.clerk.accounts.dev https://clerk.forestock.app https://api.razorpay.com https://checkout.razorpay.com https://lumberjack.razorpay.com",
+      "connect-src 'self' https://api.groq.com https://*.supabase.co https://*.clerk.accounts.dev https://clerk.getforestock.com https://api.razorpay.com https://checkout.razorpay.com https://lumberjack.razorpay.com",
       // Frames: Razorpay opens in iframe
       "frame-src https://api.razorpay.com https://checkout.razorpay.com",
       // Workers: Clerk uses blob: workers internally
@@ -45,7 +45,7 @@ const nextConfig: NextConfig = {
 
   experimental: {
     // Tree-shake large packages so only the icons/components you actually use are bundled
-    optimizePackageImports: ["framer-motion", "@clerk/nextjs"],
+    optimizePackageImports: ["framer-motion", "@clerk/nextjs", "lucide-react"],
   },
 
   async headers() {

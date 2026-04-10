@@ -9,6 +9,7 @@
 
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { logger } from "@/lib/logger";
 
 // ─── CORS enforcement ─────────────────────────────────────────────────────────
 //
@@ -49,7 +50,13 @@ export function isCrossOriginBlocked(req: Request): boolean {
   // Allow Vercel preview deployments (*.vercel.app)
   if (origin.endsWith(".vercel.app")) return false;
 
-  return !ALLOWED_ORIGINS.has(origin);
+  const blocked = !ALLOWED_ORIGINS.has(origin);
+  if (blocked) {
+    logger.warn("cors.blocked", "Cross-origin request blocked", {
+      meta: { origin },
+    });
+  }
+  return blocked;
 }
 
 // ─── API key guard ────────────────────────────────────────────────────────────
@@ -138,51 +145,51 @@ function getUpstash(): UpstashLimiters | null {
 /** Forecast endpoint: 10 requests per minute per IP */
 export async function isRateLimited(ip: string): Promise<boolean> {
   const upstash = getUpstash();
-  if (upstash) {
-    const { success } = await upstash.forecast.limit(ip);
-    return !success;
-  }
-  return checkLimitSync(forecastStore, ip, 10, 60_000);
+  const hit = upstash
+    ? !(await upstash.forecast.limit(ip)).success
+    : checkLimitSync(forecastStore, ip, 10, 60_000);
+  if (hit) logger.warn("rate_limit.ip", "Forecast rate limit exceeded", { ip, path: "/api/forecast" });
+  return hit;
 }
 
 /** Payment/alert endpoints: 5 requests per minute per IP — stricter */
 export async function isStrictRateLimited(ip: string): Promise<boolean> {
   const upstash = getUpstash();
-  if (upstash) {
-    const { success } = await upstash.strict.limit(ip);
-    return !success;
-  }
-  return checkLimitSync(strictStore, ip, 5, 60_000);
+  const hit = upstash
+    ? !(await upstash.strict.limit(ip)).success
+    : checkLimitSync(strictStore, ip, 5, 60_000);
+  if (hit) logger.warn("rate_limit.strict", "Strict rate limit exceeded", { ip });
+  return hit;
 }
 
 /** Forecast history endpoints: 30 requests per minute per IP */
 export async function isHistoryRateLimited(ip: string): Promise<boolean> {
   const upstash = getUpstash();
-  if (upstash) {
-    const { success } = await upstash.history.limit(ip);
-    return !success;
-  }
-  return checkLimitSync(historyStore, ip, 30, 60_000);
+  const hit = upstash
+    ? !(await upstash.history.limit(ip)).success
+    : checkLimitSync(historyStore, ip, 30, 60_000);
+  if (hit) logger.warn("rate_limit.ip", "History rate limit exceeded", { ip, path: "/api/forecasts" });
+  return hit;
 }
 
 /** Admin endpoints: 30 requests per minute per IP */
 export async function isAdminRateLimited(ip: string): Promise<boolean> {
   const upstash = getUpstash();
-  if (upstash) {
-    const { success } = await upstash.admin.limit(ip);
-    return !success;
-  }
-  return checkLimitSync(strictStore, `admin:${ip}`, 30, 60_000);
+  const hit = upstash
+    ? !(await upstash.admin.limit(ip)).success
+    : checkLimitSync(strictStore, `admin:${ip}`, 30, 60_000);
+  if (hit) logger.warn("rate_limit.admin", "Admin rate limit exceeded", { ip, path: "/api/admin" });
+  return hit;
 }
 
 /** Per-user rate limit: 20 forecasts per hour */
 export async function isUserRateLimited(userId: string): Promise<boolean> {
   const upstash = getUpstash();
-  if (upstash) {
-    const { success } = await upstash.user.limit(userId);
-    return !success;
-  }
-  return checkLimitSync(userStore, `user:${userId}`, 20, 3_600_000);
+  const hit = upstash
+    ? !(await upstash.user.limit(userId)).success
+    : checkLimitSync(userStore, `user:${userId}`, 20, 3_600_000);
+  if (hit) logger.warn("rate_limit.user", "Per-user hourly limit exceeded", { userId });
+  return hit;
 }
 
 /**
@@ -249,21 +256,19 @@ export function sanitizeError(err: unknown): string {
 }
 
 /**
- * Safe server-side logger — never logs stack traces or sensitive data in production.
- * In development, logs the full error for easier debugging.
+ * Safe server-side error logger.
+ * Dev: logs full error for debugging. Prod: emits structured JSON, no stack traces.
  */
 export function logError(context: string, err: unknown): void {
-  const isDev = process.env.NODE_ENV === "development";
-  if (isDev) {
-    console.error(`[${context}]`, err);
-  } else {
-    const safe = sanitizeError(err);
-    console.error(`[${context}] ${safe}`);
+  const safe = sanitizeError(err);
+  logger.error("api.error", safe, { path: context });
+  if (process.env.NODE_ENV === "development") {
+    console.error(`[${context}] full error:`, err);
   }
 }
 
-/** Safe warning logger */
+/** Safe warning logger — strips newlines to prevent log injection. */
 export function logWarn(context: string, message: string): void {
   const safe = message.replace(/[\r\n]/g, " ").substring(0, 200);
-  console.warn(`[${context}] ${safe}`);
+  logger.warn("suspicious.input", safe, { path: context });
 }
