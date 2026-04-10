@@ -1,17 +1,17 @@
 import Link from "next/link";
 
 const mockProducts = [
-  { name: "Premium Yoga Mat",     stock: 12,  days: 4,  risk: "critical", trend: "+34%", loss: "$220" },
-  { name: "Water Bottle XL",      stock: 34,  days: 11, risk: "high",     trend: "+51%", loss: "$104" },
-  { name: "Resistance Bands Set", stock: 87,  days: 29, risk: "medium",   trend: "+12%", loss: null   },
-  { name: "Foam Roller Pro",      stock: 203, days: 68, risk: "low",      trend: "-5%",  loss: null   },
+  { name: "Premium Yoga Mat",     stock: 12,  days: 4,  risk: "critical", trend: "+34%", loss: "$220", barClass: "bar-6"   },
+  { name: "Water Bottle XL",      stock: 34,  days: 11, risk: "high",     trend: "+51%", loss: "$104", barClass: "bar-16"  },
+  { name: "Resistance Bands Set", stock: 87,  days: 29, risk: "medium",   trend: "+12%", loss: null,   barClass: "bar-43"  },
+  { name: "Foam Roller Pro",      stock: 203, days: 68, risk: "low",      trend: "-5%",  loss: null,   barClass: "bar-100" },
 ];
 
-const riskStyle: Record<string, { pill: string; days: string }> = {
-  critical: { pill: "text-red-400 bg-red-500/[0.08] border-red-500/20",         days: "text-red-400"    },
-  high:     { pill: "text-orange-400 bg-orange-500/[0.08] border-orange-500/20", days: "text-orange-400" },
-  medium:   { pill: "text-yellow-400 bg-yellow-500/[0.08] border-yellow-500/20", days: "text-slate-400"  },
-  low:      { pill: "text-[#22C55E] bg-[#22C55E]/[0.08] border-[#22C55E]/20",   days: "text-slate-500"  },
+const riskStyle: Record<string, { pill: string; days: string; bar: string }> = {
+  critical: { pill: "text-red-400 bg-red-500/[0.08] border-red-500/20",         days: "text-red-400",    bar: "bg-red-500"     },
+  high:     { pill: "text-orange-400 bg-orange-500/[0.08] border-orange-500/20", days: "text-orange-400", bar: "bg-orange-500"  },
+  medium:   { pill: "text-yellow-400 bg-yellow-500/[0.08] border-yellow-500/20", days: "text-slate-400",  bar: "bg-yellow-500"  },
+  low:      { pill: "text-[#22C55E] bg-[#22C55E]/[0.08] border-[#22C55E]/20",   days: "text-slate-500",  bar: "bg-[#22C55E]"   },
 };
 
 function orderByLabel() {
@@ -172,22 +172,30 @@ export default function Hero() {
             {mockProducts.map((p) => {
               const s = riskStyle[p.risk];
               return (
-                <div key={p.name} className="flex items-center justify-between px-5 py-3.5 hover:bg-[#22C55E]/[0.02] transition-colors animate-in fade-in-0 slide-in-from-right-2 duration-300 delay-500 fill-mode-both">
-                  <div className="flex-1 min-w-0 mr-4">
-                    <p className="text-[14px] font-medium text-slate-200 truncate tracking-tight">{p.name}</p>
-                    <p className="text-[12px] mt-0.5">
-                      <span className="text-slate-600">{p.stock} units · </span>
-                      <span className={p.days <= 14 ? s.days + " font-semibold" : "text-slate-600"}>
-                        {p.days <= 14 ? `Stockout in ${p.days}d` : `${p.days}d left`}
-                      </span>
-                    </p>
+                <div key={p.name} className="px-5 py-3 hover:bg-[#22C55E]/[0.02] transition-colors animate-in fade-in-0 slide-in-from-right-2 duration-300 delay-500 fill-mode-both">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0 mr-4">
+                      <p className="text-[13px] font-medium text-slate-200 truncate tracking-tight">{p.name}</p>
+                      <p className="text-[11px] mt-0.5">
+                        <span className="text-slate-600">{p.stock} units · </span>
+                        <span className={p.days <= 14 ? s.days + " font-semibold" : "text-slate-600"}>
+                          {p.days <= 14 ? `Stockout in ${p.days}d` : `${p.days}d left`}
+                        </span>
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      {p.loss
+                        ? <span className="text-[12px] font-bold text-red-400 hidden sm:block">{p.loss}</span>
+                        : <span className="text-[12px] text-[#22C55E] hidden sm:block">Safe</span>}
+                      <span className={`text-[12px] font-medium ${p.trend.startsWith("+") ? "text-[#22C55E]" : "text-red-400"}`}>{p.trend}</span>
+                      <span className={`text-[12px] font-semibold px-2 py-0.5 rounded-lg border ${s.pill}`}>{p.risk}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    {p.loss
-                      ? <span className="text-[12px] font-bold text-red-400 hidden sm:block">{p.loss}</span>
-                      : <span className="text-[12px] text-[#22C55E] hidden sm:block">Safe</span>}
-                    <span className={`text-[12px] font-medium ${p.trend.startsWith("+") ? "text-[#22C55E]" : "text-red-400"}`}>{p.trend}</span>
-                    <span className={`text-[12px] font-semibold px-2 py-0.5 rounded-lg border ${s.pill}`}>{p.risk}</span>
+                  {/* Progress bar — shows days remaining as % of max */}
+                  <div className="mt-2 h-1 bg-white/[0.04] rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full ${s.bar} opacity-70 ${p.barClass} ${p.risk === "critical" ? "animate-pulse" : ""}`}
+                    />
                   </div>
                 </div>
               );

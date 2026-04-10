@@ -8,6 +8,8 @@ const features: {
   before?: string; after?: string; afterStyle?: string;
   formula?: string[];
   desc: string;
+  span?: "wide" | "full";
+  visual?: ReactNode;
 }[] = [
   {
     icon: (
@@ -23,6 +25,31 @@ const features: {
     after: "Stockout in 5 days → lose ₹12,000",
     afterStyle: "text-red-400 bg-red-500/[0.06] border-red-500/15",
     desc: "Every product shows a precise countdown and revenue impact — not a vague risk label.",
+    span: "wide",
+    visual: (
+      <div className="mt-4 space-y-2">
+        {[
+          { name: "Yoga Mat Pro", days: 5, pct: 7, color: "bg-red-500" },
+          { name: "Water Bottle XL", days: 11, pct: 16, color: "bg-orange-500" },
+          { name: "Resistance Bands", days: 29, pct: 43, color: "bg-yellow-500" },
+        ].map((p) => (
+          <div key={p.name}>
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[11px] text-slate-400">{p.name}</span>
+              <span className={`text-[11px] font-semibold ${p.days <= 7 ? "text-red-400" : p.days <= 14 ? "text-orange-400" : "text-yellow-400"}`}>
+                {p.days}d left
+              </span>
+            </div>
+            <div className="h-1.5 bg-white/[0.05] rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full ${p.color} opacity-80`}
+                style={{ width: `${p.pct}%` }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    ),
   },
   {
     icon: (
@@ -66,6 +93,22 @@ const features: {
     after: "⚠ Already late — order immediately",
     afterStyle: "text-orange-400 bg-orange-500/[0.06] border-orange-500/15",
     desc: "Input your lead time and get concrete warnings before it's too late to reorder.",
+    span: "wide",
+    visual: (
+      <div className="mt-4 flex items-center gap-3">
+        <div className="flex-1 bg-white/[0.04] rounded-xl p-3 border border-white/[0.06]">
+          <p className="text-[10px] text-slate-600 uppercase tracking-widest mb-1">Lead time</p>
+          <p className="text-[22px] font-bold text-white tabular-nums">10<span className="text-sm font-normal text-slate-500"> days</span></p>
+        </div>
+        <svg className="w-4 h-4 text-orange-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+        </svg>
+        <div className="flex-1 bg-orange-500/[0.06] rounded-xl p-3 border border-orange-500/20">
+          <p className="text-[10px] text-orange-400/70 uppercase tracking-widest mb-1">Days left</p>
+          <p className="text-[22px] font-bold text-orange-400 tabular-nums">8<span className="text-sm font-normal text-orange-500/60"> days</span></p>
+        </div>
+      </div>
+    ),
   },
   {
     icon: (
@@ -96,6 +139,7 @@ const features: {
     after: "Download formatted PO instantly",
     afterStyle: "text-slate-300 bg-white/[0.05] border-white/10",
     desc: "One click generates a full purchase order for all urgent reorders, ready to send.",
+    span: "full",
   },
 ];
 
@@ -116,25 +160,34 @@ export default function Features() {
           </p>
         </div>
 
-        {/* Feature grid */}
+        {/* Bento grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
           {features.map((f) => (
             <div
               key={f.title}
-              className="group rounded-2xl border border-white/[0.06] bg-[#0A1415] p-5 transition-all duration-200 hover:border-[#22C55E]/30 hover:bg-[#0D1B1E] hover:-translate-y-1.5 hover:shadow-xl hover:shadow-[#22C55E]/[0.08] animate-in fade-in-0 slide-in-from-bottom-4 duration-300 fill-mode-both relative overflow-hidden"
+              className={`group rounded-2xl border border-white/[0.06] bg-[#0A1415] p-5 transition-all duration-200 hover:border-[#22C55E]/30 hover:bg-[#0D1B1E] hover:-translate-y-1.5 hover:shadow-xl hover:shadow-[#22C55E]/[0.08] animate-in fade-in-0 slide-in-from-bottom-4 duration-300 fill-mode-both relative overflow-hidden ${
+                f.span === "wide" ? "sm:col-span-2 lg:col-span-2" : f.span === "full" ? "sm:col-span-2 lg:col-span-3" : ""
+              }`}
             >
               {/* Subtle top highlight on hover */}
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#22C55E]/0 to-transparent group-hover:via-[#22C55E]/40 transition-all duration-300" />
-              <div className="flex items-start justify-between mb-4">
-                <div className={`w-8 h-8 rounded-lg border flex items-center justify-center flex-shrink-0 ${f.iconStyle}`}>
-                  {f.icon}
+
+              <div className={`flex items-start justify-between mb-4 ${f.span === "full" ? "sm:flex-row" : ""}`}>
+                <div className="flex items-start gap-3">
+                  <div className={`w-8 h-8 rounded-lg border flex items-center justify-center flex-shrink-0 ${f.iconStyle}`}>
+                    {f.icon}
+                  </div>
+                  <div>
+                    <h3 className="text-[14px] font-semibold text-white tracking-tight">{f.title}</h3>
+                    {f.span === "full" && (
+                      <p className="text-[12px] text-slate-500 leading-relaxed tracking-tight mt-1">{f.desc}</p>
+                    )}
+                  </div>
                 </div>
-                <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-md border tracking-wide ${f.tagStyle}`}>
+                <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-md border tracking-wide flex-shrink-0 ${f.tagStyle}`}>
                   {f.tag}
                 </span>
               </div>
-
-              <h3 className="text-[14px] font-semibold text-white mb-2 tracking-tight">{f.title}</h3>
 
               {f.formula && (
                 <div className="flex flex-wrap items-center gap-1 mb-3">
@@ -161,7 +214,30 @@ export default function Features() {
                 </div>
               )}
 
-              <p className="text-[12px] text-slate-500 leading-relaxed tracking-tight">{f.desc}</p>
+              {f.visual && f.visual}
+
+              {f.span !== "full" && (
+                <p className="text-[12px] text-slate-500 leading-relaxed tracking-tight mt-3">{f.desc}</p>
+              )}
+
+              {f.span === "full" && (
+                <div className="flex flex-wrap items-center gap-4 mt-4 pt-4 border-t border-white/[0.05]">
+                  {[
+                    { label: "Supplier name", val: "Auto" },
+                    { label: "Units to order", val: "120" },
+                    { label: "Delivery date", val: "Apr 20" },
+                    { label: "Est. cost", val: "₹6,000" },
+                  ].map((row) => (
+                    <div key={row.label} className="flex items-center gap-2 bg-white/[0.03] rounded-lg px-3 py-2 border border-white/[0.05]">
+                      <span className="text-[11px] text-slate-600">{row.label}:</span>
+                      <span className="text-[11px] font-semibold text-slate-300">{row.val}</span>
+                    </div>
+                  ))}
+                  <span className="ml-auto text-[11px] font-semibold text-[#22C55E] bg-[#22C55E]/[0.08] border border-[#22C55E]/20 px-3 py-2 rounded-lg">
+                    ↓ Download PO
+                  </span>
+                </div>
+              )}
             </div>
           ))}
         </div>

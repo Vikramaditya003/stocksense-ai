@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { LogoMark } from "@/components/StocksenseLogo";
 import { Button } from "@/components/ui/button";
 import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
+import { X } from "lucide-react";
 
 const _clerkKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ?? "";
 const CLERK_READY =
@@ -83,6 +84,7 @@ function MobileAuthButton() {
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [bannerVisible, setBannerVisible] = useState(true);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -98,7 +100,32 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-4">
+    <header className="fixed top-0 left-0 right-0 z-50">
+      {/* Announcement Banner */}
+      {bannerVisible && (
+        <div className="w-full h-9 flex items-center justify-center bg-[#060C0D] border-b border-[#22C55E]/20 px-4 relative">
+          <div className="absolute inset-0 bg-[#22C55E]/[0.04]" />
+          <p className="relative text-[12px] text-slate-400 text-center">
+            <span className="inline-flex items-center gap-1.5 mr-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse flex-shrink-0" />
+              <span className="font-semibold text-amber-300">Shopify Stocky</span>
+            </span>
+            shuts down August 2026 —{" "}
+            <Link href="/forecast" className="font-semibold text-white underline underline-offset-2 hover:text-[#22C55E] transition-colors">
+              migrate free →
+            </Link>
+          </p>
+          <button
+            type="button"
+            onClick={() => setBannerVisible(false)}
+            className="absolute right-3 text-slate-600 hover:text-slate-300 transition-colors p-1"
+            aria-label="Dismiss"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+      <div className="flex justify-center px-4 pt-4">
       <nav
         className={`w-full max-w-[1000px] flex items-center justify-between px-6 h-16 rounded-2xl transition-all duration-300 animate-in fade-in-0 slide-in-from-top-2 duration-350 fill-mode-both ${
           scrolled
@@ -157,10 +184,13 @@ export default function Navbar() {
           </svg>
         </button>
       </nav>
+      </div>
 
       {/* Mobile menu — CSS transition, no framer-motion */}
       <div
-        className={`absolute top-[4.75rem] left-4 right-4 bg-[#0A1415] border border-[#22C55E]/15 rounded-2xl p-3 shadow-2xl shadow-black/70 md:hidden transition-all duration-150 origin-top ${
+        className={`absolute left-4 right-4 bg-[#0A1415] border border-[#22C55E]/15 rounded-2xl p-3 shadow-2xl shadow-black/70 md:hidden transition-all duration-150 origin-top ${
+          bannerVisible ? "top-[7.25rem]" : "top-[4.75rem]"
+        } ${
           mobileOpen
             ? "opacity-100 scale-100 pointer-events-auto"
             : "opacity-0 scale-[0.98] pointer-events-none"

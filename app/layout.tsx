@@ -1,15 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "./globals.css";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-  preload: true,
-  weight: ["400", "500", "600", "700"],
-});
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -108,7 +100,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className={`${inter.variable} ${GeistMono.variable}`}>
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <head>
         {/* Preconnect to third-party origins to shorten first-request latency */}
         <link rel="preconnect" href="https://clerk.getforestock.com" />
@@ -122,7 +114,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen bg-[#060C0D] text-slate-200 antialiased font-[family-name:var(--font-inter)]">
+      <body className="min-h-screen bg-[#060C0D] text-slate-200 antialiased font-[family-name:var(--font-geist-sans)]">
         {clerkReady ? (
         <ClerkProvider
           appearance={{
@@ -134,7 +126,7 @@ export default function RootLayout({
               colorPrimary: "#22C55E",
               colorDanger: "#f87171",
               borderRadius: "0.75rem",
-              fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
+              fontFamily: "var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif",
             },
             elements: {
               // ── Shared cards ────────────────────────────────────────────────
@@ -168,7 +160,7 @@ export default function RootLayout({
               otpCodeFieldInput: "!bg-[#0F1C1E] !border-[#22C55E]/20 !text-white",
 
               // ── UserProfile modal root ───────────────────────────────────────
-              rootBox: "!font-[family-name:var(--font-inter)]",
+              rootBox: "!font-[family-name:var(--font-geist-sans)]",
               modalContent: "!bg-[#0A1415] !border !border-[#22C55E]/15 !shadow-2xl !shadow-black/80 !rounded-2xl",
               modalCloseButton: "!text-slate-500 hover:!text-white hover:!bg-white/[0.05] !rounded-lg",
 
