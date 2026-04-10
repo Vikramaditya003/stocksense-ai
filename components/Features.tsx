@@ -121,8 +121,10 @@ export default function Features() {
           {features.map((f) => (
             <div
               key={f.title}
-              className="rounded-2xl border border-[#22C55E]/10 bg-[#0A1415] p-5 transition-all duration-200 hover:border-[#22C55E]/25 hover:bg-[#0F1C1E] hover:-translate-y-1 hover:shadow-lg hover:shadow-[#22C55E]/[0.06] animate-in fade-in-0 slide-in-from-bottom-4 duration-300 fill-mode-both"
+              className="group rounded-2xl border border-white/[0.06] bg-[#0A1415] p-5 transition-all duration-200 hover:border-[#22C55E]/30 hover:bg-[#0D1B1E] hover:-translate-y-1.5 hover:shadow-xl hover:shadow-[#22C55E]/[0.08] animate-in fade-in-0 slide-in-from-bottom-4 duration-300 fill-mode-both relative overflow-hidden"
             >
+              {/* Subtle top highlight on hover */}
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#22C55E]/0 to-transparent group-hover:via-[#22C55E]/40 transition-all duration-300" />
               <div className="flex items-start justify-between mb-4">
                 <div className={`w-8 h-8 rounded-lg border flex items-center justify-center flex-shrink-0 ${f.iconStyle}`}>
                   {f.icon}

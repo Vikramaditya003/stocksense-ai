@@ -31,30 +31,29 @@ export default function Hero() {
 
       <div className="relative z-10 flex flex-col items-center text-center w-full max-w-[900px] mx-auto px-4 sm:px-6">
 
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 bg-[#22C55E]/[0.08] border border-[#22C55E]/20 px-4 py-1.5 rounded-full mb-10 animate-in fade-in-0 slide-in-from-bottom-2 duration-300 fill-mode-both">
+        {/* Label */}
+        <div className="flex items-center gap-2 mb-8 animate-in fade-in-0 slide-in-from-bottom-2 duration-300 fill-mode-both">
           <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
-          <span className="text-[12px] font-semibold text-[#22C55E] tracking-widest uppercase">
-            For Shopify merchants · No app install required
+          <span className="text-[11px] font-bold text-slate-500 tracking-[0.14em] uppercase">
+            Shopify Stocky shuts down August 2026
           </span>
+          <span className="hidden sm:inline-block text-slate-700 text-[11px]">—</span>
+          <span className="hidden sm:inline-block text-[11px] font-semibold text-[#22C55E]">switch now, free</span>
         </div>
 
         {/* Headline */}
-        <h1 className="text-[58px] sm:text-[80px] lg:text-[100px] font-bold text-white leading-[0.9] tracking-[-0.04em] mb-8 animate-in fade-in-0 slide-in-from-bottom-4 duration-400 delay-75 fill-mode-both">
-          Know exactly when
+        <h1 className="text-[52px] sm:text-[76px] lg:text-[96px] font-extrabold text-white leading-[0.92] tracking-[-0.04em] mb-7 animate-in fade-in-0 slide-in-from-bottom-4 duration-400 delay-75 fill-mode-both">
+          Never let a
           <br />
-          your <span className="text-[#22C55E]">Shopify stock</span>
+          <span className="text-[#22C55E] drop-shadow-[0_0_40px_rgba(34,197,94,0.25)]">Shopify stockout</span>
           <br />
-          runs out
+          catch you off guard
         </h1>
 
         {/* Sub */}
-        <p className="text-[18px] text-slate-400 max-w-[520px] leading-relaxed mb-10 tracking-tight animate-in fade-in-0 slide-in-from-bottom-2 duration-300 delay-100 fill-mode-both">
-          Upload your Shopify CSV. In 30 seconds, see{" "}
-          <span className="text-slate-200 font-semibold">
-            which products will run out, when to reorder, and how much revenue you&apos;ll lose
-          </span>{" "}
-          if you don&apos;t act.
+        <p className="text-[16px] sm:text-[18px] text-slate-400 max-w-[500px] leading-relaxed mb-10 tracking-tight animate-in fade-in-0 slide-in-from-bottom-2 duration-300 delay-100 fill-mode-both">
+          Upload your CSV. 30 seconds later you&apos;ll know exactly{" "}
+          <span className="text-slate-200 font-medium">which products run out first, when to reorder, and what revenue is at risk.</span>
         </p>
 
         {/* CTAs */}

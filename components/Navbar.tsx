@@ -108,9 +108,9 @@ export default function Navbar() {
       >
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">
-          <LogoMark size={36} />
-          <span className="text-[16px] font-semibold tracking-tight">
-            <span className="text-white">Fore</span><span className="text-[#22C55E]">stock</span>
+          <LogoMark size={34} />
+          <span className="text-[19px] font-extrabold tracking-[-0.03em]">
+            <span className="text-white">Fore</span><span className="text-[#22C55E] drop-shadow-[0_0_12px_rgba(34,197,94,0.5)]">stock</span>
           </span>
         </Link>
 
