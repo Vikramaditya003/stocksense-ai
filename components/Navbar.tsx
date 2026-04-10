@@ -91,10 +91,10 @@ export default function Navbar() {
   }, []);
 
   const links = [
-    { label: "How it works", href: "#how-it-works" },
-    { label: "Features",     href: "#features"     },
-    { label: "Pricing",      href: "#pricing"      },
-    { label: "Blog",         href: "/blog"         },
+    { label: "How it works", href: "/#how-it-works" },
+    { label: "Features",     href: "/#features"     },
+    { label: "Pricing",      href: "/#pricing"      },
+    { label: "Blog",         href: "/blog"          },
   ];
 
   return (
