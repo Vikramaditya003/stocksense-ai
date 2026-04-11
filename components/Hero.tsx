@@ -86,8 +86,8 @@ function ForecastWidget() {
   const [input, setInput]     = useState(SAMPLE);
   const [results, setResults] = useState<ForecastRow[] | null>(null);
   const [error, setError]     = useState(false);
-  const [email, setEmail]     = useState("");
-  const [emailSent, setEmailSent] = useState(false);
+  const [email, setEmail]         = useState("");
+  const [emailState, setEmailState] = useState<"idle" | "loading" | "done" | "error">("idle");
 
   function handleGenerate() {
     const parsed = parseInput(input);
@@ -100,7 +100,7 @@ function ForecastWidget() {
     setResults(null);
     setError(false);
     setEmail("");
-    setEmailSent(false);
+    setEmailState("idle");
   }
 
   return (
@@ -208,26 +208,49 @@ function ForecastWidget() {
             </Link>
 
             {/* Optional email capture */}
-            {!emailSent ? (
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Email me this forecast"
-                  className="flex-1 bg-[#0a0f0a] border border-white/[0.07] rounded-[6px] px-3 py-2 text-[12px] text-gray-300 placeholder-gray-700 focus:outline-none focus:border-white/[0.18] transition-colors font-mono"
-                />
-                <button
-                  type="button"
-                  onClick={() => { if (email.includes("@")) setEmailSent(true); }}
-                  className="btn-ghost text-[12px] font-semibold text-gray-400 hover:text-[#fafafa] border border-white/[0.10] hover:border-white/[0.22] px-3 py-2 rounded-[6px] transition-all whitespace-nowrap"
-                >
-                  Send
-                </button>
+            {emailState !== "done" ? (
+              <div className="flex flex-col gap-1.5">
+                <div className="flex gap-2">
+                  <label htmlFor="hero-email" className="sr-only">Email address for forecast alerts</label>
+                  <input
+                    id="hero-email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => { setEmail(e.target.value); setEmailState("idle"); }}
+                    placeholder="Email me this forecast"
+                    autoComplete="email"
+                    className="flex-1 bg-[#0a0f0a] border border-white/[0.07] rounded-[6px] px-3 py-2 text-[12px] text-gray-300 placeholder-gray-700 focus:outline-none focus:border-white/[0.18] transition-colors font-mono"
+                  />
+                  <button
+                    type="button"
+                    disabled={emailState === "loading"}
+                    onClick={async () => {
+                      if (!email.includes("@")) return;
+                      setEmailState("loading");
+                      try {
+                        const res = await fetch("/api/hero-email", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ email }),
+                        });
+                        const json = await res.json();
+                        setEmailState(json.success ? "done" : "error");
+                      } catch {
+                        setEmailState("error");
+                      }
+                    }}
+                    className="btn-ghost text-[12px] font-semibold text-gray-400 hover:text-[#fafafa] border border-white/[0.10] hover:border-white/[0.22] px-3 py-2 rounded-[6px] transition-all whitespace-nowrap disabled:opacity-50"
+                  >
+                    {emailState === "loading" ? "Sending…" : "Send"}
+                  </button>
+                </div>
+                {emailState === "error" && (
+                  <p className="text-[11px] text-red-400">Couldn&apos;t send — try again or go to /forecast directly.</p>
+                )}
               </div>
             ) : (
               <p className="text-[12px] text-[#00D26A] text-center py-1">
-                ✓ Got it — we&apos;ll send stockout alerts to {email}
+                ✓ Check your inbox — forecast + weekly alerts sent to {email}
               </p>
             )}
           </div>
