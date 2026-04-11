@@ -175,9 +175,9 @@ export default function Hero() {
         {/* ── Stats strip ── */}
         <div className="mt-16 pt-8 border-t border-white/[0.05] grid grid-cols-3 gap-6">
           {[
-            { value: "87%", label: "forecast accuracy",     sub: "across all SKU types"  },
-            { value: "30s", label: "to first insight",      sub: "no setup required"     },
-            { value: "10×", label: "cheaper than Prediko",  sub: "same-day results"      },
+            { value: "87%",   label: "forecast accuracy",  sub: "on steady-selling SKUs†" },
+            { value: "30s",   label: "to first insight",   sub: "no setup required"        },
+            { value: "$9/mo", label: "No per-SKU fees",    sub: "cancel anytime"           },
           ].map((s) => (
             <div key={s.label}>
               <span className="text-[26px] font-bold text-[#fafafa] tracking-tight tabular-nums">{s.value}</span>
@@ -186,6 +186,9 @@ export default function Hero() {
             </div>
           ))}
         </div>
+        <p className="mt-4 text-[11px] text-gray-700">
+          † Accuracy measured on products with ≥60 days of consistent sales history.
+        </p>
 
       </div>
     </section>

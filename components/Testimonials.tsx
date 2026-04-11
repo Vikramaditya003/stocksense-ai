@@ -1,10 +1,10 @@
 const testimonials = [
   {
-    quote: "We were manually tracking reorders in a spreadsheet. Forestock flagged that our best-selling SKU would stock out in 6 days — we had no idea. Saved us from losing at least ₹40,000 that month.",
+    quote: "We were manually tracking reorders in a spreadsheet. Forestock flagged that our best-selling SKU would stock out in 6 days — we had no idea. Saved us from a significant revenue loss that month.",
     name: "Priya M.",
     role: "Founder, wellness brand",
     location: "Pune",
-    metric: "₹40k saved",
+    metric: "~$480 saved",
     metricLabel: "in one month",
     initials: "PM",
     avatarBg: "bg-gray-800",
