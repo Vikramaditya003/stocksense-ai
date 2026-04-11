@@ -77,8 +77,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Footer — light ── */}
-      <footer className="bg-[#fafafa] pt-16 pb-10 border-t border-gray-200">
+      {/* ── Footer — dark ── */}
+      <footer className="bg-[#0a0f0a] pt-16 pb-10 border-t border-white/[0.05]">
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
 
           {/* Top: logo + columns */}
@@ -88,20 +88,20 @@ export default function Home() {
               <div className="flex items-center gap-2.5 mb-4">
                 <LogoMark size={36} />
                 <span className="text-[16px] font-bold tracking-tight">
-                  <span className="text-gray-900">Fore</span><span className="text-[#00D26A]">stock</span>
+                  <span className="text-[#fafafa]">Fore</span><span className="text-[#00D26A]">stock</span>
                 </span>
               </div>
               <p className="text-[12px] text-gray-500 leading-relaxed mb-4">
                 AI-powered inventory forecasting for Shopify merchants.
               </p>
-              <p className="text-[11px] text-gray-400">
+              <p className="text-[11px] text-gray-600">
                 &copy; {new Date().getFullYear()} Forestock.
               </p>
             </div>
 
             {/* Product */}
             <div>
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">Product</p>
+              <p className="text-[11px] font-bold text-gray-600 uppercase tracking-widest mb-4">Product</p>
               <ul className="space-y-2.5">
                 {[
                   { label: "Home",         href: "/"             },
@@ -111,7 +111,7 @@ export default function Home() {
                   { label: "Forecast",     href: "/forecast"     },
                 ].map((l) => (
                   <li key={l.label}>
-                    <a href={l.href} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors">{l.label}</a>
+                    <a href={l.href} className="text-[13px] text-gray-500 hover:text-gray-300 transition-colors">{l.label}</a>
                   </li>
                 ))}
               </ul>
@@ -119,14 +119,14 @@ export default function Home() {
 
             {/* Resources */}
             <div>
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">Resources</p>
+              <p className="text-[11px] font-bold text-gray-600 uppercase tracking-widest mb-4">Resources</p>
               <ul className="space-y-2.5">
                 {[
                   { label: "Blog",       href: "/blog"                              },
                   { label: "Contact Us", href: "mailto:support@getforestock.com"    },
                 ].map((l) => (
                   <li key={l.label}>
-                    <a href={l.href} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors">{l.label}</a>
+                    <a href={l.href} className="text-[13px] text-gray-500 hover:text-gray-300 transition-colors">{l.label}</a>
                   </li>
                 ))}
               </ul>
@@ -134,16 +134,16 @@ export default function Home() {
 
             {/* Legal */}
             <div>
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">Legal</p>
+              <p className="text-[11px] font-bold text-gray-600 uppercase tracking-widest mb-4">Legal</p>
               <ul className="space-y-2.5">
                 {[
-                  { label: "Privacy Policy",  href: "/privacy"  },
-                  { label: "Terms of Service", href: "/terms"   },
-                  { label: "Cookie Policy",   href: "/cookies"  },
-                  { label: "Refund Policy",   href: "/refunds"  },
+                  { label: "Privacy Policy",   href: "/privacy"  },
+                  { label: "Terms of Service", href: "/terms"    },
+                  { label: "Cookie Policy",    href: "/cookies"  },
+                  { label: "Refund Policy",    href: "/refunds"  },
                 ].map((l) => (
                   <li key={l.label}>
-                    <a href={l.href} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors">{l.label}</a>
+                    <a href={l.href} className="text-[13px] text-gray-500 hover:text-gray-300 transition-colors">{l.label}</a>
                   </li>
                 ))}
               </ul>
@@ -151,13 +151,13 @@ export default function Home() {
           </div>
 
           {/* Bottom */}
-          <div className="border-t border-gray-200 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p className="text-[11px] text-gray-400">
+          <div className="border-t border-white/[0.05] pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p className="text-[11px] text-gray-600">
               Forecasts are AI-generated estimates, not financial guarantees.
             </p>
             <div className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-[#00D26A]" />
-              <span className="text-[11px] text-gray-500">All systems operational</span>
+              <span className="text-[11px] text-gray-600">All systems operational</span>
             </div>
           </div>
         </div>
