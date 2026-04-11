@@ -119,77 +119,82 @@ export default function Pricing() {
           </p>
         </div>
 
-        {/* Starter card — only card shown */}
-        <div className="rounded-[10px] border border-white/[0.08] bg-[#111614] p-7 flex flex-col mb-6 max-w-sm">
-          <div className="mb-6">
-            <p className="text-[13px] font-semibold text-gray-300 mb-1">Starter</p>
-            <p className="text-[13px] text-gray-600 mb-5">Try it free. No credit card needed.</p>
-            <div className="flex items-end gap-1.5 mb-1">
-              <span className="text-[42px] font-bold text-[#fafafa] tracking-tight leading-none">$0</span>
+        {/* Cards — side by side, identical structure */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-10">
+
+          {/* Starter */}
+          <div className="rounded-[10px] border border-white/[0.08] bg-[#111614] p-7 flex flex-col">
+            <div className="mb-6">
+              <p className="text-[13px] font-semibold text-gray-300 mb-1">Starter</p>
+              <p className="text-[13px] text-gray-600 mb-5">Try it free. No credit card needed.</p>
+              <div className="flex items-end gap-1.5 mb-1">
+                <span className="text-[42px] font-bold text-[#fafafa] tracking-tight leading-none">$0</span>
+              </div>
+              <p className="text-[12px] text-gray-600">Free forever</p>
             </div>
-            <p className="text-[12px] text-gray-600">Free plan</p>
-          </div>
 
-          <Link
-            href="/forecast"
-            className="btn-primary block w-full text-center text-[13px] font-semibold py-2.5 px-4 rounded-[6px] mb-7 text-[#0a0f0a] bg-[#00D26A]"
-          >
-            Run free forecast
-          </Link>
+            <Link
+              href="/forecast"
+              className="btn-primary block w-full text-center text-[13px] font-semibold py-2.5 px-4 rounded-[6px] mb-7 text-[#0a0f0a] bg-[#00D26A]"
+            >
+              Run free forecast
+            </Link>
 
-          <div className="border-t border-white/[0.05] pt-6">
-            <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-4">What&apos;s included</p>
-            <ul className="space-y-3">
-              {freeFeatures.map((f) => (
-                <li key={f} className="flex items-center gap-2.5">
-                  <Check />
-                  <span className="text-[13px] text-gray-400">{f}</span>
+            <div className="border-t border-white/[0.05] pt-6">
+              <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-4">What&apos;s included</p>
+              <ul className="space-y-3">
+                {freeFeatures.map((f) => (
+                  <li key={f} className="flex items-center gap-2.5">
+                    <Check />
+                    <span className="text-[13px] text-gray-400">{f}</span>
+                  </li>
+                ))}
+                <li className="flex items-center gap-2.5 opacity-30">
+                  <Cross />
+                  <span className="text-[13px] text-gray-600">Unlimited products</span>
                 </li>
-              ))}
-              <li className="flex items-center gap-2.5 opacity-30">
-                <Cross />
-                <span className="text-[13px] text-gray-600">Unlimited products</span>
-              </li>
-              <li className="flex items-center gap-2.5 opacity-30">
-                <Cross />
-                <span className="text-[13px] text-gray-600">90-day forecasts</span>
-              </li>
-            </ul>
+                <li className="flex items-center gap-2.5 opacity-30">
+                  <Cross />
+                  <span className="text-[13px] text-gray-600">90-day forecasts</span>
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
 
-        {/* Pro coming soon — compact strip */}
-        <div className="rounded-[10px] border border-white/[0.08] bg-[#111614] p-6 mb-10">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
+          {/* Pro */}
+          <div className="rounded-[10px] border border-white/[0.08] bg-[#111614] p-7 flex flex-col">
+            <div className="mb-6">
               <div className="flex items-center gap-2 mb-1">
-                <p className="text-[15px] font-semibold text-[#fafafa]">Pro Plan</p>
+                <p className="text-[13px] font-semibold text-gray-300">Pro</p>
                 <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest border border-white/[0.08] px-1.5 py-0.5 rounded-[4px]">
                   Coming Q2 2025
                 </span>
               </div>
-              <p className="text-[13px] text-gray-500">
-                {proPrice}<span className="text-gray-600">/{proBilling.replace("per ", "")}</span>
-                {" "}· Unlimited products · 90-day forecasts · Ad-spend correlation · Purchase orders
-              </p>
+              <p className="text-[13px] text-gray-600 mb-5">For stores that can&apos;t afford stockouts.</p>
+              <div className="flex items-end gap-1.5 mb-1">
+                <span className="text-[42px] font-bold text-[#fafafa] tracking-tight leading-none">{proPrice}</span>
+                <span className="text-[14px] text-gray-500 mb-2">/{proBilling.replace("per ", "")}</span>
+              </div>
+              <p className="text-[12px] text-gray-600">Early-bird discount at launch</p>
             </div>
-            <div className="flex-shrink-0">
+
+            <div className="mb-7">
               <NotifyButton />
-              <p className="text-[11px] text-gray-600 text-center">Early-bird discount at launch</p>
+            </div>
+
+            <div className="border-t border-white/[0.05] pt-6">
+              <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-4">Everything in Starter, plus</p>
+              <ul className="space-y-3">
+                {proFeatures.map((f) => (
+                  <li key={f} className="flex items-center gap-2.5">
+                    <Check />
+                    <span className="text-[13px] text-gray-400">{f}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
 
-          <div className="mt-5 pt-4 border-t border-white/[0.05]">
-            <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-3">Everything in Starter, plus</p>
-            <div className="flex flex-wrap gap-x-5 gap-y-2">
-              {proFeatures.map((f) => (
-                <span key={f} className="flex items-center gap-1.5 text-[12px] text-gray-400">
-                  <Check />
-                  {f}
-                </span>
-              ))}
-            </div>
-          </div>
         </div>
 
         {/* Trust strip */}
