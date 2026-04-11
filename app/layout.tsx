@@ -47,7 +47,7 @@ export const metadata: Metadata = {
       "AI-powered demand forecasting and reorder intelligence for Shopify merchants. Know exactly when to reorder before you stock out.",
     images: [
       {
-        url: "/og-image.png",
+        url: "/api/og",
         width: 1200,
         height: 630,
         alt: "Forestock — Inventory Forecasting",
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     title: "Forestock — Inventory Forecasting for Shopify",
     description:
       "AI-powered demand forecasting for Shopify merchants. Never stock out again.",
-    images: ["/og-image.png"],
+    images: ["/api/og"],
   },
   robots: {
     index: true,
