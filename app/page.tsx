@@ -4,7 +4,6 @@ import Hero from "@/components/Hero";
 import HowItWorks from "@/components/HowItWorks";
 import Features from "@/components/Features";
 import Comparison from "@/components/Comparison";
-import Testimonials from "@/components/Testimonials";
 import Pricing from "@/components/Pricing";
 import FAQ from "@/components/FAQ";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
@@ -43,9 +42,6 @@ export default function Home() {
 
       {/* 4 — light */}
       <Comparison />
-
-      {/* 5 — light */}
-      <Testimonials />
 
       {/* 6 — dark */}
       <Pricing />
