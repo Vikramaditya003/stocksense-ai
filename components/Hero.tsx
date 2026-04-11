@@ -1,39 +1,257 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 
-const mockProducts = [
-  { name: "Premium Yoga Mat",     stock: 12,  days: 4,  risk: "critical", trend: "+34%", loss: "$220", barClass: "bar-6"   },
-  { name: "Water Bottle XL",      stock: 34,  days: 11, risk: "high",     trend: "+51%", loss: "$104", barClass: "bar-16"  },
-  { name: "Resistance Bands Set", stock: 87,  days: 29, risk: "safe",     trend: "+12%", loss: null,   barClass: "bar-43"  },
-];
-
-const riskStyle: Record<string, { pill: string; days: string; bar: string }> = {
-  critical: { pill: "text-red-400 bg-red-500/[0.08] border-red-500/20",         days: "text-red-400",    bar: "bg-red-500"     },
-  high:     { pill: "text-orange-400 bg-orange-500/[0.08] border-orange-500/20", days: "text-orange-400", bar: "bg-orange-500"  },
-  safe:     { pill: "text-gray-400 bg-white/[0.05] border-white/10",             days: "text-gray-500",   bar: "bg-gray-600"    },
-};
-
-function orderByLabel() {
-  const d = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000);
-  return d.toLocaleDateString("en-US", { day: "numeric", month: "short" });
+// ── Types ─────────────────────────────────────────────────────────────────────
+interface ParsedRow {
+  name: string;
+  sold30d: number;
+  stock: number;
+  leadDays: number;
 }
 
+interface ForecastRow extends ParsedRow {
+  velocityPerDay: number;
+  stockoutDays: number;
+  stockoutDate: string;
+  reorderQty: number;
+  urgency: "critical" | "high" | "safe";
+}
+
+// ── Pure forecast math (no backend) ──────────────────────────────────────────
+function calcForecast(rows: ParsedRow[]): ForecastRow[] {
+  const today = new Date();
+  return rows.map((r) => {
+    const velocityPerDay = r.sold30d / 30;
+    const stockoutDays = velocityPerDay > 0
+      ? Math.floor(r.stock / velocityPerDay)
+      : 999;
+
+    const stockoutDate = new Date(today);
+    stockoutDate.setDate(today.getDate() + stockoutDays);
+    const dateLabel = stockoutDays >= 999
+      ? "No stockout"
+      : stockoutDate.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+
+    // Reorder qty = demand for (lead time + 14-day buffer), minus current stock
+    const reorderQty = Math.max(
+      0,
+      Math.ceil(velocityPerDay * (r.leadDays + 14)) - r.stock
+    );
+
+    const urgency: ForecastRow["urgency"] =
+      stockoutDays <= 7 ? "critical" :
+      stockoutDays <= 21 ? "high" :
+      "safe";
+
+    return { ...r, velocityPerDay, stockoutDays, stockoutDate: dateLabel, reorderQty, urgency };
+  });
+}
+
+// ── Parse the textarea ────────────────────────────────────────────────────────
+const SAMPLE = `Yoga Mat Pro, 45, 12, 7
+Water Bottle XL, 28, 34, 5
+Resistance Bands, 18, 87, 10
+Protein Powder, 62, 8, 14
+Face Serum, 31, 55, 3`;
+
+function parseInput(raw: string): ParsedRow[] | null {
+  const lines = raw.trim().split("\n").filter(Boolean);
+  const rows: ParsedRow[] = [];
+  for (const line of lines) {
+    // Skip header-like lines
+    if (/product|name|sku/i.test(line) && /sold|units|stock/i.test(line)) continue;
+    const parts = line.split(",").map((s) => s.trim());
+    if (parts.length < 4) return null;
+    const [name, s1, s2, s3] = parts;
+    const sold30d = parseInt(s1, 10);
+    const stock   = parseInt(s2, 10);
+    const lead    = parseInt(s3, 10);
+    if (!name || isNaN(sold30d) || isNaN(stock) || isNaN(lead)) return null;
+    rows.push({ name, sold30d, stock, leadDays: lead });
+  }
+  return rows.length > 0 ? rows : null;
+}
+
+// ── Urgency styles ────────────────────────────────────────────────────────────
+const urgencyStyle = {
+  critical: { days: "text-red-400",    badge: "text-red-400 bg-red-500/[0.08] border-red-500/20"     },
+  high:     { days: "text-orange-400", badge: "text-orange-400 bg-orange-500/[0.08] border-orange-500/20" },
+  safe:     { days: "text-[#00D26A]",  badge: "text-gray-500 bg-white/[0.04] border-white/10"         },
+};
+
+// ── Widget (right column) ─────────────────────────────────────────────────────
+function ForecastWidget() {
+  const [input, setInput]     = useState(SAMPLE);
+  const [results, setResults] = useState<ForecastRow[] | null>(null);
+  const [error, setError]     = useState(false);
+  const [email, setEmail]     = useState("");
+  const [emailSent, setEmailSent] = useState(false);
+
+  function handleGenerate() {
+    const parsed = parseInput(input);
+    if (!parsed) { setError(true); return; }
+    setError(false);
+    setResults(calcForecast(parsed));
+  }
+
+  function handleReset() {
+    setResults(null);
+    setError(false);
+    setEmail("");
+    setEmailSent(false);
+  }
+
+  return (
+    <div className="rounded-[10px] border border-white/[0.08] bg-[#111614] overflow-hidden shadow-2xl shadow-black/60">
+
+      {/* Header bar */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.05] bg-[#0d1210]">
+        <div className="flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#00D26A]" />
+          <span className="text-[11px] font-medium text-gray-500 font-mono">
+            {results ? "Forecast results" : "Live calculator"}
+          </span>
+        </div>
+        {results && (
+          <button
+            type="button"
+            onClick={handleReset}
+            className="text-[11px] text-gray-600 hover:text-gray-400 transition-colors"
+          >
+            ← Edit data
+          </button>
+        )}
+      </div>
+
+      {!results ? (
+        /* ── Input state ── */
+        <div className="p-4">
+          <p className="text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-2">
+            Paste your data — 4 columns, comma-separated
+          </p>
+          <p id="forecast-input-hint" className="text-[10px] text-gray-700 font-mono mb-3">
+            Product name, Units sold (30d), Current stock, Lead time (days)
+          </p>
+          <label htmlFor="forecast-input" className="sr-only">
+            Sales data — product name, units sold last 30 days, current stock, lead time in days
+          </label>
+          <textarea
+            id="forecast-input"
+            value={input}
+            onChange={(e) => { setInput(e.target.value); setError(false); }}
+            rows={6}
+            spellCheck={false}
+            aria-describedby="forecast-input-hint"
+            className="w-full bg-[#0a0f0a] border border-white/[0.07] rounded-[6px] px-3 py-2.5 text-[12px] text-gray-300 font-mono resize-none focus:outline-none focus:border-white/[0.18] transition-colors"
+          />
+          {error && (
+            <p className="text-[11px] text-red-400 mt-1.5">
+              Couldn&apos;t parse that. Check format: name, sold30d, stock, leadDays
+            </p>
+          )}
+          <button
+            type="button"
+            onClick={handleGenerate}
+            className="btn-primary mt-3 w-full flex items-center justify-center gap-2 text-[13px] font-semibold text-[#0a0f0a] bg-[#00D26A] py-2.5 rounded-[6px]"
+          >
+            Generate forecast
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            </svg>
+          </button>
+        </div>
+      ) : (
+        /* ── Results state ── */
+        <div>
+          {/* Rows */}
+          <div className="divide-y divide-white/[0.03]">
+            {results.map((r) => {
+              const s = urgencyStyle[r.urgency];
+              return (
+                <div key={r.name} className="px-4 py-3">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <p className="text-[13px] font-medium text-gray-200 truncate mr-3">{r.name}</p>
+                    <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-[4px] border flex-shrink-0 ${s.badge}`}>
+                      {r.urgency}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-4 text-[11px]">
+                    <span className="text-gray-600">
+                      Stock: <span className="text-gray-400 font-mono">{r.stock}</span>
+                    </span>
+                    <span className={`font-semibold tabular-nums ${s.days}`}>
+                      {r.stockoutDays >= 999 ? "No stockout" : `Stockout ${r.stockoutDate}`}
+                    </span>
+                    {r.reorderQty > 0 && (
+                      <span className="text-gray-600 font-mono">
+                        Reorder: <span className="text-gray-300">{r.reorderQty}u</span>
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* CTA */}
+          <div className="px-4 pt-3 pb-4 border-t border-white/[0.05]">
+            <Link
+              href="/forecast"
+              className="btn-primary flex items-center justify-center gap-2 w-full text-[13px] font-semibold text-[#0a0f0a] bg-[#00D26A] py-2.5 rounded-[6px] mb-3"
+            >
+              Run full forecast on your CSV
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </Link>
+
+            {/* Optional email capture */}
+            {!emailSent ? (
+              <div className="flex gap-2">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Email me this forecast"
+                  className="flex-1 bg-[#0a0f0a] border border-white/[0.07] rounded-[6px] px-3 py-2 text-[12px] text-gray-300 placeholder-gray-700 focus:outline-none focus:border-white/[0.18] transition-colors font-mono"
+                />
+                <button
+                  type="button"
+                  onClick={() => { if (email.includes("@")) setEmailSent(true); }}
+                  className="btn-ghost text-[12px] font-semibold text-gray-400 hover:text-[#fafafa] border border-white/[0.10] hover:border-white/[0.22] px-3 py-2 rounded-[6px] transition-all whitespace-nowrap"
+                >
+                  Send
+                </button>
+              </div>
+            ) : (
+              <p className="text-[12px] text-[#00D26A] text-center py-1">
+                ✓ Got it — we&apos;ll send stockout alerts to {email}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Hero (page section) ───────────────────────────────────────────────────────
 export default function Hero() {
-  const orderBy = orderByLabel();
   return (
     <section className="relative min-h-screen flex items-center pt-32 pb-16 overflow-hidden bg-[#0a0f0a]">
       <div className="relative z-10 w-full max-w-[1100px] mx-auto px-4 sm:px-6">
 
-        {/* Two-column asymmetric layout */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_460px] gap-10 xl:gap-16 items-center">
 
           {/* ── Left: Headline + CTAs ── */}
           <div className="flex flex-col items-start">
-
             <p className="text-[11px] font-medium text-gray-500 uppercase tracking-[0.18em] mb-7">
               Shopify inventory forecasting
             </p>
 
-            <h1 className="text-[58px] sm:text-[72px] lg:text-[80px] xl:text-[88px] font-bold leading-[0.93] tracking-[-0.03em] text-[#fafafa] mb-6">
+            <h1 className="text-[58px] sm:text-[72px] lg:text-[80px] xl:text-[88px] font-bold leading-[0.93] text-[#fafafa] mb-6">
               Know before<br />
               you stock out.
             </h1>
@@ -43,7 +261,6 @@ export default function Hero() {
               and revenue at risk — in 30 seconds.
             </p>
 
-            {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-8">
               <Link
                 href="/forecast"
@@ -69,107 +286,16 @@ export default function Hero() {
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-6">
               <span className="text-[11px] text-gray-700">Used in</span>
               {["Fitness", "Fashion", "Beauty", "Supplements", "Home"].map((cat) => (
-                <span key={cat} className="text-[11px] text-gray-600">
-                  {cat}
-                </span>
+                <span key={cat} className="text-[11px] text-gray-600">{cat}</span>
               ))}
             </div>
           </div>
 
-          {/* ── Right: Product mockup ── */}
-          <div className="relative lg:mt-0 mt-8">
-            <div className="rounded-[10px] border border-white/[0.08] bg-[#111614] overflow-hidden shadow-2xl shadow-black/60">
-
-              {/* Top bar */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.05] bg-[#0d1210]">
-                <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00D26A]" />
-                  <span className="text-[11px] font-medium text-gray-500 font-mono">Forecast report</span>
-                </div>
-                <span className="text-[10px] font-medium text-gray-500 border border-white/[0.08] px-2.5 py-1 rounded-[4px]">
-                  Live analysis
-                </span>
-              </div>
-
-              {/* Alert */}
-              <div className="flex items-center gap-3 px-4 py-2.5 bg-red-500/[0.04] border-b border-red-500/[0.08]">
-                <span className="w-1.5 h-1.5 rounded-full bg-red-500 flex-shrink-0" />
-                <span className="text-[12px] text-gray-400 flex-1 min-w-0 truncate">
-                  <span className="font-semibold text-red-400">Premium Yoga Mat</span>
-                  {" "}— stockout in <span className="font-semibold text-[#00D26A]">4 days</span>
-                  <span className="text-gray-700 mx-1.5">·</span>
-                  <span className="text-red-400">$220 at risk</span>
-                </span>
-                <span className="text-[11px] font-semibold text-orange-300 bg-orange-500/10 border border-orange-500/15 px-2 py-0.5 rounded-[4px] flex-shrink-0">
-                  Order by {orderBy}
-                </span>
-              </div>
-
-              {/* Health row */}
-              <div className="flex items-center gap-4 px-4 py-3 border-b border-white/[0.04]">
-                <div>
-                  <p className="text-[10px] text-gray-600 uppercase tracking-widest mb-0.5">Health</p>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-[22px] font-bold text-[#fafafa] tracking-tight tabular-nums">72</span>
-                    <span className="text-xs text-gray-600">/100</span>
-                  </div>
-                </div>
-                <div className="flex-1 h-1.5 bg-white/[0.05] rounded-full overflow-hidden">
-                  <div className="h-full rounded-full bg-[#00D26A] health-bar-fill-72" />
-                </div>
-                <div className="flex items-center gap-3 text-[11px]">
-                  <span className="flex items-center gap-1 text-red-400"><span className="w-1.5 h-1.5 rounded-full bg-red-500" />2 critical</span>
-                  <span className="flex items-center gap-1 text-[#00D26A]"><span className="w-1.5 h-1.5 rounded-full bg-[#00D26A]" />1 safe</span>
-                </div>
-              </div>
-
-              {/* Product rows */}
-              <div className="divide-y divide-white/[0.03]">
-                {mockProducts.map((p) => {
-                  const s = riskStyle[p.risk];
-                  return (
-                    <div key={p.name} className="px-4 py-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1 min-w-0 mr-3">
-                          <p className="text-[13px] font-medium text-gray-200 truncate">{p.name}</p>
-                          <p className="text-[11px] mt-0.5">
-                            <span className="text-gray-600">{p.stock} units · </span>
-                            <span className={p.days <= 14 ? s.days + " font-semibold" : "text-gray-600"}>
-                              {p.days <= 14 ? `Stockout in ${p.days}d` : `${p.days}d left`}
-                            </span>
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2.5">
-                          {p.loss
-                            ? <span className="text-[12px] font-bold text-red-400 hidden sm:block">{p.loss}</span>
-                            : <span className="text-[12px] text-[#00D26A] hidden sm:block">Safe</span>}
-                          <span className={`text-[11px] font-medium ${p.trend.startsWith("+") ? "text-[#00D26A]" : "text-red-400"}`}>{p.trend}</span>
-                          <span className={`text-[11px] font-medium px-1.5 py-0.5 rounded-[4px] border ${s.pill}`}>{p.risk}</span>
-                        </div>
-                      </div>
-                      <div className="mt-2 h-1 bg-white/[0.04] rounded-full overflow-hidden">
-                        <div className={`h-full rounded-full ${s.bar} opacity-70 ${p.barClass}`} />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* AI recommendation footer */}
-              <div className="flex items-center gap-3 px-4 py-3 border-t border-white/[0.04]">
-                <div className="w-5 h-5 rounded-[4px] bg-[#00D26A]/10 border border-[#00D26A]/20 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-3 h-3 text-[#00D26A]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-                  </svg>
-                </div>
-                <span className="text-[12px] text-gray-500">
-                  Order <span className="text-gray-200 font-semibold">150 units of Yoga Mat</span>
-                  <span className="mx-1.5 text-gray-700">→</span>
-                  <span className="text-gray-400">covers demand through May 3</span>
-                </span>
-              </div>
-            </div>
+          {/* ── Right: Interactive widget ── */}
+          <div className="lg:mt-0 mt-8">
+            <ForecastWidget />
           </div>
+
         </div>
 
         {/* ── Stats strip ── */}
