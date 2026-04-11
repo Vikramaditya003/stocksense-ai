@@ -23,7 +23,7 @@ const rows = [
 
 export default function Comparison() {
   return (
-    <section className="py-28 bg-[#fafafa]">
+    <section className="py-28 bg-[#0a0f0a]">
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
 
         {/* Header */}
@@ -31,20 +31,20 @@ export default function Comparison() {
           <p className="text-[11px] font-medium text-gray-500 uppercase tracking-[0.18em] mb-4">
             Decisions, not dashboards
           </p>
-          <h2 className="text-[48px] sm:text-[56px] font-bold leading-[0.93] tracking-[-0.03em] text-gray-900">
+          <h2 className="text-[48px] sm:text-[56px] font-bold leading-[0.93] tracking-[-0.03em] text-[#fafafa]">
             What other tools show<br />
             vs. what you actually need.
           </h2>
         </div>
 
         {/* Table */}
-        <div className="rounded-[10px] border border-gray-200 overflow-hidden shadow-sm">
+        <div className="rounded-[10px] border border-white/[0.08] overflow-hidden">
           {/* Column headers */}
-          <div className="grid grid-cols-2 border-b border-gray-200">
-            <div className="px-6 py-4 bg-gray-50 border-r border-gray-200">
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Other tools</p>
+          <div className="grid grid-cols-2 border-b border-white/[0.08]">
+            <div className="px-6 py-4 bg-white/[0.03] border-r border-white/[0.06]">
+              <p className="text-[11px] font-bold text-gray-600 uppercase tracking-widest">Other tools</p>
             </div>
-            <div className="px-6 py-4 bg-white">
+            <div className="px-6 py-4 bg-[#111614]">
               <p className="text-[11px] font-bold text-[#00D26A] uppercase tracking-widest">Forestock</p>
             </div>
           </div>
@@ -53,19 +53,19 @@ export default function Comparison() {
           {rows.map((row, i) => (
             <div
               key={i}
-              className={`grid grid-cols-2 ${i < rows.length - 1 ? "border-b border-gray-100" : ""}`}
+              className={`grid grid-cols-2 ${i < rows.length - 1 ? "border-b border-white/[0.04]" : ""}`}
             >
-              <div className="px-6 py-4 bg-gray-50 border-r border-gray-100 flex items-center gap-3">
-                <svg className="w-3.5 h-3.5 text-gray-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <div className="px-6 py-4 bg-white/[0.02] border-r border-white/[0.04] flex items-center gap-3">
+                <svg className="w-3.5 h-3.5 text-gray-700 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
                 <span className="text-[14px] text-gray-500 font-mono">{row.them}</span>
               </div>
-              <div className="px-6 py-4 bg-white flex items-center gap-3">
+              <div className="px-6 py-4 bg-[#111614] flex items-center gap-3">
                 <svg className="w-3.5 h-3.5 text-[#00D26A] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
-                <span className="text-[14px] text-gray-800 font-medium">{row.us}</span>
+                <span className="text-[14px] text-gray-200 font-medium">{row.us}</span>
               </div>
             </div>
           ))}

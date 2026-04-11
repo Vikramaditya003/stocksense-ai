@@ -21,6 +21,367 @@ export interface Section {
 
 export const POSTS: BlogPost[] = [
   {
+    slug: "shopify-stocky-shutdown-migration",
+    title: "Shopify Stocky Is Shutting Down: Complete Migration Guide for Merchants",
+    excerpt: "Shopify Stocky — the free inventory management app built into Shopify — is being discontinued in August 2026. Here's everything you need to know, what you'll lose, and how to migrate to a replacement before your next peak season.",
+    date: "8 April 2026",
+    readTime: "7 min read",
+    tag: "Guide",
+    tagColor: "text-[#C4714A] bg-[rgba(196,113,74,0.12)] border-[rgba(196,113,74,0.2)]",
+    featured: true,
+    content: [
+      {
+        type: "paragraph",
+        text: "If you've relied on Shopify Stocky to manage purchase orders and track inventory, you have a deadline: August 2026. Shopify is discontinuing the app, and merchants who haven't migrated will lose access to all Stocky features — purchase order history, supplier records, demand forecasts, and the reorder point alerts you may have been relying on for years.",
+      },
+      {
+        type: "paragraph",
+        text: "This guide covers what Stocky actually did, what you'll lose when it's gone, what to look for in a replacement, and how to migrate without losing data or creating gaps in your inventory management process.",
+      },
+      {
+        type: "heading",
+        text: "What Shopify Stocky Actually Did",
+      },
+      {
+        type: "paragraph",
+        text: "Stocky was a free inventory management app developed by Shopify and available exclusively to Shopify merchants. Unlike third-party apps, it had direct access to your Shopify product catalog, orders, and inventory levels — no OAuth, no webhooks, no API keys.",
+      },
+      {
+        type: "list",
+        items: [
+          "Purchase order creation and management — create POs, send to suppliers, receive stock",
+          "Demand forecasting — basic sales velocity calculations to suggest reorder quantities",
+          "Reorder point suggestions — inventory level thresholds that triggered a reorder alert",
+          "Supplier management — store supplier contact information alongside products",
+          "ABC analysis — classify products by revenue contribution to prioritise ordering",
+          "Inventory adjustment logs — track manual stock adjustments and their reasons",
+        ],
+      },
+      {
+        type: "callout",
+        variant: "warning",
+        text: "Deadline: Shopify Stocky is shutting down in August 2026. After that date, you will lose access to all Stocky data including purchase order history and supplier records. Export your data before then.",
+      },
+      {
+        type: "heading",
+        text: "What You'll Lose When Stocky Disappears",
+      },
+      {
+        type: "paragraph",
+        text: "The shutdown affects more than just the interface. Any data that lives exclusively in Stocky — supplier contacts, historical POs, inventory adjustment notes — will be inaccessible unless you export it before the cutoff.",
+      },
+      {
+        type: "list",
+        items: [
+          "All purchase order history — you won't be able to look up what you ordered, from whom, or when",
+          "Supplier contact database — names, emails, lead times you've stored against each product",
+          "Reorder point configuration — any custom thresholds you've set up per SKU",
+          "Demand forecasts — Stocky's historical forecast data and accuracy records",
+          "Inventory adjustment history — notes and reasons for manual stock changes",
+        ],
+      },
+      {
+        type: "heading",
+        text: "Export Your Stocky Data Before the Deadline",
+      },
+      {
+        type: "paragraph",
+        text: "Before you migrate to a new tool, export everything Stocky has. This is time-sensitive — once the app shuts down, this data is gone.",
+      },
+      {
+        type: "steps",
+        items: [
+          "Open Shopify Admin → Apps → Stocky",
+          "Go to Settings → Export Data (or check each section for its own export button)",
+          "Export your purchase order history as CSV",
+          "Export your supplier list",
+          "Screenshot or export any custom reorder point settings",
+          "Save all files to a folder labelled with today's date — you may need to reference them during migration",
+        ],
+      },
+      {
+        type: "heading",
+        text: "What to Look for in a Stocky Replacement",
+      },
+      {
+        type: "paragraph",
+        text: "Not all inventory tools are equivalent replacements for Stocky. When evaluating alternatives, the key question is whether the tool gives you actionable decisions — not just dashboards and charts.",
+      },
+      {
+        type: "table",
+        headers: ["Capability", "Why It Matters"],
+        rows: [
+          ["Exact stockout dates per SKU", "You need to know when each product runs out, not just that it's 'low'"],
+          ["Lead time awareness", "Reorder points that ignore lead time are worse than useless — they give false safety"],
+          ["Revenue at risk calculation", "Prioritises which stockouts to prevent based on actual impact"],
+          ["No Shopify app install required", "App-based tools add friction, permissions overhead, and monthly cost per store"],
+          ["CSV upload compatibility", "Works with your existing Shopify data export without custom integrations"],
+          ["Purchase order generation", "Creates supplier-ready POs from forecast data in one click"],
+        ],
+      },
+      {
+        type: "heading",
+        text: "How to Migrate to Forestock",
+      },
+      {
+        type: "paragraph",
+        text: "Forestock is designed as a direct Stocky replacement — and it goes further. It doesn't require a Shopify app install, calculates exact stockout dates (not just reorder suggestions), and shows the revenue at risk for each at-risk product. Here's how to migrate:",
+      },
+      {
+        type: "steps",
+        items: [
+          "Export your Shopify orders as CSV: Shopify Admin → Orders → Export → Last 90 days",
+          "Export your current inventory: Shopify Admin → Products → Inventory → Export",
+          "Go to getforestock.com/forecast and upload your orders CSV",
+          "Set your supplier lead time in days (use the realistic number, not the optimistic one)",
+          "Run the forecast — you'll see every SKU ranked by stockout risk with exact dates",
+          "Review the reorder quantities and export a purchase order for any critical SKUs",
+        ],
+      },
+      {
+        type: "callout",
+        variant: "tip",
+        text: "For the lead time field, use your actual average lead time — not what your supplier promises. If they say 7 days but it usually takes 10, use 10. One missed stockout costs more than the error.",
+      },
+      {
+        type: "heading",
+        text: "What's Better About Forestock vs Stocky",
+      },
+      {
+        type: "paragraph",
+        text: "Stocky was a capable tool, but it was built when inventory management was simpler. Forestock is built for the current reality: faster-moving D2C brands, unpredictable demand from ad spend and social traffic, and the need for instant decisions rather than weekly check-ins.",
+      },
+      {
+        type: "table",
+        headers: ["Feature", "Shopify Stocky", "Forestock"],
+        rows: [
+          ["Exact stockout date", "Not shown — only reorder suggestion", "Shown per SKU with calendar date"],
+          ["Revenue at risk", "Not calculated", "Calculated per product and total"],
+          ["Ad-spend correlation", "Not available", "Available in Pro plan"],
+          ["Shopify app required", "Yes — must install app", "No — CSV upload, no install"],
+          ["Lead time integration", "Manual, basic", "Per-product, used in all calculations"],
+          ["Purchase orders", "Yes", "Yes, one-click from forecast"],
+          ["Price", "Free (until shutdown)", "$0 free tier, $9/mo Pro"],
+        ],
+      },
+      {
+        type: "heading",
+        text: "Migrate Before Peak Season",
+      },
+      {
+        type: "paragraph",
+        text: "The worst time to switch inventory tools is during your highest-volume period. If you sell through festivals, seasonal peaks, or campaign-driven spikes, migrate and complete at least one full forecasting cycle before that window arrives.",
+      },
+      {
+        type: "paragraph",
+        text: "Forestock's free tier lets you run unlimited forecasts on up to 5 products at no cost — enough to validate the tool and get comfortable with the workflow before you rely on it for your full catalog.",
+      },
+    ],
+  },
+  {
+    slug: "shopify-inventory-forecast-csv",
+    title: "How to Forecast Your Shopify Inventory from a CSV File (Step-by-Step)",
+    excerpt: "Your Shopify orders CSV contains everything you need to predict stockouts weeks in advance. This guide walks through the exact process — from export to forecast — including the formulas, the common mistakes, and how to read the results.",
+    date: "1 April 2026",
+    readTime: "8 min read",
+    tag: "Tutorial",
+    tagColor: "text-[#7C5C8C] bg-[rgba(124,92,140,0.12)] border-[rgba(124,92,140,0.2)]",
+    featured: false,
+    content: [
+      {
+        type: "paragraph",
+        text: "You don't need a Shopify app, an API integration, or a data analyst to forecast your inventory. Your Shopify admin already exports everything you need as a CSV file — and with the right process, you can go from raw export to a ranked list of at-risk SKUs in under 30 minutes the first time, and under 5 minutes every week after that.",
+      },
+      {
+        type: "paragraph",
+        text: "This guide covers the complete process: what to export, which columns matter, the forecasting formulas, and how to interpret the results.",
+      },
+      {
+        type: "heading",
+        text: "Why CSV-Based Forecasting Works",
+      },
+      {
+        type: "paragraph",
+        text: "Shopify's order export is a complete record of your sales history — every SKU, every quantity, every date. That's the core input for any demand forecast. The CSV approach works because it uses your actual data, not samples or estimates, and it doesn't require any third-party access to your store.",
+      },
+      {
+        type: "callout",
+        variant: "info",
+        text: "The accuracy ceiling for any forecast is set by the quality and length of your sales history. 60–90 days of consistent data produces reliable stockout dates. Less than 30 days produces rough estimates only.",
+      },
+      {
+        type: "heading",
+        text: "Step 1 — Export Your Shopify Orders CSV",
+      },
+      {
+        type: "steps",
+        items: [
+          "Log in to Shopify Admin (yourstore.myshopify.com/admin)",
+          "Click Orders in the left sidebar",
+          "Click the Export button in the top right",
+          "Select date range: Last 90 days for best results (minimum: Last 30 days)",
+          "Select All orders and export format CSV for Excel",
+          "Click Export orders — the file downloads to your computer",
+        ],
+      },
+      {
+        type: "heading",
+        text: "Step 2 — Which Columns Drive the Forecast",
+      },
+      {
+        type: "paragraph",
+        text: "Shopify's order export has dozens of columns. For inventory forecasting, only five of them matter. Everything else can be ignored.",
+      },
+      {
+        type: "table",
+        headers: ["Column Name", "What It Is", "Used For"],
+        rows: [
+          ["Created at", "Order timestamp", "Calculating daily sales velocity per product"],
+          ["Lineitem name", "Product + variant name", "Identifying which product was sold"],
+          ["Lineitem sku", "Your SKU code", "Matching products across systems"],
+          ["Lineitem quantity", "Units sold in this line", "Total units sold per product per day"],
+          ["Lineitem price", "Price per unit", "Revenue at risk if the product stocks out"],
+        ],
+      },
+      {
+        type: "callout",
+        variant: "warning",
+        text: "Before you run any calculations, filter out cancelled and refunded orders. Including them inflates your apparent sales velocity and produces optimistic (wrong) forecasts.",
+      },
+      {
+        type: "heading",
+        text: "Step 3 — Add Current Stock Levels",
+      },
+      {
+        type: "paragraph",
+        text: "The orders CSV doesn't include current stock — you need to add that. Go to Shopify Admin → Products → Inventory and export that file too. Or add a column manually with today's stock levels per SKU. This is the most important input in the whole forecast — an error here affects every calculation downstream.",
+      },
+      {
+        type: "list",
+        items: [
+          "Use units physically available to sell — not including in-transit stock, reserved orders, or damaged units",
+          "If you have multiple warehouse locations, use the combined available quantity",
+          "Update this number on the day you run the forecast — yesterday's stock count produces yesterday's forecast",
+        ],
+      },
+      {
+        type: "heading",
+        text: "Step 4 — The Core Forecasting Formula",
+      },
+      {
+        type: "paragraph",
+        text: "With sales history and current stock, the stockout forecast is a three-step calculation:",
+      },
+      {
+        type: "formula",
+        text: "Average Daily Sales (ADS) = Total Units Sold ÷ Number of Days in Period",
+      },
+      {
+        type: "formula",
+        text: "Days of Stock Remaining = Current Stock ÷ Average Daily Sales",
+      },
+      {
+        type: "formula",
+        text: "Stockout Date = Today + Days of Stock Remaining",
+      },
+      {
+        type: "paragraph",
+        text: "Example: you have 180 units of a product. It sold 450 units in the last 90 days. ADS = 450/90 = 5 units/day. Days of stock = 180/5 = 36 days. Stockout date = today + 36 days.",
+      },
+      {
+        type: "heading",
+        text: "Step 5 — Calculate Reorder Point",
+      },
+      {
+        type: "paragraph",
+        text: "Days of stock tells you when you'll run out. The reorder point tells you when to order. These are different numbers — and the gap between them is where merchants lose revenue.",
+      },
+      {
+        type: "formula",
+        text: "Reorder Point = (ADS × Supplier Lead Time) + Safety Stock",
+      },
+      {
+        type: "formula",
+        text: "Safety Stock = ADS × Buffer Days (use 7–14 depending on demand variance)",
+      },
+      {
+        type: "paragraph",
+        text: "Using the example above: ADS = 5, lead time = 10 days, safety stock = 5 × 7 = 35 units. Reorder point = (5 × 10) + 35 = 85 units. When your stock drops to 85 units, place the order immediately.",
+      },
+      {
+        type: "callout",
+        variant: "tip",
+        text: "If your Days of Stock Remaining is already less than your lead time, you are late. Order today and expect a brief stockout window unless you have expediting options.",
+      },
+      {
+        type: "heading",
+        text: "Step 6 — Run the Forecast in Forestock",
+      },
+      {
+        type: "paragraph",
+        text: "Doing this manually for 3–5 products is feasible. For 20+ SKUs, it becomes a spreadsheet maintenance job that will be out of date before you finish. Forestock automates all the steps above from your CSV upload:",
+      },
+      {
+        type: "steps",
+        items: [
+          "Go to getforestock.com/forecast",
+          "Upload your Shopify orders CSV (the file you exported in Step 1)",
+          "Enter your supplier lead time in days — this applies globally; you can adjust per-product after",
+          "Click Run Forecast",
+          "Review the ranked product list: Critical (stock out in <7 days), High (<21 days), Safe",
+          "For any Critical or High product, click Generate PO to create a purchase order ready to send",
+        ],
+      },
+      {
+        type: "heading",
+        text: "How to Read Your Forecast Results",
+      },
+      {
+        type: "table",
+        headers: ["Column", "What It Shows", "What to Do"],
+        rows: [
+          ["Stockout Date", "Calendar date the product runs out at current velocity", "If within 3× your lead time, order now"],
+          ["Days Remaining", "Days until stockout at current ADS", "Anything below lead time is already critical"],
+          ["Reorder Qty", "Units to order to cover demand + safety buffer", "Use this as your PO quantity starting point"],
+          ["Revenue at Risk", "Sales you'll lose if the stockout happens", "Prioritise the highest-revenue at-risk SKUs first"],
+          ["Urgency", "Critical / High / Safe classification", "Critical = order today, High = order this week"],
+        ],
+      },
+      {
+        type: "heading",
+        text: "Common Mistakes That Skew CSV Forecasts",
+      },
+      {
+        type: "list",
+        items: [
+          "Including cancelled/refunded orders — this inflates ADS and makes stockout dates look further away than they are",
+          "Using too short a date range — 14-day data captures one bad week and treats it as normal velocity",
+          "Stale stock counts — if your stock figure is from last week, your Days Remaining is wrong by exactly the units sold since then",
+          "Using supplier's quoted lead time instead of actual lead time — a systematic optimism bias that causes consistent late reorders",
+          "Treating variants as one product — a shoe that comes in 6 sizes has 6 different stock levels and 6 different forecast outputs",
+          "Running the forecast once a month — velocity changes weekly; a monthly forecast misses trend shifts",
+        ],
+      },
+      {
+        type: "callout",
+        variant: "tip",
+        text: "Set a weekly recurring reminder to export and upload a fresh CSV. Monday morning works well — it captures the previous week's sales and gives you time to place orders before the weekend.",
+      },
+      {
+        type: "heading",
+        text: "What Frequency Is Right",
+      },
+      {
+        type: "paragraph",
+        text: "For most Shopify merchants, a weekly forecast cadence is sufficient. Run it every Monday, review Critical and High items, place any necessary orders, and move on. The whole process takes under 10 minutes once you have a clean CSV template.",
+      },
+      {
+        type: "paragraph",
+        text: "Increase frequency during peak seasons, after a significant ad campaign launch, or any time you get unexpected press or social traffic that might spike demand on a specific product. Those are the moments when a stockout from undetected velocity change costs the most.",
+      },
+    ],
+  },
+  {
     slug: "how-to-prevent-stockouts-shopify",
     title: "How to Prevent Stockouts on Shopify Before They Cost You Revenue",
     excerpt: "Most Shopify merchants discover they're out of stock after a customer fails to check out. Here's a data-driven approach to catching stockouts 2–3 weeks early, using your own sales history.",
