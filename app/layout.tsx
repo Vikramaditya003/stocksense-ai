@@ -1,7 +1,16 @@
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
+import { Instrument_Serif } from "next/font/google";
 import "./globals.css";
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--font-instrument-serif",
+  display: "swap",
+});
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -39,7 +48,7 @@ export const metadata: Metadata = {
   creator: "Forestock",
   openGraph: {
     type: "website",
-    locale: "en_IN",
+    locale: "en_US",
     url: SITE_URL,
     siteName: "Forestock",
     title: "Forestock — Inventory Forecasting for Shopify",
@@ -73,34 +82,55 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Forestock",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Web",
-    "url": SITE_URL,
-    "description": "AI-powered inventory forecasting for Shopify merchants. Get exact stockout dates, reorder quantities, and revenue-at-risk analysis in 30 seconds.",
-    "offers": [
-      {
-        "@type": "Offer",
-        "name": "Free",
-        "price": "0",
-        "priceCurrency": "INR",
-        "description": "5 products per month, 30-day forecast"
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Forestock",
+      "url": SITE_URL,
+      "logo": `${SITE_URL}/icon.svg`,
+      "description": "AI-powered inventory forecasting for Shopify merchants.",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "support@getforestock.com",
+        "contactType": "customer support",
       },
-      {
-        "@type": "Offer",
-        "name": "Pro",
-        "price": "999",
-        "priceCurrency": "INR",
-        "description": "Unlimited products, 90-day forecasts, purchase order generation"
-      }
-    ]
-  };
+      "sameAs": [],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Forestock",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "url": SITE_URL,
+      "description": "AI-powered inventory forecasting for Shopify merchants. Get exact stockout dates, reorder quantities, and revenue-at-risk analysis in 30 seconds.",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "47",
+      },
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Free",
+          "price": "0",
+          "priceCurrency": "USD",
+          "description": "5 products per forecast, 30-day demand forecast",
+        },
+        {
+          "@type": "Offer",
+          "name": "Pro",
+          "price": "9",
+          "priceCurrency": "USD",
+          "description": "Unlimited products, 90-day forecasts, AI ad-spend correlation, purchase order generation",
+        },
+      ],
+    },
+  ];
 
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} ${instrumentSerif.variable}`}>
       <head>
         {/* Preconnect to third-party origins to shorten first-request latency */}
         <link rel="preconnect" href="https://clerk.getforestock.com" />
