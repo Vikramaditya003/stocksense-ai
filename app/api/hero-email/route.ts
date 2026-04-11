@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
       // Send welcome/forecast email to the user
       await resend.emails.send({
-        from: "Forestock <hello@getforestock.com>",
+        from: "Forestock <support@getforestock.com>",
         to: email,
         subject: "Your Forestock forecast + stockout alerts",
         text: [
@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
 
       // Notify ourselves about the new lead
       await resend.emails.send({
-        from: "Forestock Leads <hello@getforestock.com>",
+        from: "Forestock Leads <support@getforestock.com>",
         to: NOTIFY_RECIPIENT,
         subject: `[Lead] Hero email capture: ${email}`,
         text: `New hero widget email capture.\n\nEmail: ${email}\nIP: ${ip}\nTimestamp: ${new Date().toISOString()}`,

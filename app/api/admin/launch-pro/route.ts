@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
     for (const user of waitlist) {
       try {
         await resend.emails.send({
-          from: "Forestock <hello@getforestock.com>",
+          from: "Forestock <support@getforestock.com>",
           to: user.email,
           subject: "Forestock Pro is live — your early-bird discount inside",
           text: `Hi,

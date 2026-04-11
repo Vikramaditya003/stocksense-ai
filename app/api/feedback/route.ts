@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
       const label =
         npsScore >= 9 ? "Promoter 🟢" : npsScore >= 7 ? "Passive 🟡" : "Detractor 🔴";
       await resend.emails.send({
-        from: "Forestock Feedback <hello@getforestock.com>",
+        from: "Forestock Feedback <support@getforestock.com>",
         to: FEEDBACK_RECIPIENT,
         subject: `[Feedback] ${npsScore}/10 · ${label} · ${page}`,
         text: [
