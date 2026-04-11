@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
@@ -94,12 +94,11 @@ function NotifyButton() {
 }
 
 export default function Pricing() {
-  const [currency, setCurrency] = useState<"USD" | "INR">("USD");
-
-  useEffect(() => {
+  const [currency] = useState<"USD" | "INR">(() => {
+    if (typeof window === "undefined") return "USD";
     const lang = navigator.language || "";
-    if (lang === "en-IN" || lang.startsWith("hi")) setCurrency("INR");
-  }, []);
+    return lang === "en-IN" || lang.startsWith("hi") ? "INR" : "USD";
+  });
 
   const proPrice    = currency === "INR" ? "₹749"  : "$9";
   const proBilling  = currency === "INR" ? "billed monthly" : "per month";

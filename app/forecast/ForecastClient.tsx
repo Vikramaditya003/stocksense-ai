@@ -1610,12 +1610,12 @@ export default function ForecastClient() {
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
-                          <span className="text-sm font-semibold">You're on the alert list — we'll email you when stock is critical.</span>
+                          <span className="text-sm font-semibold">You&apos;re on the alert list &mdash; we&apos;ll email you when stock is critical.</span>
                         </div>
                       ) : (
                         <>
                           <p className="text-sm font-semibold text-white mb-0.5">Get weekly stockout alerts by email</p>
-                          <p className="text-xs text-slate-500 mb-3">We'll send your top at-risk SKUs to your account email every Monday. Free, no spam.</p>
+                          <p className="text-xs text-slate-500 mb-3">We&apos;ll send your top at-risk SKUs to your account email every Monday. Free, no spam.</p>
                           <button
                             onClick={handleEmailAlert}
                             disabled={alertStatus === "sending"}

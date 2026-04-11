@@ -113,7 +113,6 @@ function EditorialHero({ post, index }: { post: BlogPost; index: number }) {
 
 // Mid-weight card for posts 2-3
 function FeaturedCard({ post, index }: { post: BlogPost; index: number }) {
-  const m = TAG_META[post.tag] ?? FALLBACK;
   return (
     <Link
       href={`/blog/${post.slug}`}
@@ -139,7 +138,6 @@ function FeaturedCard({ post, index }: { post: BlogPost; index: number }) {
 
 // Compact list row for remaining posts
 function ListRow({ post, index }: { post: BlogPost; index: number }) {
-  const m = TAG_META[post.tag] ?? FALLBACK;
   return (
     <Link
       href={`/blog/${post.slug}`}

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 
@@ -84,7 +83,7 @@ export default function CookiePolicyPage() {
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xs font-bold px-2 py-0.5 rounded-full border text-yellow-400 bg-yellow-500/10 border-yellow-500/20">Preference</span>
                 </div>
-                <p className="text-slate-400">Remembers your display settings (such as theme) across visits so you don't have to reconfigure on every login.</p>
+                <p className="text-slate-400">Remembers your display settings (such as theme) across visits so you don&apos;t have to reconfigure on every login.</p>
               </div>
               <div className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-2">
