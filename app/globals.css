@@ -5,20 +5,20 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-background: #060C0D;
-  --color-foreground: #E2F4F4;
-  --color-card: #0A1415;
-  --color-card-foreground: #E2F4F4;
-  --color-muted: #0F1C1E;
-  --color-muted-foreground: #7DB8BC;
-  --color-border: rgba(34,197,94,0.1);
-  --color-input: #0F1C1E;
-  --color-primary: #22C55E;
-  --color-primary-foreground: #060C0D;
-  --color-ring: #22C55E;
+  --color-background: #0a0f0a;
+  --color-foreground: #fafafa;
+  --color-card: #111614;
+  --color-card-foreground: #fafafa;
+  --color-muted: #1a1f1a;
+  --color-muted-foreground: #6b7280;
+  --color-border: rgba(255,255,255,0.08);
+  --color-input: #1a1f1a;
+  --color-primary: #00D26A;
+  --color-primary-foreground: #0a0f0a;
+  --color-ring: #00D26A;
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --radius: 0.5rem;
+  --radius: 0.625rem;
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -50,39 +50,38 @@
 }
 
 :root {
-  /* Dark-first design system — no light theme */
-  --background: #060C0D;
-  --foreground: #E2F4F4;
-  --card: #0A1415;
-  --card-foreground: #E2F4F4;
-  --popover: #0A1415;
-  --popover-foreground: #E2F4F4;
-  --primary: #22C55E;
-  --primary-foreground: #060C0D;
-  --secondary: #0F1C1E;
-  --secondary-foreground: #E2F4F4;
-  --muted: #0F1C1E;
-  --muted-foreground: #7DB8BC;
-  --accent: #0F1C1E;
-  --accent-foreground: #E2F4F4;
+  --background: #0a0f0a;
+  --foreground: #fafafa;
+  --card: #111614;
+  --card-foreground: #fafafa;
+  --popover: #111614;
+  --popover-foreground: #fafafa;
+  --primary: #00D26A;
+  --primary-foreground: #0a0f0a;
+  --secondary: #1a1f1a;
+  --secondary-foreground: #fafafa;
+  --muted: #1a1f1a;
+  --muted-foreground: #6b7280;
+  --accent: #1a1f1a;
+  --accent-foreground: #fafafa;
   --destructive: #ef4444;
-  --border: rgba(34, 197, 94, 0.1);
-  --input: #0F1C1E;
-  --ring: #22C55E;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: #1a1f1a;
+  --ring: #00D26A;
   --radius: 0.625rem;
-  --chart-1: #22C55E;
+  --chart-1: #00D26A;
   --chart-2: #0D9488;
   --chart-3: #0F766E;
   --chart-4: #115E59;
   --chart-5: #134E4A;
-  --sidebar: #0A1415;
-  --sidebar-foreground: #E2F4F4;
-  --sidebar-primary: #22C55E;
-  --sidebar-primary-foreground: #060C0D;
-  --sidebar-accent: #0F1C1E;
-  --sidebar-accent-foreground: #E2F4F4;
-  --sidebar-border: rgba(34, 197, 94, 0.1);
-  --sidebar-ring: #22C55E;
+  --sidebar: #111614;
+  --sidebar-foreground: #fafafa;
+  --sidebar-primary: #00D26A;
+  --sidebar-primary-foreground: #0a0f0a;
+  --sidebar-accent: #1a1f1a;
+  --sidebar-accent-foreground: #fafafa;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #00D26A;
 }
 
 /* ── Base reset ───────────────────────────────────────────── */
@@ -121,45 +120,38 @@ body {
 }
 
 /* ── Typography ───────────────────────────────────────────── */
-/* Font-feature settings only — sizes controlled by Tailwind classes per component */
 h1, h2, h3, h4 {
   font-feature-settings: "kern" 1, "liga" 1, "ss01" 1;
 }
 
-/* Instrument Serif — used for display headings and editorial elements */
-.font-serif {
-  font-family: var(--font-instrument-serif), Georgia, "Times New Roman", serif;
+/* ── Primary CTA — hyper-reactive ─────────────────────────── */
+.btn-primary {
+  transition: transform 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
+  border-radius: 6px;
 }
-.font-serif-italic {
-  font-family: var(--font-instrument-serif), Georgia, "Times New Roman", serif;
-  font-style: italic;
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+.btn-primary:active:not(:disabled) {
+  transform: translateY(1px) scale(0.98);
+}
+.btn-primary:focus-visible {
+  outline: 2px solid #00D26A;
+  outline-offset: 2px;
 }
 
-/* ── Subtle grain texture ──────────────────────────────────── */
-/* Layered over sections to break the pure-digital flatness */
-.grain {
-  position: relative;
+/* ── Ghost / secondary buttons ────────────────────────────── */
+.btn-ghost {
+  border-radius: 6px;
+  transition: border-color 150ms ease, color 150ms ease;
 }
-.grain::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-  background-size: 128px 128px;
-  opacity: 0.022;
-  pointer-events: none;
-  z-index: 0;
-  mix-blend-mode: overlay;
+.btn-ghost:focus-visible {
+  outline: 2px solid #00D26A;
+  outline-offset: 2px;
 }
 
 /* Tabular numbers for data/metrics */
 .tabular { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
-
-/* ── Background patterns ──────────────────────────────────── */
-.dot-grid {
-  background-image: radial-gradient(rgba(34,197,94,0.12) 1px, transparent 1px);
-  background-size: 28px 28px;
-}
 
 /* ── Card ─────────────────────────────────────────────────── */
 .card {
@@ -174,14 +166,6 @@ h1, h2, h3, h4 {
   border-radius: calc(var(--radius) - 1px);
 }
 
-/* ── Glass ────────────────────────────────────────────────── */
-.glass {
-  background: rgba(255,255,255,0.03);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255,255,255,0.07);
-}
-
 /* ── Badges ────────────────────────────────────────────────── */
 .badge {
   display: inline-flex;
@@ -190,7 +174,7 @@ h1, h2, h3, h4 {
   font-size: 0.75rem;
   font-weight: 500;
   padding: 0.18rem 0.55rem;
-  border-radius: 9999px;
+  border-radius: 4px;
   border: 1px solid transparent;
   line-height: 1.4;
 }
@@ -201,69 +185,6 @@ h1, h2, h3, h4 {
 .badge-low      { background: rgba(16,185,129,0.1); color: #34d399; border-color: rgba(16,185,129,0.18); }
 .badge-done     { background: rgba(16,185,129,0.1); color: #34d399; border-color: rgba(16,185,129,0.18); }
 .badge-neutral  { background: rgba(255,255,255,0.05); color: #71717a; border-color: rgba(255,255,255,0.08); }
-
-/* ── Gradient text ─────────────────────────────────────────── */
-.text-gradient {
-  background: linear-gradient(135deg, #34d399 0%, #06b6d4 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ── Section label ─────────────────────────────────────────── */
-.section-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #22C55E;
-  background: rgba(34,197,94,0.08);
-  border: 1px solid rgba(34,197,94,0.2);
-  padding: 0.3rem 0.75rem;
-  border-radius: 9999px;
-  font-feature-settings: "kern" 1;
-}
-
-/* ── Gradient border (for featured pricing card, etc.) ──────── */
-/* Uses a pseudo-element so the CSS validator never sees padding-box/border-box */
-.gradient-border-teal {
-  position: relative;
-  border: 1px solid rgba(34, 197, 94, 0.35);
-  box-shadow: 0 0 0 1px rgba(6, 182, 212, 0.15), 0 20px 60px -10px rgba(34, 197, 94, 0.12);
-}
-
-/* ── Pro pricing card glow border ───────────────────────────── */
-.pro-card-border {
-  box-shadow: 0 0 0 1.5px #22C55E40, 0 24px 60px -12px rgba(34,197,94,0.12);
-}
-
-/* ── Section alt background ─────────────────────────────────── */
-.section-alt {
-  background: #07100F;
-}
-
-/* ── Stats strip gradient ───────────────────────────────────── */
-.stats-gradient {
-  background: linear-gradient(135deg, rgba(34,197,94,0.04) 0%, rgba(13,148,136,0.03) 50%, rgba(34,197,94,0.04) 100%);
-}
-
-/* ── Orbs ──────────────────────────────────────────────────── */
-.orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(100px);
-  pointer-events: none;
-  z-index: 0;
-}
-.orb-emerald { background: rgba(34,197,94,0.10); }
-.orb-cyan    { background: rgba(6,182,212,0.09); }
-.orb-blue    { background: rgba(59,130,246,0.08); }
-.orb-violet  { background: rgba(124,58,237,0.07); }
-.orb-indigo  { background: rgba(99,102,241,0.07); }
-.orb-purple  { background: rgba(167,139,250,0.06); }
 
 /* ── Table ─────────────────────────────────────────────────── */
 .data-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
@@ -277,7 +198,7 @@ h1, h2, h3, h4 {
   padding: 0.7rem 1rem;
   border-bottom: 1px solid var(--border);
   white-space: nowrap;
-  background: #0A1415;
+  background: #111614;
 }
 .data-table td {
   padding: 0.85rem 1rem;
@@ -286,7 +207,7 @@ h1, h2, h3, h4 {
 }
 .data-table tbody tr:last-child td { border-bottom: none; }
 .data-table tbody tr { transition: background 0.12s; }
-.data-table tbody tr:hover { background: rgba(34,197,94,0.03); }
+.data-table tbody tr:hover { background: rgba(0,210,106,0.03); }
 
 /* ── Gauge animation ───────────────────────────────────────── */
 @keyframes dashOffset {
@@ -295,8 +216,7 @@ h1, h2, h3, h4 {
 }
 .gauge-fill { animation: dashOffset 1.2s ease-out forwards; }
 
-/* ── Hero health-bar fill (CSS-only, replaces framer-motion width tween) ── */
-/* Uses scaleX (compositor-only) instead of width to avoid Layout/Paint triggers */
+/* ── Hero health-bar fill ───────────────────────────────────── */
 @keyframes healthBarGrow {
   from { transform: scaleX(0); }
   to   { transform: scaleX(0.72); }
@@ -308,7 +228,7 @@ h1, h2, h3, h4 {
   animation: healthBarGrow 1.2s ease-out 0.95s forwards;
 }
 
-/* ── Hero dashboard product bars (data-driven widths as static classes) ── */
+/* ── Product bar widths (static classes) ────────────────────── */
 .bar-6   { width: 6%; }
 .bar-7   { width: 7%; }
 .bar-16  { width: 16%; }
@@ -346,7 +266,7 @@ h1, h2, h3, h4 {
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.07); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.14); }
 
-/* ── Health bar (progress element, avoids inline styles) ────── */
+/* ── Health bar (progress element) ─────────────────────────── */
 progress.health-bar {
   -webkit-appearance: none;
   appearance: none;
@@ -367,3 +287,16 @@ progress.health-bar-yellow::-webkit-progress-value { background: #facc15; }
 progress.health-bar-yellow::-moz-progress-bar      { background: #facc15; }
 progress.health-bar-red::-webkit-progress-value    { background: #f87171; }
 progress.health-bar-red::-moz-progress-bar         { background: #f87171; }
+
+/* ── FAQ accordion ─────────────────────────────────────────── */
+.faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 250ms ease;
+}
+.faq-answer.open {
+  grid-template-rows: 1fr;
+}
+.faq-answer > div {
+  overflow: hidden;
+}

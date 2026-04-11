@@ -1,16 +1,7 @@
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
-import { Instrument_Serif } from "next/font/google";
 import "./globals.css";
-
-const instrumentSerif = Instrument_Serif({
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
-  variable: "--font-instrument-serif",
-  display: "swap",
-});
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -130,7 +121,7 @@ export default function RootLayout({
   ];
 
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} ${instrumentSerif.variable}`}>
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <head>
         {/* Preconnect to third-party origins to shorten first-request latency */}
         <link rel="preconnect" href="https://clerk.getforestock.com" />
@@ -144,7 +135,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen bg-[#060C0D] text-slate-200 antialiased font-[family-name:var(--font-geist-sans)]">
+      <body className="min-h-screen bg-[#0a0f0a] text-[#fafafa] antialiased font-[family-name:var(--font-geist-sans)]">
         {clerkReady ? (
         <ClerkProvider
           appearance={{
@@ -153,14 +144,14 @@ export default function RootLayout({
               colorInputBackground: "#0F1C1E",
               colorText: "#E2F4F4",
               colorTextSecondary: "#7DB8BC",
-              colorPrimary: "#22C55E",
+              colorPrimary: "#00D26A",
               colorDanger: "#f87171",
               borderRadius: "0.75rem",
               fontFamily: "var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif",
             },
             elements: {
               // ── Shared cards ────────────────────────────────────────────────
-              card: "!bg-[#0A1415] !border !border-[#22C55E]/15 !shadow-2xl !shadow-black/80",
+              card: "!bg-[#0A1415] !border !border-[#00D26A]/15 !shadow-2xl !shadow-black/80",
               headerTitle: "!text-white !font-semibold",
               headerSubtitle: "!text-slate-400",
 
@@ -173,31 +164,31 @@ export default function RootLayout({
               dividerText: "!text-slate-500",
 
               // ── Form fields ──────────────────────────────────────────────────
-              formFieldInput: "!bg-[#0F1C1E] !border-[#22C55E]/20 !text-white focus:!border-[#22C55E]/50 !text-[15px]",
+              formFieldInput: "!bg-[#0F1C1E] !border-[#00D26A]/20 !text-white focus:!border-[#00D26A]/50 !text-[15px]",
               formFieldLabel: "!text-slate-300 !font-medium",
-              formButtonPrimary: "!bg-[#22C55E] hover:!bg-[#16A34A] !text-[#060C0D] !font-semibold !shadow-lg !shadow-[#22C55E]/20",
+              formButtonPrimary: "!bg-[#00D26A] hover:!bg-[#00b85e] !text-[#060C0D] !font-semibold !shadow-lg !shadow-[#00D26A]/20",
               formButtonReset: "!text-slate-400 hover:!text-white !border !border-white/10 hover:!border-white/20",
 
               // ── Links ────────────────────────────────────────────────────────
-              footerActionLink: "!text-[#22C55E] hover:!text-[#16A34A]",
-              formResendCodeLink: "!text-[#22C55E]",
+              footerActionLink: "!text-[#00D26A] hover:!text-[#00b85e]",
+              formResendCodeLink: "!text-[#00D26A]",
 
               // ── Identity preview ─────────────────────────────────────────────
               identityPreviewText: "!text-slate-300",
-              identityPreviewEditButton: "!text-[#22C55E]",
+              identityPreviewEditButton: "!text-[#00D26A]",
 
               // ── OTP ──────────────────────────────────────────────────────────
-              otpCodeFieldInput: "!bg-[#0F1C1E] !border-[#22C55E]/20 !text-white",
+              otpCodeFieldInput: "!bg-[#0F1C1E] !border-[#00D26A]/20 !text-white",
 
               // ── UserProfile modal root ───────────────────────────────────────
               rootBox: "!font-[family-name:var(--font-geist-sans)]",
-              modalContent: "!bg-[#0A1415] !border !border-[#22C55E]/15 !shadow-2xl !shadow-black/80 !rounded-2xl",
+              modalContent: "!bg-[#0A1415] !border !border-[#00D26A]/15 !shadow-2xl !shadow-black/80 !rounded-2xl",
               modalCloseButton: "!text-slate-500 hover:!text-white hover:!bg-white/[0.05] !rounded-lg",
 
               // ── UserProfile left nav ─────────────────────────────────────────
-              navbar: "!bg-[#07100F] !border-r !border-[#22C55E]/[0.08]",
+              navbar: "!bg-[#07100F] !border-r !border-[#00D26A]/[0.08]",
               navbarButton: "!text-slate-400 hover:!text-white hover:!bg-white/[0.04] !rounded-lg !font-medium",
-              navbarButtonActive: "!text-[#22C55E] !bg-[#22C55E]/10 !rounded-lg",
+              navbarButtonActive: "!text-[#00D26A] !bg-[#00D26A]/10 !rounded-lg",
               navbarButtonIcon: "!text-slate-500",
 
               // ── UserProfile page content ─────────────────────────────────────
@@ -206,16 +197,16 @@ export default function RootLayout({
               profilePage: "!bg-[#0A1415]",
 
               // ── Section titles & content ─────────────────────────────────────
-              profileSectionTitle: "!border-b !border-[#22C55E]/[0.08]",
+              profileSectionTitle: "!border-b !border-[#00D26A]/[0.08]",
               profileSectionTitleText: "!text-white !font-semibold",
               profileSectionContent: "!text-slate-300",
-              profileSectionPrimaryButton: "!text-[#22C55E] hover:!text-[#16A34A] !font-medium",
+              profileSectionPrimaryButton: "!text-[#00D26A] hover:!text-[#00b85e] !font-medium",
 
               // ── Badge (e.g. "Primary" email badge) ──────────────────────────
-              badge: "!bg-[#22C55E]/10 !text-[#22C55E] !border !border-[#22C55E]/20 !font-semibold",
+              badge: "!bg-[#00D26A]/10 !text-[#00D26A] !border !border-[#00D26A]/20 !font-semibold",
 
               // ── Menu items (⋯ action menus) ──────────────────────────────────
-              menuList: "!bg-[#0D1B1D] !border !border-[#22C55E]/15 !rounded-xl !shadow-xl !shadow-black/60",
+              menuList: "!bg-[#0D1B1D] !border !border-[#00D26A]/15 !rounded-xl !shadow-xl !shadow-black/60",
               menuItem: "!text-slate-300 hover:!bg-white/[0.05] hover:!text-white",
               menuItemDestructive: "!text-red-400 hover:!bg-red-500/[0.06]",
 
@@ -223,7 +214,7 @@ export default function RootLayout({
               accordionTriggerButton: "!text-slate-300 hover:!text-white",
               userPreviewMainIdentifier: "!text-white !font-semibold",
               userPreviewSecondaryIdentifier: "!text-slate-500",
-              avatarBox: "!ring-1 !ring-[#22C55E]/20",
+              avatarBox: "!ring-1 !ring-[#00D26A]/20",
 
               // ── Alert / danger zone ──────────────────────────────────────────
               alertText: "!text-red-400",

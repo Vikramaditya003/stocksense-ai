@@ -35,7 +35,7 @@ function AuthButtons() {
             },
             elements: {
               avatarBox: "w-8 h-8",
-              userButtonPopoverCard: "!bg-[#0D1B1D] !border !border-[#22C55E]/20 !shadow-2xl !shadow-black/80 !rounded-xl",
+              userButtonPopoverCard: "!bg-[#0D1B1D] !border !border-[#00D26A]/20 !shadow-2xl !shadow-black/80 !rounded-xl",
               userButtonPopoverMain: "!bg-[#0D1B1D]",
               userButtonPopoverHeader: "!bg-[#0D1B1D] !border-b !border-white/[0.05]",
               userButtonPopoverActions: "!bg-[#0D1B1D]",
@@ -103,15 +103,15 @@ export default function Navbar() {
     <header className="fixed top-0 left-0 right-0 z-50">
       {/* Announcement Banner */}
       {bannerVisible && (
-        <div className="w-full h-9 flex items-center justify-center bg-[#060C0D] border-b border-[#22C55E]/20 px-4 relative">
-          <div className="absolute inset-0 bg-[#22C55E]/[0.04]" />
+        <div className="w-full h-9 flex items-center justify-center bg-[#0a0f0a] border-b border-[#00D26A]/20 px-4 relative">
+          <div className="absolute inset-0 bg-[#00D26A]/[0.04]" />
           <p className="relative text-[12px] text-slate-400 text-center">
             <span className="inline-flex items-center gap-1.5 mr-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse flex-shrink-0" />
               <span className="font-semibold text-amber-300">Shopify Stocky</span>
             </span>
             shuts down August 2026 —{" "}
-            <Link href="/forecast" className="font-semibold text-white underline underline-offset-2 hover:text-[#22C55E] transition-colors">
+            <Link href="/forecast" className="font-semibold text-white underline underline-offset-2 hover:text-[#00D26A] transition-colors">
               migrate free →
             </Link>
           </p>
@@ -129,15 +129,15 @@ export default function Navbar() {
       <nav
         className={`w-full max-w-[1000px] flex items-center justify-between px-6 h-16 rounded-2xl transition-all duration-300 animate-in fade-in-0 slide-in-from-top-2 duration-350 fill-mode-both ${
           scrolled
-            ? "bg-[#0A1415]/95 backdrop-blur-2xl border border-[#22C55E]/15 shadow-2xl shadow-black/60"
-            : "bg-[#0A1415]/70 backdrop-blur-xl border border-white/[0.07]"
+            ? "bg-[#111614]/95 backdrop-blur-2xl border border-[#00D26A]/15 shadow-2xl shadow-black/60"
+            : "bg-[#111614]/70 backdrop-blur-xl border border-white/[0.07]"
         }`}
       >
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">
           <LogoMark size={34} />
           <span className="text-[19px] font-extrabold tracking-[-0.03em]">
-            <span className="text-white">Fore</span><span className="text-[#22C55E]">stock</span>
+            <span className="text-white">Fore</span><span className="text-[#00D26A]">stock</span>
           </span>
         </Link>
 
@@ -188,7 +188,7 @@ export default function Navbar() {
 
       {/* Mobile menu — CSS transition, no framer-motion */}
       <div
-        className={`absolute left-4 right-4 bg-[#0A1415] border border-[#22C55E]/15 rounded-2xl p-3 shadow-2xl shadow-black/70 md:hidden transition-all duration-150 origin-top ${
+        className={`absolute left-4 right-4 bg-[#111614] border border-[#00D26A]/15 rounded-2xl p-3 shadow-2xl shadow-black/70 md:hidden transition-all duration-150 origin-top ${
           bannerVisible ? "top-[7.25rem]" : "top-[4.75rem]"
         } ${
           mobileOpen

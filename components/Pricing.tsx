@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
@@ -28,21 +28,25 @@ const proFeatures = [
   "Priority email support",
 ];
 
-const Check = () => (
-  <div className="w-4 h-4 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/25 flex items-center justify-center flex-shrink-0">
-    <svg className="w-2.5 h-2.5 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-    </svg>
-  </div>
-);
+function Check() {
+  return (
+    <div className="w-4 h-4 rounded-[4px] bg-[#00D26A]/10 border border-[#00D26A]/25 flex items-center justify-center flex-shrink-0">
+      <svg className="w-2.5 h-2.5 text-[#00D26A]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+      </svg>
+    </div>
+  );
+}
 
-const Cross = () => (
-  <div className="w-4 h-4 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center flex-shrink-0">
-    <svg className="w-2.5 h-2.5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-    </svg>
-  </div>
-);
+function Cross() {
+  return (
+    <div className="w-4 h-4 rounded-[4px] bg-white/[0.04] border border-white/10 flex items-center justify-center flex-shrink-0">
+      <svg className="w-2.5 h-2.5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </div>
+  );
+}
 
 function NotifyButton() {
   const { isSignedIn, isLoaded } = useUser();
@@ -52,24 +56,18 @@ function NotifyButton() {
   const handleClick = async () => {
     if (!CLERK_READY || !isLoaded) return;
 
-    // Not signed in → send to sign-up, then back here
     if (!isSignedIn) {
       router.push("/sign-up?redirect_url=" + encodeURIComponent("/#pricing"));
       return;
     }
 
-    // Already on waitlist
     if (state === "done") return;
 
     setState("loading");
     try {
       const res = await fetch("/api/waitlist", { method: "POST" });
       const json = await res.json();
-      if (json.success) {
-        setState("done");
-      } else {
-        setState("idle");
-      }
+      setState(json.success ? "done" : "idle");
     } catch {
       setState("idle");
     }
@@ -77,7 +75,7 @@ function NotifyButton() {
 
   if (state === "done") {
     return (
-      <div className="w-full text-center text-[13px] font-semibold py-2.5 px-4 rounded-xl mb-2 bg-[#22C55E]/10 border border-[#22C55E]/25 text-[#22C55E]">
+      <div className="w-full text-center text-[13px] font-semibold py-2.5 px-4 rounded-[6px] mb-2 bg-[#00D26A]/10 border border-[#00D26A]/25 text-[#00D26A]">
         ✓ You&apos;re on the list — we&apos;ll email you at launch
       </div>
     );
@@ -85,125 +83,120 @@ function NotifyButton() {
 
   return (
     <button
+      type="button"
       onClick={handleClick}
       disabled={state === "loading"}
-      className="block w-full text-center text-[13px] font-semibold py-2.5 px-4 rounded-xl mb-2 transition-all bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] shadow-lg shadow-[#22C55E]/25 disabled:opacity-60 disabled:cursor-not-allowed"
+      className="btn-ghost block w-full text-center text-[13px] font-semibold py-2.5 px-4 rounded-[6px] mb-2 text-gray-300 border border-white/[0.12] hover:border-white/[0.25] hover:text-[#fafafa] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
     >
-      {state === "loading" ? "Saving…" : "Notify me when it\u2019s live \u2192"}
+      {state === "loading" ? "Saving…" : "Get notified at launch →"}
     </button>
   );
 }
 
 export default function Pricing() {
-  return (
-    <section id="pricing" className="py-28 bg-[#060C0D] relative overflow-hidden">
-      <div className="hidden sm:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#22C55E]/[0.03] blur-[140px] rounded-full pointer-events-none" />
+  const [currency, setCurrency] = useState<"USD" | "INR">("USD");
 
+  useEffect(() => {
+    const lang = navigator.language || "";
+    if (lang === "en-IN" || lang.startsWith("hi")) setCurrency("INR");
+  }, []);
+
+  const proPrice    = currency === "INR" ? "₹749"  : "$9";
+  const proBilling  = currency === "INR" ? "billed monthly" : "per month";
+
+  return (
+    <section id="pricing" className="py-28 bg-[#0a0f0a] relative overflow-hidden">
       <div className="max-w-[860px] mx-auto px-4 sm:px-6 relative z-10">
 
         {/* Header */}
-        <div className="text-center mb-14 animate-in fade-in-0 slide-in-from-bottom-4 duration-300 fill-mode-both">
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#22C55E] uppercase tracking-widest bg-[#22C55E]/10 border border-[#22C55E]/20 px-3 py-1 rounded-full mb-5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]" />
-            Pricing
-          </span>
-          <h2 className="text-[40px] sm:text-[52px] font-semibold text-white tracking-[-0.03em] leading-tight mt-4 mb-3">
+        <div className="mb-14">
+          <p className="text-[11px] font-medium text-gray-500 uppercase tracking-[0.18em] mb-4">Pricing</p>
+          <h2 className="text-[40px] sm:text-[52px] font-bold text-[#fafafa] tracking-[-0.03em] leading-tight mb-3">
             Get started for free
           </h2>
-          <p className="text-[15px] text-slate-500 max-w-sm mx-auto leading-relaxed">
+          <p className="text-[15px] text-gray-500 max-w-sm leading-relaxed">
             Start free. Upgrade when you need more. Cancel anytime.
           </p>
         </div>
 
-        {/* Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-10">
-
-          {/* Free */}
-          <div className="rounded-2xl border border-white/[0.08] bg-[#0A1415] p-7 flex flex-col animate-in fade-in-0 slide-in-from-bottom-4 duration-300 fill-mode-both">
-            <div className="mb-6">
-              <p className="text-[13px] font-semibold text-slate-300 mb-1">Starter</p>
-              <p className="text-[13px] text-slate-600 mb-5">Try it free. No credit card needed.</p>
-              <div className="flex items-end gap-1.5 mb-1">
-                <span className="text-[42px] font-bold text-white tracking-tight leading-none">$0</span>
-              </div>
-              <p className="text-[12px] text-slate-600">Free plan</p>
+        {/* Starter card — only card shown */}
+        <div className="rounded-[10px] border border-white/[0.08] bg-[#111614] p-7 flex flex-col mb-6 max-w-sm">
+          <div className="mb-6">
+            <p className="text-[13px] font-semibold text-gray-300 mb-1">Starter</p>
+            <p className="text-[13px] text-gray-600 mb-5">Try it free. No credit card needed.</p>
+            <div className="flex items-end gap-1.5 mb-1">
+              <span className="text-[42px] font-bold text-[#fafafa] tracking-tight leading-none">$0</span>
             </div>
+            <p className="text-[12px] text-gray-600">Free plan</p>
+          </div>
 
-            <Link
-              href="/forecast"
-              className="block w-full text-center text-[13px] font-semibold py-2.5 px-4 rounded-xl mb-7 transition-all bg-white/[0.06] hover:bg-white/[0.10] text-slate-300 border border-white/[0.08]"
-            >
-              Start free →
-            </Link>
+          <Link
+            href="/forecast"
+            className="btn-primary block w-full text-center text-[13px] font-semibold py-2.5 px-4 rounded-[6px] mb-7 text-[#0a0f0a] bg-[#00D26A]"
+          >
+            Run free forecast
+          </Link>
 
-            <div className="border-t border-white/[0.05] pt-6">
-              <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4">What&apos;s included</p>
-              <ul className="space-y-3">
-                {freeFeatures.map((f) => (
-                  <li key={f} className="flex items-center gap-2.5">
-                    <Check />
-                    <span className="text-[13px] text-slate-400">{f}</span>
-                  </li>
-                ))}
-                <li className="flex items-center gap-2.5 opacity-30">
-                  <Cross />
-                  <span className="text-[13px] text-slate-600">Unlimited products</span>
+          <div className="border-t border-white/[0.05] pt-6">
+            <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-4">What&apos;s included</p>
+            <ul className="space-y-3">
+              {freeFeatures.map((f) => (
+                <li key={f} className="flex items-center gap-2.5">
+                  <Check />
+                  <span className="text-[13px] text-gray-400">{f}</span>
                 </li>
-                <li className="flex items-center gap-2.5 opacity-30">
-                  <Cross />
-                  <span className="text-[13px] text-slate-600">90-day forecasts</span>
-                </li>
-              </ul>
+              ))}
+              <li className="flex items-center gap-2.5 opacity-30">
+                <Cross />
+                <span className="text-[13px] text-gray-600">Unlimited products</span>
+              </li>
+              <li className="flex items-center gap-2.5 opacity-30">
+                <Cross />
+                <span className="text-[13px] text-gray-600">90-day forecasts</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Pro coming soon — compact strip */}
+        <div className="rounded-[10px] border border-white/[0.08] bg-[#111614] p-6 mb-10">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <p className="text-[15px] font-semibold text-[#fafafa]">Pro Plan</p>
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest border border-white/[0.08] px-1.5 py-0.5 rounded-[4px]">
+                  Coming Q2 2025
+                </span>
+              </div>
+              <p className="text-[13px] text-gray-500">
+                {proPrice}<span className="text-gray-600">/{proBilling.replace("per ", "")}</span>
+                {" "}· Unlimited products · 90-day forecasts · Ad-spend correlation · Purchase orders
+              </p>
+            </div>
+            <div className="flex-shrink-0">
+              <NotifyButton />
+              <p className="text-[11px] text-gray-600 text-center">Early-bird discount at launch</p>
             </div>
           </div>
 
-          {/* Pro */}
-          <div className="relative rounded-2xl bg-[#0A1415] p-7 flex flex-col overflow-hidden animate-in fade-in-0 slide-in-from-bottom-4 duration-300 delay-75 fill-mode-both pro-card-border">
-            {/* Launching soon badge */}
-            <div className="absolute top-5 right-5">
-              <span className="flex items-center gap-1.5 bg-[#22C55E]/10 border border-[#22C55E]/30 text-[#22C55E] text-[10px] font-bold px-2.5 py-1 rounded-full tracking-widest uppercase">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
-                Launching soon
-              </span>
-            </div>
-
-            {/* Subtle green glow top */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-px bg-gradient-to-r from-transparent via-[#22C55E]/60 to-transparent" />
-
-            <div className="mb-6">
-              <p className="text-[13px] font-semibold text-white mb-1">Pro Plan</p>
-              <p className="text-[13px] text-slate-500 mb-5">For stores that can&apos;t afford stockouts.</p>
-              <div className="flex items-end gap-1.5 mb-1">
-                <span className="text-[42px] font-bold text-white tracking-tight leading-none">$9</span>
-                <span className="text-[14px] text-slate-500 mb-1.5">/month</span>
-              </div>
-              <p className="text-[12px] text-slate-600">Billed in INR · approx ₹749/mo</p>
-            </div>
-
-            <NotifyButton />
-            <p className="text-[11px] text-slate-600 text-center mb-5">
-              We&apos;ll email you at launch — with an early-bird discount.
-            </p>
-
-            <div className="border-t border-[#22C55E]/[0.12] pt-6">
-              <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4">Everything in Starter, plus</p>
-              <ul className="space-y-3">
-                {proFeatures.map((f) => (
-                  <li key={f} className="flex items-center gap-2.5">
-                    <Check />
-                    <span className="text-[13px] text-slate-300">{f}</span>
-                  </li>
-                ))}
-              </ul>
+          <div className="mt-5 pt-4 border-t border-white/[0.05]">
+            <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-3">Everything in Starter, plus</p>
+            <div className="flex flex-wrap gap-x-5 gap-y-2">
+              {proFeatures.map((f) => (
+                <span key={f} className="flex items-center gap-1.5 text-[12px] text-gray-400">
+                  <Check />
+                  {f}
+                </span>
+              ))}
             </div>
           </div>
         </div>
 
         {/* Trust strip */}
-        <div className="flex flex-wrap items-center justify-center gap-6 text-[12px] text-slate-600 animate-in fade-in-0 duration-300 fill-mode-both">
+        <div className="flex flex-wrap items-center gap-6 text-[12px] text-gray-600">
           {["No credit card for Free plan", "Cancel anytime", "Instant forecasts", "Shopify CSV compatible"].map(t => (
             <span key={t} className="flex items-center gap-1.5">
-              <svg className="w-3 h-3 text-[#22C55E]/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <svg className="w-3 h-3 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
               {t}
