@@ -109,7 +109,7 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
 
   return (
     <aside
-      className={`flex-shrink-0 ${collapsed ? "w-[52px]" : "w-[210px]"} transition-all duration-200 bg-[#07100F] border-r border-[#22C55E]/[0.08] flex flex-col h-screen sticky top-0 z-30 overflow-hidden`}
+      className={`hidden md:flex flex-shrink-0 ${collapsed ? "w-[52px]" : "w-[210px]"} transition-all duration-200 bg-[#07100F] border-r border-[#22C55E]/[0.08] flex-col h-screen sticky top-0 z-30 overflow-hidden`}
     >
       {/* ── Logo ── */}
       <div className="h-12 flex items-center gap-3 px-3 border-b border-[#22C55E]/[0.07] flex-shrink-0">

@@ -22,7 +22,7 @@ function orderByLabel() {
 export default function Hero() {
   const orderBy = orderByLabel();
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center pt-28 pb-16 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-center pt-40 pb-16 overflow-hidden">
       <div className="absolute inset-0 bg-[#060C0D]" />
       <div className="absolute inset-0 dot-grid opacity-40" />
       <div className="hidden sm:block absolute top-[-10%] left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-[#22C55E]/[0.07] blur-[140px] rounded-full pointer-events-none" />
@@ -35,10 +35,10 @@ export default function Hero() {
         <div className="flex items-center gap-2 mb-8 animate-in fade-in-0 slide-in-from-bottom-2 duration-300 fill-mode-both">
           <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
           <span className="text-[11px] font-bold text-slate-500 tracking-[0.14em] uppercase">
-            Shopify Stocky shuts down August 2026
+            AI-powered inventory forecasting
           </span>
-          <span className="hidden sm:inline-block text-slate-700 text-[11px]">—</span>
-          <span className="hidden sm:inline-block text-[11px] font-semibold text-[#22C55E]">switch now, free</span>
+          <span className="hidden sm:inline-block text-slate-700 text-[11px]">·</span>
+          <span className="hidden sm:inline-block text-[11px] font-semibold text-[#22C55E]">87% forecast accuracy</span>
         </div>
 
         {/* Headline */}

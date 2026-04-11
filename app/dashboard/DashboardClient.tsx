@@ -1221,7 +1221,7 @@ export default function DashboardClient() {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-3 sm:p-4">
+        <main className="flex-1 overflow-y-auto p-3 sm:p-4 pb-24 md:pb-4">
           <AnimatePresence mode="wait">
             <motion.div
               key={section}
@@ -1237,6 +1237,57 @@ export default function DashboardClient() {
           </AnimatePresence>
         </main>
       </div>
+
+      {/* ── Mobile bottom nav (hidden on md+) ─────────────────────────────── */}
+      <nav className="fixed bottom-0 inset-x-0 md:hidden bg-[#0A1415]/95 backdrop-blur-md border-t border-[#22C55E]/[0.08] z-30">
+        <div className="flex items-center h-16">
+          {([
+            {
+              label: "Overview", href: "/dashboard", isActive: section === "overview",
+              icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zm0 9.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zm9.75-9.75A2.25 2.25 0 0115.75 3.75H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zm0 9.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>,
+            },
+            {
+              label: "Products", href: "/dashboard?tab=products", isActive: section === "products",
+              icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>,
+            },
+            {
+              label: "Alerts", href: "/dashboard?tab=alerts", isActive: section === "alerts", badge: alertProducts.length,
+              icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}><path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" /></svg>,
+            },
+            {
+              label: "Forecast", href: "/forecast", isActive: false, highlight: true,
+              icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" /></svg>,
+            },
+          ] as { label: string; href: string; isActive: boolean; icon: React.ReactNode; badge?: number; highlight?: boolean }[]).map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className={`flex-1 flex flex-col items-center justify-center gap-1 h-full relative transition-colors ${
+                item.highlight
+                  ? "text-[#22C55E]"
+                  : item.isActive
+                  ? "text-[#22C55E]"
+                  : "text-slate-600 hover:text-slate-400"
+              }`}
+            >
+              <span className="relative">
+                {item.icon}
+                {(item.badge ?? 0) > 0 && (
+                  <span className="absolute -top-1 -right-1.5 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+                    {(item.badge ?? 0) > 9 ? "9+" : item.badge}
+                  </span>
+                )}
+              </span>
+              <span className={`text-[10px] font-semibold tracking-tight ${item.isActive || item.highlight ? "text-[#22C55E]" : "text-slate-600"}`}>
+                {item.label}
+              </span>
+              {item.isActive && (
+                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-[#22C55E] rounded-full" />
+              )}
+            </a>
+          ))}
+        </div>
+      </nav>
     </div>
   );
 }
