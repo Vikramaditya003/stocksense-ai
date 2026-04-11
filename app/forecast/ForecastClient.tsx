@@ -6,6 +6,7 @@ import Link from "next/link";
 import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
 import type { ForecastAnalysis, ForecastStep, InputMode, ProductForecast } from "@/lib/types";
 import { formatMoney, detectCurrencyFromCsv, CURRENCIES } from "@/lib/currency";
+import FeedbackPopup from "@/components/FeedbackPopup";
 
 const _clerkKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ?? "";
 const CLERK_READY =
@@ -820,6 +821,7 @@ export default function ForecastClient() {
     if (typeof window === "undefined") return false;
     return !!localStorage.getItem("forestock_signup_dismissed");
   });
+  const [showFeedback, setShowFeedback] = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
   const demoRan = useRef(false);
@@ -843,6 +845,13 @@ export default function ForecastClient() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Show feedback popup once when forecast results arrive, but only if user
+  // hasn't already submitted feedback (localStorage gate is inside FeedbackPopup).
+  useEffect(() => {
+    if (step === "done") setShowFeedback(true);
+    else setShowFeedback(false);
+  }, [step]);
 
   const handleFile = useCallback((file: File) => {
     if (!file.name.endsWith(".csv") && file.type !== "text/csv") { setError("Please upload a CSV file."); return; }
@@ -948,6 +957,13 @@ export default function ForecastClient() {
       <AnimatePresence>
         {upgradeModal && <UpgradeModal feature={upgradeModal} onClose={() => setUpgradeModal(null)} />}
       </AnimatePresence>
+      {showFeedback && (
+        <FeedbackPopup
+          page="forecast"
+          delayMs={5000}
+          onClose={() => setShowFeedback(false)}
+        />
+      )}
       <div className="absolute top-[-15%] left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#22C55E]/[0.05] blur-[120px] rounded-full pointer-events-none" />
       <div className="orb orb-cyan w-64 h-64 top-1/2 right-0 opacity-10 pointer-events-none" />
 

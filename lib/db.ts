@@ -93,6 +93,50 @@ export async function getUserPlan(clerkUserId: string): Promise<UserPlan> {
   return ((data as { plan: string } | null)?.plan as UserPlan) ?? "free";
 }
 
+// ── Pro waitlist ──────────────────────────────────────────────────────────────
+// SQL: CREATE TABLE pro_waitlist (
+//   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+//   clerk_user_id text UNIQUE NOT NULL,
+//   email text NOT NULL,
+//   created_at timestamptz DEFAULT now()
+// );
+
+export async function addToWaitlist(clerkUserId: string, email: string): Promise<void> {
+  const { error } = await db
+    .from("pro_waitlist")
+    .upsert({ clerk_user_id: clerkUserId, email }, { onConflict: "clerk_user_id" });
+  if (error) throw error;
+}
+
+export async function getAllWaitlist(): Promise<{ clerk_user_id: string; email: string; created_at: string }[]> {
+  const { data, error } = await db
+    .from("pro_waitlist")
+    .select("clerk_user_id, email, created_at")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as { clerk_user_id: string; email: string; created_at: string }[];
+}
+
+// ── Feedback ──────────────────────────────────────────────────────────────────
+// SQL: CREATE TABLE feedback (
+//   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+//   clerk_user_id text,
+//   nps_score int NOT NULL CHECK (nps_score BETWEEN 1 AND 10),
+//   message text,
+//   page text,
+//   created_at timestamptz DEFAULT now()
+// );
+
+export async function saveFeedback(row: {
+  clerk_user_id?: string;
+  nps_score: number;
+  message: string;
+  page: string;
+}): Promise<void> {
+  const { error } = await db.from("feedback").insert(row);
+  if (error) throw error;
+}
+
 // ── Admin-only DB functions ───────────────────────────────────────────────────
 // These bypass per-user filters intentionally. ONLY call them after requireAdmin()
 // has confirmed the caller holds the admin role.

@@ -1,4 +1,14 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+
+const _clerkKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ?? "";
+const CLERK_READY =
+  (_clerkKey.startsWith("pk_test_") || _clerkKey.startsWith("pk_live_")) &&
+  _clerkKey.length > 30;
 
 const freeFeatures = [
   "5 products per forecast",
@@ -33,6 +43,56 @@ const Cross = () => (
     </svg>
   </div>
 );
+
+function NotifyButton() {
+  const { isSignedIn, isLoaded } = useUser();
+  const router = useRouter();
+  const [state, setState] = useState<"idle" | "loading" | "done">("idle");
+
+  const handleClick = async () => {
+    if (!CLERK_READY || !isLoaded) return;
+
+    // Not signed in → send to sign-up, then back here
+    if (!isSignedIn) {
+      router.push("/sign-up?redirect_url=" + encodeURIComponent("/#pricing"));
+      return;
+    }
+
+    // Already on waitlist
+    if (state === "done") return;
+
+    setState("loading");
+    try {
+      const res = await fetch("/api/waitlist", { method: "POST" });
+      const json = await res.json();
+      if (json.success) {
+        setState("done");
+      } else {
+        setState("idle");
+      }
+    } catch {
+      setState("idle");
+    }
+  };
+
+  if (state === "done") {
+    return (
+      <div className="w-full text-center text-[13px] font-semibold py-2.5 px-4 rounded-xl mb-2 bg-[#22C55E]/10 border border-[#22C55E]/25 text-[#22C55E]">
+        ✓ You&apos;re on the list — we&apos;ll email you at launch
+      </div>
+    );
+  }
+
+  return (
+    <button
+      onClick={handleClick}
+      disabled={state === "loading"}
+      className="block w-full text-center text-[13px] font-semibold py-2.5 px-4 rounded-xl mb-2 transition-all bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] shadow-lg shadow-[#22C55E]/25 disabled:opacity-60 disabled:cursor-not-allowed"
+    >
+      {state === "loading" ? "Saving…" : "Notify me when it\u2019s live \u2192"}
+    </button>
+  );
+}
 
 export default function Pricing() {
   return (
@@ -120,12 +180,7 @@ export default function Pricing() {
               <p className="text-[12px] text-slate-600">Billed in INR · approx ₹749/mo</p>
             </div>
 
-            <a
-              href="mailto:support@getforestock.com?subject=Notify me when Pro launches&body=Hi, please notify me when the Forestock Pro plan goes live."
-              className="block w-full text-center text-[13px] font-semibold py-2.5 px-4 rounded-xl mb-2 transition-all bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] shadow-lg shadow-[#22C55E]/25"
-            >
-              Notify me when it&apos;s live →
-            </a>
+            <NotifyButton />
             <p className="text-[11px] text-slate-600 text-center mb-5">
               We&apos;ll email you at launch — with an early-bird discount.
             </p>
