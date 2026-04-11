@@ -122,6 +122,7 @@ body {
 /* ── Typography ───────────────────────────────────────────── */
 h1, h2, h3, h4 {
   font-feature-settings: "kern" 1, "liga" 1, "ss01" 1;
+  letter-spacing: -0.04em;
 }
 
 /* ── Primary CTA — hyper-reactive ─────────────────────────── */
