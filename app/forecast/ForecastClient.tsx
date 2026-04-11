@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
+import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
 import type { ForecastAnalysis, ForecastStep, InputMode, ProductForecast } from "@/lib/types";
 import { formatMoney, detectCurrencyFromCsv, CURRENCIES } from "@/lib/currency";
 
@@ -727,6 +727,47 @@ function POGenerator({ products }: { products: ProductForecast[] }) {
   );
 }
 
+// ─── Results sign-up prompt ───────────────────────────────────────────────
+
+function ResultsSignupPrompt({ onDismiss }: { onDismiss: () => void }) {
+  const { isSignedIn, isLoaded } = useUser();
+  if (!isLoaded || isSignedIn) return null;
+  return (
+    <div className="flex flex-col sm:flex-row sm:items-center gap-4 bg-[#22C55E]/[0.04] border border-[#22C55E]/20 rounded-2xl px-5 py-4 mb-5 relative">
+      <button
+        onClick={onDismiss}
+        className="absolute top-3 right-3 text-slate-700 hover:text-slate-400 transition-colors p-1"
+        aria-label="Dismiss"
+      >
+        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <div className="w-10 h-10 rounded-xl bg-[#22C55E]/15 border border-[#22C55E]/25 flex items-center justify-center flex-shrink-0">
+        <svg className="w-5 h-5 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+        </svg>
+      </div>
+
+      <div className="flex-1 min-w-0 pr-6 sm:pr-0">
+        <p className="text-[14px] font-semibold text-white tracking-tight">
+          Get email alerts 7 days before each stockout
+        </p>
+        <p className="text-[12px] text-slate-500 mt-0.5">
+          Sign up free to save this forecast, track history, and get automated reorder alerts.
+        </p>
+      </div>
+
+      <SignUpButton mode="redirect">
+        <button className="flex-shrink-0 text-[13px] font-semibold text-[#060C0D] bg-[#22C55E] hover:bg-[#16A34A] px-4 py-2.5 rounded-xl transition-all shadow-lg shadow-[#22C55E]/20 whitespace-nowrap w-full sm:w-auto text-center">
+          Save forecast free →
+        </button>
+      </SignUpButton>
+    </div>
+  );
+}
+
 // ─── Step indicator ───────────────────────────────────────────────────────
 
 function StepIndicator({ step }: { step: ForecastStep }) {
@@ -774,6 +815,11 @@ export default function ForecastClient() {
   const [sortDir, setSortDir] = useState<SortDir>("asc");
   const [upgradeModal, setUpgradeModal] = useState<string | null>(null);
   const [alertStatus, setAlertStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+
+  const [signupPromptDismissed, setSignupPromptDismissed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return !!localStorage.getItem("forestock_signup_dismissed");
+  });
 
   const fileRef = useRef<HTMLInputElement>(null);
   const demoRan = useRef(false);
@@ -1158,6 +1204,18 @@ export default function ForecastClient() {
                   </span>
                 </div>
               </div>
+
+              {/* Sign-up prompt — only shown to non-authed users, dismissible */}
+              {CLERK_READY && !signupPromptDismissed && (
+                <ResultsSignupPrompt
+                  onDismiss={() => {
+                    setSignupPromptDismissed(true);
+                    if (typeof window !== "undefined") {
+                      localStorage.setItem("forestock_signup_dismissed", "1");
+                    }
+                  }}
+                />
+              )}
 
               {/* Critical alerts banner */}
               <CriticalAlerts products={sortedProducts} leadTime={parseInt(leadTime) || 14} currency={analysis?.currency ?? currency} />
