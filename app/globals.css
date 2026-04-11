@@ -284,6 +284,7 @@ h1, h2, h3, h4 {
 
 /* ── Hero dashboard product bars (data-driven widths as static classes) ── */
 .bar-6   { width: 6%; }
+.bar-7   { width: 7%; }
 .bar-16  { width: 16%; }
 .bar-43  { width: 43%; }
 .bar-100 { width: 100%; }

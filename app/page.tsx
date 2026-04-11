@@ -25,7 +25,7 @@ export default function Home() {
 
         <div className="relative z-10 max-w-[720px] mx-auto px-4 sm:px-6 text-center">
           <p className="section-label mb-5">Get started free</p>
-          <h2 className="text-4xl sm:text-[56px] font-bold text-white tracking-[-0.035em] leading-[1.0] mb-6 mt-4">
+          <h2 className="text-4xl sm:text-[56px] font-extrabold text-white tracking-[-0.04em] leading-[1.0] mb-6 mt-4">
             Stop losing revenue<br className="hidden sm:block" />{" "}
             to <span className="text-[#22C55E]">stockouts.</span>
           </h2>

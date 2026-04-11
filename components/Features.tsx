@@ -29,9 +29,9 @@ const features: {
     visual: (
       <div className="mt-4 space-y-2">
         {[
-          { name: "Yoga Mat Pro", days: 5, pct: 7, color: "bg-red-500" },
-          { name: "Water Bottle XL", days: 11, pct: 16, color: "bg-orange-500" },
-          { name: "Resistance Bands", days: 29, pct: 43, color: "bg-yellow-500" },
+          { name: "Yoga Mat Pro",     days: 5,  barClass: "bar-7",  color: "bg-red-500"    },
+          { name: "Water Bottle XL",  days: 11, barClass: "bar-16", color: "bg-orange-500" },
+          { name: "Resistance Bands", days: 29, barClass: "bar-43", color: "bg-yellow-500" },
         ].map((p) => (
           <div key={p.name}>
             <div className="flex items-center justify-between mb-1">
@@ -41,10 +41,7 @@ const features: {
               </span>
             </div>
             <div className="h-1.5 bg-white/[0.05] rounded-full overflow-hidden">
-              <div
-                className={`h-full rounded-full ${p.color} opacity-80`}
-                style={{ width: `${p.pct}%` }}
-              />
+              <div className={`h-full rounded-full ${p.color} opacity-80 ${p.barClass}`} />
             </div>
           </div>
         ))}
@@ -151,7 +148,7 @@ export default function Features() {
         {/* Header */}
         <div className="text-center mb-14 animate-in fade-in-0 slide-in-from-bottom-4 duration-300 fill-mode-both">
           <p className="section-label mb-5">Why teams switch</p>
-          <h2 className="text-4xl sm:text-[52px] font-semibold text-white tracking-[-0.03em] leading-tight mb-4 mt-4">
+          <h2 className="text-4xl sm:text-[52px] font-bold text-white tracking-[-0.03em] leading-tight mb-4 mt-4">
             Decisions, not{" "}
             <span className="text-slate-500">dashboards</span>
           </h2>

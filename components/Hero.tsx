@@ -79,13 +79,26 @@ export default function Hero() {
         </div>
 
         {/* Trust signals */}
-        <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 mb-14 animate-in fade-in-0 duration-300 delay-200 fill-mode-both">
+        <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 mb-5 animate-in fade-in-0 duration-300 delay-200 fill-mode-both">
           {["No credit card", "No Shopify install", "Results in 30 seconds", "Works with any store"].map((t) => (
             <span key={t} className="flex items-center gap-1.5 text-[12px] text-slate-600">
               <svg className="w-3 h-3 text-[#22C55E] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
               </svg>
               {t}
+            </span>
+          ))}
+        </div>
+
+        {/* Store category trust strip */}
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-14 animate-in fade-in-0 duration-300 delay-200 fill-mode-both">
+          <span className="text-[11px] text-slate-700 font-medium mr-0.5">Used by merchants in</span>
+          {["Fitness & Wellness", "Fashion", "Beauty & Skincare", "Home & Lifestyle", "Supplements"].map((cat) => (
+            <span
+              key={cat}
+              className="text-[11px] text-slate-500 bg-white/[0.04] border border-white/[0.07] px-2.5 py-1 rounded-full hover:border-white/[0.12] hover:text-slate-400 transition-colors"
+            >
+              {cat}
             </span>
           ))}
         </div>

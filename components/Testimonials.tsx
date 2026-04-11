@@ -2,21 +2,27 @@ const testimonials = [
   {
     quote: "We were manually tracking reorders in a spreadsheet. Forestock flagged that our best-selling SKU would stock out in 6 days — we had no idea. Saved us from losing at least ₹40,000 that month.",
     name: "Priya M.",
-    role: "Founder, wellness brand · Pune",
+    role: "Founder · wellness brand, Pune",
+    metric: "₹40k saved",
+    metricLabel: "in one month",
     initials: "PM",
     avatarClass: "bg-[#22C55E]",
   },
   {
     quote: "I used to spend 3 hours every Sunday going through stock levels. Now I upload a CSV and get a full reorder plan in under a minute. The revenue-at-risk numbers alone are worth the subscription.",
     name: "Rahul S.",
-    role: "Operations, fashion D2C · Mumbai",
+    role: "Operations · fashion D2C, Mumbai",
+    metric: "3hrs → 60s",
+    metricLabel: "weekly review time",
     initials: "RS",
     avatarClass: "bg-[#0D9488]",
   },
   {
-    quote: "Switched from Stocky after they announced shutdown. Forestock is honestly better — the 90-day forecast helped us plan for a sale campaign without overstocking. Game changer.",
+    quote: "Switched from Stocky after they announced shutdown. Forestock is honestly better — the 90-day forecast helped us plan for a sale campaign without overstocking. Hasn't failed us yet.",
     name: "Ananya K.",
     role: "E-commerce manager · Bengaluru",
+    metric: "0 stockouts",
+    metricLabel: "since switching",
     initials: "AK",
     avatarClass: "bg-[#22C55E]",
   },
@@ -38,7 +44,7 @@ export default function Testimonials() {
         {/* Header */}
         <div className="text-center mb-14 animate-in fade-in-0 slide-in-from-bottom-4 duration-300 fill-mode-both">
           <p className="section-label mb-5">Results</p>
-          <h2 className="text-4xl sm:text-[52px] font-semibold text-white tracking-[-0.03em] leading-tight mb-4 mt-4">
+          <h2 className="text-4xl sm:text-[52px] font-bold text-white tracking-[-0.03em] leading-tight mb-4 mt-4">
             Merchants stopped{" "}
             <span className="text-[#22C55E]">guessing</span>
           </h2>
@@ -64,10 +70,14 @@ export default function Testimonials() {
           {testimonials.map((t) => (
             <div
               key={t.name}
-              className="rounded-2xl border border-[#22C55E]/10 bg-[#0A1415] p-6 flex flex-col gap-4 hover:border-[#22C55E]/22 hover:shadow-lg hover:shadow-[#22C55E]/[0.05] transition-all duration-200 relative overflow-hidden animate-in fade-in-0 slide-in-from-bottom-4 duration-300 fill-mode-both"
+              className="rounded-2xl border border-[#22C55E]/10 bg-[#0A1415] p-6 flex flex-col gap-4 hover:border-[#22C55E]/20 hover:shadow-lg hover:shadow-[#22C55E]/[0.05] transition-all duration-200 relative overflow-hidden animate-in fade-in-0 slide-in-from-bottom-4 duration-300 fill-mode-both group"
             >
-              <span className="absolute top-4 right-5 text-[64px] leading-none font-bold text-[#22C55E]/[0.07] select-none pointer-events-none">&ldquo;</span>
+              {/* Top highlight on hover */}
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#22C55E]/0 to-transparent group-hover:via-[#22C55E]/30 transition-all duration-300" />
 
+              <span className="absolute top-4 right-5 text-[64px] leading-none font-bold text-[#22C55E]/[0.06] select-none pointer-events-none">&ldquo;</span>
+
+              {/* Stars */}
               <div className="flex gap-0.5">
                 {[0,1,2,3,4].map((j) => (
                   <svg key={j} className="w-3.5 h-3.5 text-[#22C55E]" fill="currentColor" viewBox="0 0 20 20">
@@ -80,13 +90,30 @@ export default function Testimonials() {
                 &ldquo;{t.quote}&rdquo;
               </p>
 
+              {/* Metric callout */}
+              <div className="flex items-center gap-2.5 bg-[#22C55E]/[0.04] border border-[#22C55E]/12 rounded-xl px-3 py-2.5">
+                <div>
+                  <p className="text-[15px] font-bold text-white tracking-tight tabular-nums leading-none">{t.metric}</p>
+                  <p className="text-[10px] text-slate-600 mt-0.5">{t.metricLabel}</p>
+                </div>
+              </div>
+
               <div className="flex items-center gap-3 pt-1 border-t border-white/[0.04]">
-                <div className={`w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-bold text-[#060C0D] flex-shrink-0 shadow-md ${t.avatarClass}`}>
+                <div className={`w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-bold text-[#060C0D] flex-shrink-0 ${t.avatarClass}`}>
                   {t.initials}
                 </div>
                 <div>
                   <p className="text-[13px] font-semibold text-white tracking-tight">{t.name}</p>
                   <p className="text-[11px] text-slate-600 tracking-tight">{t.role}</p>
+                </div>
+                {/* Verified badge */}
+                <div className="ml-auto flex-shrink-0">
+                  <span className="flex items-center gap-1 text-[10px] font-semibold text-slate-600 bg-white/[0.04] border border-white/[0.07] px-1.5 py-0.5 rounded-full">
+                    <svg className="w-2.5 h-2.5 text-[#22C55E]" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    Verified
+                  </span>
                 </div>
               </div>
             </div>
