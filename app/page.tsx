@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import HowItWorks from "@/components/HowItWorks";
@@ -7,6 +8,21 @@ import Testimonials from "@/components/Testimonials";
 import Pricing from "@/components/Pricing";
 import { Button } from "@/components/ui/button";
 import { LogoMark } from "@/components/StocksenseLogo";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://getforestock.com";
+
+export const metadata: Metadata = {
+  title: "Forestock — Shopify Inventory Forecasting & Stocky Alternative",
+  description:
+    "The best Shopify Stocky alternative. AI-powered demand forecasting that shows exact stockout dates, reorder quantities, and revenue at risk — in 30 seconds. Free to try.",
+  alternates: { canonical: SITE_URL },
+  openGraph: {
+    title: "Forestock — Shopify Inventory Forecasting & Stocky Alternative",
+    description:
+      "AI-powered demand forecasting for Shopify. Get exact stockout dates and reorder quantities in 30 seconds. Better than Shopify Stocky.",
+    url: SITE_URL,
+  },
+};
 
 export default function Home() {
   return (

@@ -10,15 +10,33 @@ export function generateStaticParams() {
   return POSTS.map((p) => ({ slug: p.slug }));
 }
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://getforestock.com";
+
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) return { title: "Not Found" };
+  const url = `${SITE_URL}/blog/${slug}`;
   return {
     title: `${post.title} — Forestock Blog`,
     description: post.excerpt,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "article",
+      url,
+      title: `${post.title} — Forestock Blog`,
+      description: post.excerpt,
+      publishedTime: post.date,
+      authors: ["Forestock Team"],
+      siteName: "Forestock",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${post.title} — Forestock Blog`,
+      description: post.excerpt,
+    },
   };
 }
 
@@ -189,8 +207,24 @@ export default async function BlogPostPage(
   const related = POSTS.filter((p) => p.slug !== post.slug).slice(0, 3);
   const cover = TAG_COVER[post.tag] ?? FALLBACK_COVER;
 
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": post.title,
+    "description": post.excerpt,
+    "datePublished": post.date,
+    "author": { "@type": "Organization", "name": "Forestock", "url": SITE_URL },
+    "publisher": { "@type": "Organization", "name": "Forestock", "url": SITE_URL },
+    "url": `${SITE_URL}/blog/${slug}`,
+    "mainEntityOfPage": `${SITE_URL}/blog/${slug}`,
+  };
+
   return (
     <div className="min-h-screen bg-[#060C0D]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd).replace(/<\//g, "<\\/") }}
+      />
       <Navbar />
 
       {/* Hero header */}

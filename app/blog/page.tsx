@@ -4,9 +4,19 @@ import { BookOpen, GraduationCap, BarChart2, Settings2, TreePine, FileText, Arro
 import Navbar from "@/components/Navbar";
 import { POSTS, type BlogPost } from "@/lib/blog-posts";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://getforestock.com";
+
 export const metadata: Metadata = {
-  title: "Blog — Forestock",
-  description: "Inventory management tips, demand forecasting guides, and Shopify growth strategies from the Forestock team.",
+  title: "Inventory Forecasting Blog — Guides & Strategy for Shopify Merchants",
+  description:
+    "Practical guides on inventory forecasting, stockout prevention, reorder point calculations, and demand planning for Shopify merchants. Written by the Forestock team.",
+  alternates: { canonical: `${SITE_URL}/blog` },
+  openGraph: {
+    title: "Inventory Forecasting Blog — Guides & Strategy for Shopify Merchants",
+    description:
+      "Practical guides on inventory forecasting, stockout prevention, and demand planning for Shopify merchants.",
+    url: `${SITE_URL}/blog`,
+  },
 };
 
 const TAG_META: Record<string, {
