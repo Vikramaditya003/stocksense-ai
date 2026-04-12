@@ -154,7 +154,7 @@ function ForecastWidget() {
           <button
             type="button"
             onClick={handleGenerate}
-            className="btn-primary mt-3 w-full flex items-center justify-center gap-2 text-[13px] font-semibold text-[#0a0f0a] bg-[#00D26A] py-2.5 rounded-[6px]"
+            className="btn-primary btn-gradient mt-3 w-full flex items-center justify-center gap-2 text-[13px] font-semibold text-[#0a0f0a] py-2.5 rounded-[6px]"
           >
             Generate forecast
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -199,7 +199,7 @@ function ForecastWidget() {
           <div className="px-4 pt-3 pb-4 border-t border-white/[0.05]">
             <Link
               href="/forecast"
-              className="btn-primary flex items-center justify-center gap-2 w-full text-[13px] font-semibold text-[#0a0f0a] bg-[#00D26A] py-2.5 rounded-[6px] mb-3"
+              className="btn-primary btn-gradient flex items-center justify-center gap-2 w-full text-[13px] font-semibold text-[#0a0f0a] py-2.5 rounded-[6px] mb-3"
             >
               Run full forecast on your CSV
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -270,9 +270,9 @@ export default function Hero() {
 
           {/* ── Left: Headline + CTAs ── */}
           <div className="flex flex-col items-start">
-            <p className="text-[11px] font-medium text-gray-500 uppercase tracking-[0.18em] mb-7">
+            <span className="inline-flex items-center text-[10px] font-bold text-[#00D26A] uppercase tracking-[0.18em] bg-[#00D26A]/[0.07] border border-[#00D26A]/20 px-3 py-1 rounded-full mb-7">
               Shopify inventory forecasting
-            </p>
+            </span>
 
             <h1 className="text-[58px] sm:text-[72px] lg:text-[80px] xl:text-[88px] font-bold leading-[0.93] text-[#fafafa] mb-6">
               Know before<br />
@@ -287,7 +287,7 @@ export default function Hero() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-8">
               <Link
                 href="/forecast"
-                className="btn-primary inline-flex items-center gap-2 text-[15px] font-semibold text-[#0a0f0a] bg-[#00D26A] px-7 py-3 rounded-[6px]"
+                className="btn-primary btn-gradient inline-flex items-center gap-2 text-[15px] font-semibold text-[#0a0f0a] px-7 py-3 rounded-[6px]"
               >
                 Run free forecast
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>

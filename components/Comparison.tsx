@@ -28,9 +28,9 @@ export default function Comparison() {
 
         {/* Header */}
         <div className="mb-12">
-          <p className="text-[11px] font-medium text-gray-500 uppercase tracking-[0.18em] mb-4">
+          <span className="inline-flex items-center text-[10px] font-bold text-[#00D26A] uppercase tracking-[0.18em] bg-[#00D26A]/[0.07] border border-[#00D26A]/20 px-3 py-1 rounded-full mb-6">
             Decisions, not dashboards
-          </p>
+          </span>
           <h2 className="text-[48px] sm:text-[56px] font-bold leading-[0.93] tracking-[-0.03em] text-[#fafafa]">
             What other tools show<br />
             vs. what you actually need.

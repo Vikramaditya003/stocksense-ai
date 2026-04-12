@@ -7,9 +7,9 @@ export default function HowItWorks() {
 
         {/* ── Section header ── */}
         <div className="mb-20">
-          <p className="text-[11px] font-medium text-gray-500 uppercase tracking-[0.18em] mb-4">
+          <span className="inline-flex items-center text-[10px] font-bold text-[#00D26A] uppercase tracking-[0.18em] bg-[#00D26A]/[0.07] border border-[#00D26A]/20 px-3 py-1 rounded-full mb-6">
             How it works
-          </p>
+          </span>
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <h2 className="text-[48px] sm:text-[60px] font-bold leading-[0.93] tracking-[-0.03em] text-[#fafafa]">
               Forecast in under<br />a minute.
@@ -40,7 +40,7 @@ export default function HowItWorks() {
               </p>
             </div>
             {/* Visual */}
-            <div className="rounded-[10px] border border-white/[0.08] bg-[#111614] p-5">
+            <div className="rounded-[10px] border border-white/[0.08] bg-[#111614] p-5 card-depth transition-all duration-200 hover:-translate-y-1 hover:border-white/[0.14]">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-white/[0.05] border border-white/[0.08] rounded-[8px] flex items-center justify-center flex-shrink-0">
                   <svg className="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -63,7 +63,7 @@ export default function HowItWorks() {
           {/* Step 02 — reversed */}
           <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-8 lg:gap-16 items-center py-16 border-b border-white/[0.06]">
             {/* Visual — left on desktop */}
-            <div className="rounded-[10px] border border-white/[0.08] bg-[#111614] p-5 order-last lg:order-first">
+            <div className="rounded-[10px] border border-white/[0.08] bg-[#111614] p-5 order-last lg:order-first card-depth transition-all duration-200 hover:-translate-y-1 hover:border-white/[0.14]">
               <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-4 font-mono">Demand signals</p>
               <div className="space-y-3">
                 {[
@@ -113,7 +113,7 @@ export default function HowItWorks() {
               </p>
               <Link
                 href="/forecast"
-                className="btn-primary inline-flex items-center gap-2 text-[13px] font-semibold text-[#0a0f0a] bg-[#00D26A] px-5 py-2.5 rounded-[6px] mt-7"
+                className="btn-primary btn-gradient inline-flex items-center gap-2 text-[13px] font-semibold text-[#0a0f0a] px-5 py-2.5 rounded-[6px] mt-7"
               >
                 Run free forecast
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>

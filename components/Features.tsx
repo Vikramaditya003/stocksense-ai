@@ -110,9 +110,9 @@ export default function Features() {
         {/* ── Header ── */}
         <div className="mb-16 grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6 items-end">
           <div>
-            <p className="text-[11px] font-medium text-gray-500 uppercase tracking-[0.18em] mb-4">
+            <span className="inline-flex items-center text-[10px] font-bold text-[#00D26A] uppercase tracking-[0.18em] bg-[#00D26A]/[0.07] border border-[#00D26A]/20 px-3 py-1 rounded-full mb-6">
               Why teams switch
-            </p>
+            </span>
             <h2 className="text-[48px] sm:text-[60px] font-bold leading-[0.93] tracking-[-0.03em] text-[#fafafa]">
               Decisions,<br />
               not dashboards.
@@ -129,7 +129,7 @@ export default function Features() {
           {features.map((f) => (
             <div
               key={f.title}
-              className={`rounded-[10px] border border-white/[0.06] bg-[#111614] p-5 transition-colors duration-200 hover:border-white/[0.11] relative overflow-hidden ${
+              className={`rounded-[10px] border border-white/[0.06] bg-[#111614] p-5 card-depth transition-all duration-200 hover:border-white/[0.13] hover:-translate-y-0.5 relative overflow-hidden ${
                 f.span === "wide" ? "sm:col-span-2 lg:col-span-2" : f.span === "full" ? "sm:col-span-2 lg:col-span-3" : ""
               }`}
             >

@@ -109,7 +109,7 @@ export default function Pricing() {
 
         {/* Header */}
         <div className="mb-14">
-          <p className="text-[11px] font-medium text-gray-500 uppercase tracking-[0.18em] mb-4">Pricing</p>
+          <span className="inline-flex items-center text-[10px] font-bold text-[#00D26A] uppercase tracking-[0.18em] bg-[#00D26A]/[0.07] border border-[#00D26A]/20 px-3 py-1 rounded-full mb-6">Pricing</span>
           <h2 className="text-[40px] sm:text-[52px] font-bold text-[#fafafa] tracking-[-0.03em] leading-tight mb-3">
             Get started for free
           </h2>
@@ -134,7 +134,7 @@ export default function Pricing() {
 
             <Link
               href="/forecast"
-              className="btn-primary block w-full text-center text-[13px] font-semibold py-2.5 px-4 rounded-[6px] mb-7 text-[#0a0f0a] bg-[#00D26A]"
+              className="btn-primary btn-gradient block w-full text-center text-[13px] font-semibold py-2.5 px-4 rounded-[6px] mb-7 text-[#0a0f0a]"
             >
               Run free forecast
             </Link>
@@ -161,7 +161,7 @@ export default function Pricing() {
           </div>
 
           {/* Pro */}
-          <div className="rounded-[10px] border border-white/[0.08] bg-[#111614] p-7 flex flex-col">
+          <div className="rounded-[10px] border border-[#00D26A]/30 bg-[#111614] p-7 flex flex-col relative card-pro-glow">
             <div className="mb-6">
               <div className="flex items-center gap-2 mb-1">
                 <p className="text-[13px] font-semibold text-gray-300">Pro</p>

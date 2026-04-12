@@ -132,6 +132,28 @@ h1, h2, h3, h4 {
 }
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
+  box-shadow: 0 8px 24px -4px rgba(0, 210, 106, 0.35);
+}
+
+/* ── Gradient primary CTA ──────────────────────────────────── */
+.btn-gradient {
+  background: linear-gradient(135deg, #00a852 0%, #00D26A 100%);
+}
+.btn-gradient:hover:not(:disabled) {
+  background: linear-gradient(135deg, #00bf5e 0%, #14e57a 100%);
+}
+
+/* ── Card depth (dark theme) ───────────────────────────────── */
+.card-depth {
+  box-shadow: 0 4px 24px -6px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.04) inset;
+}
+.card-depth:hover {
+  box-shadow: 0 8px 32px -8px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.06) inset;
+}
+
+/* ── Pro pricing card glow ─────────────────────────────────── */
+.card-pro-glow {
+  box-shadow: 0 0 0 1px rgba(0,210,106,0.08), 0 8px 32px -8px rgba(0,210,106,0.15);
 }
 .btn-primary:active:not(:disabled) {
   transform: translateY(1px) scale(0.98);
