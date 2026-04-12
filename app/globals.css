@@ -5,13 +5,13 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-background: #0a0f0a;
-  --color-foreground: #fafafa;
-  --color-card: #111614;
-  --color-card-foreground: #fafafa;
-  --color-muted: #1a1f1a;
-  --color-muted-foreground: #6b7280;
-  --color-border: rgba(255,255,255,0.08);
+  --color-background: #f6faf6;
+  --color-foreground: #181d1b;
+  --color-card: #ffffff;
+  --color-card-foreground: #181d1b;
+  --color-muted: #eaefeb;
+  --color-muted-foreground: #5a6059;
+  --color-border: #bbcbba;
   --color-input: #1a1f1a;
   --color-primary: #00D26A;
   --color-primary-foreground: #0a0f0a;
@@ -50,38 +50,38 @@
 }
 
 :root {
-  --background: #0a0f0a;
-  --foreground: #fafafa;
-  --card: #111614;
-  --card-foreground: #fafafa;
-  --popover: #111614;
-  --popover-foreground: #fafafa;
-  --primary: #00D26A;
-  --primary-foreground: #0a0f0a;
-  --secondary: #1a1f1a;
-  --secondary-foreground: #fafafa;
-  --muted: #1a1f1a;
-  --muted-foreground: #6b7280;
-  --accent: #1a1f1a;
-  --accent-foreground: #fafafa;
-  --destructive: #ef4444;
-  --border: rgba(255, 255, 255, 0.08);
-  --input: #1a1f1a;
-  --ring: #00D26A;
+  --background: #f6faf6;
+  --foreground: #181d1b;
+  --card: #ffffff;
+  --card-foreground: #181d1b;
+  --popover: #ffffff;
+  --popover-foreground: #181d1b;
+  --primary: #006d34;
+  --primary-foreground: #ffffff;
+  --secondary: #eaefeb;
+  --secondary-foreground: #181d1b;
+  --muted: #eaefeb;
+  --muted-foreground: #5a6059;
+  --accent: #eaefeb;
+  --accent-foreground: #181d1b;
+  --destructive: #ba1a1a;
+  --border: #bbcbba;
+  --input: #eaefeb;
+  --ring: #006d34;
   --radius: 0.625rem;
-  --chart-1: #00D26A;
-  --chart-2: #0D9488;
-  --chart-3: #0F766E;
-  --chart-4: #115E59;
-  --chart-5: #134E4A;
-  --sidebar: #111614;
-  --sidebar-foreground: #fafafa;
-  --sidebar-primary: #00D26A;
-  --sidebar-primary-foreground: #0a0f0a;
-  --sidebar-accent: #1a1f1a;
-  --sidebar-accent-foreground: #fafafa;
-  --sidebar-border: rgba(255, 255, 255, 0.08);
-  --sidebar-ring: #00D26A;
+  --chart-1: #006d34;
+  --chart-2: #00D26A;
+  --chart-3: #0D9488;
+  --chart-4: #0F766E;
+  --chart-5: #115E59;
+  --sidebar: #f6faf6;
+  --sidebar-foreground: #181d1b;
+  --sidebar-primary: #006d34;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eaefeb;
+  --sidebar-accent-foreground: #181d1b;
+  --sidebar-border: #bbcbba;
+  --sidebar-ring: #006d34;
 }
 
 /* ── Base reset ───────────────────────────────────────────── */
@@ -263,8 +263,21 @@ h1, h2, h3, h4 {
 
 /* ── Dot grid background ──────────────────────────────────── */
 .dot-grid {
-  background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(0,0,0,0.06) 1px, transparent 1px);
   background-size: 24px 24px;
+}
+
+/* ── Stitch design utilities ──────────────────────────────── */
+.glass-nav {
+  background: rgba(246, 250, 246, 0.75);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+.primary-gradient {
+  background: linear-gradient(135deg, #006d34 0%, #00d26a 100%);
+}
+.ambient-shadow {
+  box-shadow: 0 24px 48px -12px rgba(24, 29, 27, 0.10);
 }
 
 /* ── Scrollbar ─────────────────────────────────────────────── */

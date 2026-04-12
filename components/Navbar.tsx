@@ -103,15 +103,14 @@ export default function Navbar() {
     <header className="fixed top-0 left-0 right-0 z-50">
       {/* Announcement Banner */}
       {bannerVisible && (
-        <div className="w-full h-9 flex items-center justify-center bg-[#0a0f0a] border-b border-[#00D26A]/20 px-4 relative">
-          <div className="absolute inset-0 bg-[#00D26A]/[0.04]" />
-          <p className="relative text-[12px] text-slate-400 text-center">
+        <div className="w-full h-9 flex items-center justify-center bg-[#006d34]/[0.06] border-b border-[#006d34]/15 px-4 relative">
+          <p className="relative text-[12px] text-[#3c4a3d] text-center">
             <span className="inline-flex items-center gap-1.5 mr-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse flex-shrink-0" />
-              <span className="font-semibold text-amber-300">Shopify Stocky</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse flex-shrink-0" />
+              <span className="font-semibold text-amber-700">Shopify Stocky</span>
             </span>
             shuts down August 2026 —{" "}
-            <Link href="/forecast" className="font-semibold text-white underline underline-offset-2 hover:text-[#00D26A] transition-colors">
+            <Link href="/forecast" className="font-semibold text-[#006d34] underline underline-offset-2 hover:text-[#00D26A] transition-colors">
               migrate free →
             </Link>
           </p>
@@ -129,15 +128,15 @@ export default function Navbar() {
       <nav
         className={`w-full max-w-[1000px] flex items-center justify-between px-6 h-16 rounded-2xl transition-all duration-300 animate-in fade-in-0 slide-in-from-top-2 duration-350 fill-mode-both ${
           scrolled
-            ? "bg-[#111614]/95 backdrop-blur-2xl border border-[#00D26A]/15 shadow-2xl shadow-black/60"
-            : "bg-[#111614]/70 backdrop-blur-xl border border-white/[0.07]"
+            ? "glass-nav border border-[#bbcbba]/60 ambient-shadow"
+            : "bg-white/60 backdrop-blur-xl border border-[#bbcbba]/40"
         }`}
       >
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">
           <LogoMark size={34} />
           <span className="text-[19px] font-extrabold tracking-[-0.03em]">
-            <span className="text-white">Fore</span><span className="text-[#00D26A]">stock</span>
+            <span className="text-[#181d1b]">Fore</span><span className="text-[#006d34]">stock</span>
           </span>
         </Link>
 
@@ -147,7 +146,7 @@ export default function Navbar() {
             <a
               key={link.label}
               href={link.href}
-              className="text-[15px] text-slate-400 hover:text-white px-4 py-2 rounded-xl hover:bg-white/[0.05] transition-all duration-150 tracking-tight"
+              className="text-[15px] text-[#5a6059] hover:text-[#181d1b] px-4 py-2 rounded-xl hover:bg-[#eaefeb] transition-all duration-150 tracking-tight"
             >
               {link.label}
             </a>
@@ -174,7 +173,7 @@ export default function Navbar() {
         <button
           type="button"
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden text-slate-400 hover:text-white p-2 rounded-xl hover:bg-white/[0.05] transition-all"
+          className="md:hidden text-[#5a6059] hover:text-[#181d1b] p-2 rounded-xl hover:bg-[#eaefeb] transition-all"
           aria-label="Toggle menu"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -188,7 +187,7 @@ export default function Navbar() {
 
       {/* Mobile menu — CSS transition, no framer-motion */}
       <div
-        className={`absolute left-4 right-4 bg-[#111614] border border-[#00D26A]/15 rounded-2xl p-3 shadow-2xl shadow-black/70 md:hidden transition-all duration-150 origin-top ${
+        className={`absolute left-4 right-4 bg-white border border-[#bbcbba]/60 rounded-2xl p-3 shadow-2xl shadow-black/10 md:hidden transition-all duration-150 origin-top ${
           bannerVisible ? "top-[7.25rem]" : "top-[4.75rem]"
         } ${
           mobileOpen
@@ -199,7 +198,7 @@ export default function Navbar() {
         <div className="space-y-0.5 mb-3">
           {links.map((link) => (
             <a key={link.label} href={link.href} onClick={() => setMobileOpen(false)}
-              className="block text-[15px] text-slate-400 hover:text-white px-3 py-2.5 rounded-xl hover:bg-white/[0.05] transition-all tracking-tight">
+              className="block text-[15px] text-[#5a6059] hover:text-[#181d1b] px-3 py-2.5 rounded-xl hover:bg-[#eaefeb] transition-all tracking-tight">
               {link.label}
             </a>
           ))}
