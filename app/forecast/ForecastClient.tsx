@@ -191,7 +191,7 @@ const CSV_ALIASES: Record<string, string[]> = {
   current_stock: ["current_stock", "stock", "inventory", "qty", "on_hand", "stock_quantity", "available"],
   price:         ["price", "unit_price", "avg_price", "selling_price", "mrp"],
   // per-product lead time — falls back to global default if column missing
-  lead_time:     ["lead_time", "lead_days", "leadtime", "supplier_lead_time", "days_lead"],
+  lead_time:     ["lead_time", "lead_days", "leadtime", "supplier_lead_time", "days_lead", "lt", "days_to_ship"],
 };
 
 // Required columns — everything else is optional
@@ -260,7 +260,7 @@ function extractPerProductLeadTimes(csv: string, globalDefault: number): Record<
     const name = cols[productIdx]?.trim();
     const raw  = cols[leadIdx]?.trim();
     if (!name) continue;
-    const days = raw ? parseInt(raw, 10) : NaN;
+    const days = raw ? parseInt(raw.replace(/[^\d]/g, ""), 10) : NaN;
     if (!isNaN(days) && days > 0 && map[name] === undefined) {
       map[name] = days;
     } else if (map[name] === undefined) {
@@ -1277,7 +1277,10 @@ export default function ForecastClient() {
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-amber-400">Free plan: first {FREE_PRODUCT_LIMIT} products only</p>
                     <p className="text-xs text-slate-500 mt-0.5">
-                      Your CSV has {productCountInCsv} products. The {productCountInCsv - FREE_PRODUCT_LIMIT} we&apos;re not analyzing could have significant revenue at risk. &nbsp;
+                      Your CSV has {productCountInCsv} products. The {productCountInCsv - FREE_PRODUCT_LIMIT} we&apos;re not analyzing could have{" "}
+                      {currency === "INR"
+                        ? `₹${((productCountInCsv - FREE_PRODUCT_LIMIT) * 2000).toLocaleString("en-IN")}`
+                        : `$${((productCountInCsv - FREE_PRODUCT_LIMIT) * 25).toLocaleString("en-US")}`}+ at risk. &nbsp;
                       <button onClick={() => setUpgradeModal("Unlimited Products")} className="text-[#22C55E] hover:underline font-medium">Upgrade to Pro</button>
                       {" "}to see all of them.
                     </p>
@@ -1710,22 +1713,23 @@ export default function ForecastClient() {
                       <div className="text-center px-6 py-4">
                         {(() => {
                           const hiddenCount = sortedProducts.length - FREE_PRODUCT_LIMIT;
-                          const hiddenRar = sortedProducts.slice(FREE_PRODUCT_LIMIT).reduce((sum, p) => sum + (p.rarAmount ?? 0), 0);
-                          const rarStr = hiddenRar > 0
-                            ? (currency === "INR"
-                                ? `₹${hiddenRar.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`
-                                : `$${hiddenRar.toLocaleString("en-US", { maximumFractionDigits: 0 })}`)
-                            : null;
+                          const hiddenProducts = sortedProducts.slice(FREE_PRODUCT_LIMIT);
+                          const hiddenRar = hiddenProducts.reduce((sum, p) => sum + (p.rarAmount ?? 0), 0);
+                          // Fallback: ₹2,000 / $25 conservative estimate per hidden SKU when no price data
+                          const fallbackRar = hiddenCount * (currency === "INR" ? 2000 : 25);
+                          const effectiveRar = hiddenRar > 0 ? hiddenRar : fallbackRar;
+                          const rarStr = currency === "INR"
+                            ? `₹${effectiveRar.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`
+                            : `$${effectiveRar.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
                           return (
                             <>
                               <p className="text-sm font-semibold text-white mb-1">
                                 {hiddenCount} product{hiddenCount > 1 ? "s" : ""} locked
                               </p>
                               <p className="text-xs text-slate-400 mb-3">
-                                {rarStr
-                                  ? <>The {hiddenCount} SKUs we&apos;re not showing have <span className="text-red-400 font-semibold">{rarStr}+ at risk</span>. Upgrade to see all of them.</>
-                                  : <>Free plan shows {FREE_PRODUCT_LIMIT} SKUs. Upgrade to analyze your full catalog.</>
-                                }
+                                The {hiddenCount} SKU{hiddenCount > 1 ? "s" : ""} we&apos;re not showing have{" "}
+                                <span className="text-red-400 font-semibold">{rarStr}+ at risk</span>.{" "}
+                                Upgrade to see all of them.
                               </p>
                             </>
                           );

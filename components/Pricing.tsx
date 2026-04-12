@@ -88,7 +88,7 @@ function NotifyButton() {
       disabled={state === "loading"}
       className="btn-ghost block w-full text-center text-[13px] font-semibold py-2.5 px-4 rounded-[6px] mb-2 text-gray-300 border border-white/[0.12] hover:border-white/[0.25] hover:text-[#fafafa] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
     >
-      {state === "loading" ? "Saving…" : "Get notified at launch →"}
+      {state === "loading" ? "Saving…" : "Join Waitlist →"}
     </button>
   );
 }
@@ -166,7 +166,7 @@ export default function Pricing() {
               <div className="flex items-center gap-2 mb-1">
                 <p className="text-[13px] font-semibold text-gray-300">Pro</p>
                 <span className="text-[10px] font-bold text-[#00D26A] uppercase tracking-widest border border-[#00D26A]/25 bg-[#00D26A]/10 px-1.5 py-0.5 rounded-[4px]">
-                  Early Bird
+                  Early Access
                 </span>
               </div>
               <p className="text-[13px] text-gray-600 mb-5">For stores that can&apos;t afford stockouts.</p>
