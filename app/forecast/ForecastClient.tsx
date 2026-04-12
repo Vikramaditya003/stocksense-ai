@@ -113,51 +113,128 @@ function downloadSampleCSV() {
   URL.revokeObjectURL(url);
 }
 
+// ─── Proper CSV line parser (handles quoted commas) ───────────────────────
+function parseCSVLine(line: string): string[] {
+  const result: string[] = [];
+  let cur = "";
+  let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (inQ && line[i + 1] === '"') { cur += '"'; i++; }
+      else inQ = !inQ;
+    } else if (ch === ',' && !inQ) {
+      result.push(cur.trim());
+      cur = "";
+    } else {
+      cur += ch;
+    }
+  }
+  result.push(cur.trim());
+  return result;
+}
+
+// ─── Shopify native orders export auto-transform ──────────────────────────
+// Detects Shopify's own orders CSV (has "Lineitem name" + "Created at") and
+// converts it to Forestock's format automatically — no friction for merchants
+// who just hit Export in Shopify Admin.
+function transformShopifyOrdersCSV(csv: string): string | null {
+  const lines = csv.trim().split("\n").filter(l => l.trim());
+  if (lines.length < 2) return null;
+  const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase());
+
+  const nameIdx  = headers.findIndex(h => h === "lineitem name");
+  const skuIdx   = headers.findIndex(h => h === "lineitem sku");
+  const qtyIdx   = headers.findIndex(h => h === "lineitem quantity");
+  const priceIdx = headers.findIndex(h => h === "lineitem price");
+  const dateIdx  = headers.findIndex(h => h === "created at");
+  const statusIdx = headers.findIndex(h => h === "financial status");
+
+  if (nameIdx === -1 || qtyIdx === -1 || dateIdx === -1) return null; // not Shopify orders
+
+  // Aggregate units_sold per product per date
+  const map: Record<string, Record<string, { qty: number; price: string; sku: string }>> = {};
+
+  for (let i = 1; i < lines.length; i++) {
+    const cols = parseCSVLine(lines[i]);
+    // Skip refunded / voided orders
+    const status = statusIdx >= 0 ? (cols[statusIdx] ?? "").toLowerCase() : "";
+    if (status === "voided" || status === "refunded") continue;
+
+    const name = cols[nameIdx]?.trim();
+    const rawDate = cols[dateIdx]?.trim() ?? "";
+    const date = rawDate.split(" ")[0] || rawDate.split("T")[0]; // "2024-03-15"
+    const qty = parseInt(cols[qtyIdx] ?? "0", 10);
+    if (!name || !date || isNaN(qty) || qty <= 0) continue;
+
+    if (!map[name]) map[name] = {};
+    if (!map[name][date]) map[name][date] = { qty: 0, price: cols[priceIdx] ?? "", sku: cols[skuIdx] ?? "" };
+    map[name][date].qty += qty;
+  }
+
+  if (Object.keys(map).length === 0) return null;
+
+  const out = ["product,sku,date,units_sold,price"];
+  for (const [product, dates] of Object.entries(map)) {
+    for (const [date, d] of Object.entries(dates)) {
+      out.push(`"${product.replace(/"/g, '""')}",${d.sku},${date},${d.qty},${d.price}`);
+    }
+  }
+  return out.join("\n");
+}
+
 // ─── Row-level CSV validation ──────────────────────────────────────────────
 const CSV_ALIASES: Record<string, string[]> = {
   product:       ["product", "product_name", "name", "item", "item_name", "title"],
   units_sold:    ["units_sold", "sold", "sales", "quantity_sold", "qty_sold", "quantity"],
-  current_stock: ["current_stock", "stock", "inventory", "qty", "on_hand", "stock_quantity"],
-  // optional columns — recognized but not required
+  // current_stock is optional — Shopify orders exports don't have it
+  current_stock: ["current_stock", "stock", "inventory", "qty", "on_hand", "stock_quantity", "available"],
   price:         ["price", "unit_price", "avg_price", "selling_price", "mrp"],
 };
+
+// Required columns — current_stock excluded (optional, AI infers from velocity)
+const REQUIRED_COLUMNS = ["product", "units_sold"] as const;
 
 function validateCsv(csv: string): string[] {
   const errors: string[] = [];
   const lines = csv.trim().split("\n").filter(l => l.trim());
   if (lines.length < 2) {
-    return ["CSV needs at least a header row and one data row. Download the sample CSV to see the correct format."];
+    return ["File needs at least a header row and one data row. Download the sample CSV to see the correct format."];
   }
 
-  const raw = lines[0].split(",").map(h => h.trim().replace(/^"|"$/g, "").toLowerCase());
+  const raw = parseCSVLine(lines[0]).map(h => h.toLowerCase());
 
   const idx: Record<string, number> = {};
   for (const [key, aliases] of Object.entries(CSV_ALIASES)) {
     const found = raw.findIndex(h => aliases.includes(h));
-    if (found === -1) {
-      errors.push(`Column "${key}" not found. Accepted names: ${aliases.join(", ")}. See sample CSV ↓`);
-    } else {
-      idx[key] = found;
+    if (found !== -1) idx[key] = found;
+  }
+
+  // Only require product + units_sold
+  for (const key of REQUIRED_COLUMNS) {
+    if (idx[key] === undefined) {
+      errors.push(`Column "${key}" not found. Accepted names: ${CSV_ALIASES[key].join(", ")}. See sample CSV ↓`);
     }
   }
-  if (errors.length) return errors; // header errors block row-level check
+  if (errors.length) return errors;
 
   for (let i = 1; i < Math.min(lines.length, 300); i++) {
-    const cols = lines[i].split(",").map(c => c.trim().replace(/^"|"$/g, ""));
-
+    const cols = parseCSVLine(lines[i]);
     if (!cols[idx.product]) {
       errors.push(`Row ${i + 1}: Product name is empty — every row needs a product name.`);
     }
     const sold = cols[idx.units_sold] ?? "";
     if (sold !== "" && isNaN(Number(sold))) {
-      errors.push(`Row ${i + 1}: "units_sold" value "${sold}" must be a number, not text.`);
+      errors.push(`Row ${i + 1}: units_sold value "${sold}" must be a number.`);
     }
-    const stock = cols[idx.current_stock] ?? "";
-    if (stock !== "" && isNaN(Number(stock))) {
-      errors.push(`Row ${i + 1}: "current_stock" value "${stock}" must be a number, not text.`);
+    if (idx.current_stock !== undefined) {
+      const stock = cols[idx.current_stock] ?? "";
+      if (stock !== "" && isNaN(Number(stock))) {
+        errors.push(`Row ${i + 1}: current_stock value "${stock}" must be a number.`);
+      }
     }
     if (errors.length >= 4) {
-      errors.push("Fix these errors first, then re-upload. Need help? Download the sample CSV below.");
+      errors.push("Fix these errors first, then re-upload.");
       break;
     }
   }
@@ -817,6 +894,8 @@ export default function ForecastClient() {
   const [upgradeModal, setUpgradeModal] = useState<string | null>(null);
   const [alertStatus, setAlertStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
+  const [detectedFormat, setDetectedFormat] = useState<"shopify-orders" | "standard" | null>(null);
+
   const [signupPromptDismissed, setSignupPromptDismissed] = useState(() => {
     if (typeof window === "undefined") return false;
     return !!localStorage.getItem("forestock_signup_dismissed");
@@ -853,18 +932,50 @@ export default function ForecastClient() {
     else setShowFeedback(false);
   }, [step]);
 
-  const handleFile = useCallback((file: File) => {
-    if (!file.name.endsWith(".csv") && file.type !== "text/csv") { setError("Please upload a CSV file."); return; }
-    setFileName(file.name);
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const text = e.target?.result as string;
+  const processText = useCallback((text: string) => {
+    // Try Shopify native orders format first
+    const transformed = transformShopifyOrdersCSV(text);
+    if (transformed) {
+      setCsvText(transformed);
+      setDetectedFormat("shopify-orders");
+    } else {
       setCsvText(text);
-      setError(null);
-      setCurrency(detectCurrencyFromCsv(text));
-    };
-    reader.readAsText(file);
+      setDetectedFormat("standard");
+    }
+    setError(null);
+    setCurrency(detectCurrencyFromCsv(text));
   }, []);
+
+  const handleFile = useCallback(async (file: File) => {
+    const name = file.name.toLowerCase();
+    const isExcel = name.endsWith(".xlsx") || name.endsWith(".xls");
+    const isCsv   = name.endsWith(".csv") || file.type === "text/csv" || file.type === "application/vnd.ms-excel";
+
+    if (!isExcel && !isCsv) {
+      setError("Please upload a CSV or Excel (.xlsx / .xls) file.");
+      return;
+    }
+
+    setFileName(file.name);
+    setDetectedFormat(null);
+
+    if (isExcel) {
+      try {
+        const { read, utils } = await import("xlsx");
+        const buf = await file.arrayBuffer();
+        const wb  = read(buf);
+        const ws  = wb.Sheets[wb.SheetNames[0]];
+        const csv = utils.sheet_to_csv(ws);
+        processText(csv);
+      } catch {
+        setError("Could not read the Excel file. Try saving it as CSV and uploading that instead.");
+      }
+    } else {
+      const reader = new FileReader();
+      reader.onload = (e) => processText(e.target?.result as string);
+      reader.readAsText(file);
+    }
+  }, [processText]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault(); setDragOver(false);
@@ -922,8 +1033,8 @@ export default function ForecastClient() {
     }
   };
 
-  const loadDemo = () => { setCsvText(DEMO_CSV); setFileName("demo-inventory.csv"); setInputMode("csv"); setError(null); runForecast(DEMO_CSV); };
-  const reset = () => { setStep("idle"); setAnalysis(null); setError(null); setFileName(null); setCsvText(""); };
+  const loadDemo = () => { setCsvText(DEMO_CSV); setFileName("demo-inventory.csv"); setInputMode("csv"); setError(null); setDetectedFormat("standard"); runForecast(DEMO_CSV); };
+  const reset = () => { setStep("idle"); setAnalysis(null); setError(null); setFileName(null); setCsvText(""); setDetectedFormat(null); };
   const isLoading = ["parsing", "analyzing", "generating"].includes(step);
 
   const toggleSort = (key: SortKey) => {
@@ -964,8 +1075,7 @@ export default function ForecastClient() {
           onClose={() => setShowFeedback(false)}
         />
       )}
-      <div className="absolute top-[-15%] left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#22C55E]/[0.05] blur-[120px] rounded-full pointer-events-none" />
-      <div className="orb orb-cyan w-64 h-64 top-1/2 right-0 opacity-10 pointer-events-none" />
+      <div className="absolute top-[-15%] left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#00D26A]/[0.04] blur-[120px] rounded-full pointer-events-none" />
 
       {/* Nav */}
       <nav className="border-b border-[#22C55E]/10 px-4 sm:px-6 h-16 flex items-center justify-between sticky top-0 z-40 bg-[#060C0D]/90 backdrop-blur-md">
@@ -1004,7 +1114,7 @@ export default function ForecastClient() {
             <motion.div key="idle" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.25 }}>
               <div className="mb-8">
                 <h1 className="text-3xl font-light text-white tracking-tight mb-1.5">Inventory Forecast</h1>
-                <p className="text-[15px] text-slate-500">Upload your Shopify sales CSV to get AI-powered demand forecasts, stockout alerts, and revenue impact estimates.</p>
+                <p className="text-[15px] text-slate-500">Upload your Shopify orders CSV or Excel file — get stockout dates, reorder quantities, and revenue at risk in 30 seconds.</p>
               </div>
 
               {/* Input card */}
@@ -1036,7 +1146,7 @@ export default function ForecastClient() {
                       "border-[#22C55E]/15 hover:border-[#22C55E]/30 hover:bg-[#22C55E]/[0.02]"
                     }`}
                   >
-                    <input ref={fileRef} id="csv-upload" type="file" accept=".csv,text/csv" title="Upload CSV file" aria-label="Upload inventory CSV file" className="hidden" onChange={(e) => { if (e.target.files?.[0]) handleFile(e.target.files[0]); }} />
+                    <input ref={fileRef} id="csv-upload" type="file" accept=".csv,.xlsx,.xls,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" title="Upload CSV or Excel file" aria-label="Upload inventory CSV or Excel file" className="hidden" onChange={(e) => { if (e.target.files?.[0]) handleFile(e.target.files[0]); }} />
                     {fileName ? (
                       <>
                         <div className="w-12 h-12 rounded-xl bg-[#22C55E]/10 border border-[#22C55E]/20 flex items-center justify-center mx-auto mb-3">
@@ -1045,7 +1155,12 @@ export default function ForecastClient() {
                           </svg>
                         </div>
                         <p className="text-[#22C55E] font-semibold text-sm">{fileName}</p>
-                        <p className="text-slate-600 text-xs mt-1">Click to replace</p>
+                        {detectedFormat === "shopify-orders" && (
+                          <p className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#22C55E] bg-[#22C55E]/10 border border-[#22C55E]/20 px-2 py-0.5 rounded-full mt-2">
+                            ✓ Shopify orders format detected — auto-converted
+                          </p>
+                        )}
+                        <p className="text-slate-600 text-xs mt-2">Click to replace</p>
                       </>
                     ) : (
                       <>
@@ -1054,8 +1169,8 @@ export default function ForecastClient() {
                             <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                           </svg>
                         </div>
-                        <p className="text-slate-200 font-medium text-sm mb-1">Drop your Shopify CSV here</p>
-                        <p className="text-slate-600 text-xs">or click to browse · product + date + units columns required</p>
+                        <p className="text-slate-200 font-medium text-sm mb-1">Drop your file here</p>
+                        <p className="text-slate-600 text-xs">CSV or Excel (.xlsx) · Shopify exports work directly</p>
                       </>
                     )}
                   </div>
@@ -1092,12 +1207,15 @@ export default function ForecastClient() {
                   </div>
                 </div>
 
-                {/* Sample CSV download */}
-                <div className="mt-3 flex items-center gap-1.5">
-                  <svg className="w-3.5 h-3.5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m.75 12l3 3m0 0l3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                  </svg>
-                  <span className="text-xs text-slate-600">Not sure of the format?</span>
+                {/* Format help */}
+                <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <div className="flex items-center gap-1.5">
+                    <svg className="w-3.5 h-3.5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                    </svg>
+                    <span className="text-xs text-slate-600">Shopify: Orders → Export → Last 90 days</span>
+                  </div>
+                  <span className="text-slate-700 text-xs">·</span>
                   <button onClick={downloadSampleCSV} className="text-xs text-[#22C55E] hover:underline font-medium">
                     Download sample CSV
                   </button>
