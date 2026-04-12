@@ -49,23 +49,23 @@ export default function Home() {
       {/* 7 — light */}
       <FAQ />
 
-      {/* ── Final CTA — dark ── */}
-      <section className="py-24 bg-[#0a0f0a] border-t border-white/[0.05]">
+      {/* ── Final CTA ── */}
+      <section className="py-24 bg-[#f0f5f1] border-t border-[#bbcbba]/40">
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
-          <div className="rounded-[10px] border border-white/[0.07] bg-[#111614] px-8 py-10 sm:px-12 sm:py-14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
+          <div className="rounded-[10px] border border-[#bbcbba]/60 bg-white px-8 py-10 sm:px-12 sm:py-14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8 card-depth">
             <div>
-              <h2 className="text-[40px] sm:text-[52px] font-bold leading-[0.93] tracking-[-0.03em] text-[#fafafa] mb-3">
+              <h2 className="text-[40px] sm:text-[52px] font-bold leading-[0.93] tracking-[-0.03em] text-[#181d1b] mb-3">
                 Stop losing revenue<br />
                 to stockouts.
               </h2>
-              <p className="text-[13px] text-gray-600">
+              <p className="text-[13px] text-[#8a9a8a]">
                 No credit card · Results in 30 seconds · Cancel anytime
               </p>
             </div>
             <div className="flex flex-col gap-2.5 flex-shrink-0">
               <Link
                 href="/forecast"
-                className="btn-primary btn-gradient inline-flex items-center gap-2 text-[15px] font-semibold text-[#0a0f0a] px-7 py-3 rounded-[6px] whitespace-nowrap"
+                className="btn-primary btn-gradient inline-flex items-center gap-2 text-[15px] font-semibold text-white px-7 py-3 rounded-[6px] whitespace-nowrap"
               >
                 Run free forecast
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -77,8 +77,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Footer — dark ── */}
-      <footer className="bg-[#0a0f0a] pt-16 pb-10 border-t border-white/[0.05]">
+      {/* ── Footer ── */}
+      <footer className="bg-[#f6faf6] pt-16 pb-10 border-t border-[#bbcbba]/40">
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
 
           {/* Top: logo + columns */}
@@ -88,20 +88,20 @@ export default function Home() {
               <div className="flex items-center gap-2.5 mb-4">
                 <LogoMark size={36} />
                 <span className="text-[16px] font-bold tracking-tight">
-                  <span className="text-[#fafafa]">Fore</span><span className="text-[#00D26A]">stock</span>
+                  <span className="text-[#181d1b]">Fore</span><span className="text-[#006d34]">stock</span>
                 </span>
               </div>
-              <p className="text-[12px] text-gray-500 leading-relaxed mb-4">
+              <p className="text-[12px] text-[#5a6059] leading-relaxed mb-4">
                 AI-powered inventory forecasting for Shopify merchants.
               </p>
-              <p className="text-[11px] text-gray-600">
+              <p className="text-[11px] text-[#8a9a8a]">
                 &copy; {new Date().getFullYear()} Forestock.
               </p>
             </div>
 
             {/* Product */}
             <div>
-              <p className="text-[11px] font-bold text-gray-600 uppercase tracking-widest mb-4">Product</p>
+              <p className="text-[11px] font-bold text-[#8a9a8a] uppercase tracking-widest mb-4">Product</p>
               <ul className="space-y-2.5">
                 {[
                   { label: "Home",         href: "/"             },
@@ -111,7 +111,7 @@ export default function Home() {
                   { label: "Forecast",     href: "/forecast"     },
                 ].map((l) => (
                   <li key={l.label}>
-                    <a href={l.href} className="text-[13px] text-gray-500 hover:text-gray-300 transition-colors">{l.label}</a>
+                    <a href={l.href} className="text-[13px] text-[#5a6059] hover:text-[#181d1b] transition-colors">{l.label}</a>
                   </li>
                 ))}
               </ul>
@@ -119,14 +119,14 @@ export default function Home() {
 
             {/* Resources */}
             <div>
-              <p className="text-[11px] font-bold text-gray-600 uppercase tracking-widest mb-4">Resources</p>
+              <p className="text-[11px] font-bold text-[#8a9a8a] uppercase tracking-widest mb-4">Resources</p>
               <ul className="space-y-2.5">
                 {[
                   { label: "Blog",       href: "/blog"                              },
                   { label: "Contact Us", href: "mailto:support@getforestock.com"    },
                 ].map((l) => (
                   <li key={l.label}>
-                    <a href={l.href} className="text-[13px] text-gray-500 hover:text-gray-300 transition-colors">{l.label}</a>
+                    <a href={l.href} className="text-[13px] text-[#5a6059] hover:text-[#181d1b] transition-colors">{l.label}</a>
                   </li>
                 ))}
               </ul>
@@ -134,7 +134,7 @@ export default function Home() {
 
             {/* Legal */}
             <div>
-              <p className="text-[11px] font-bold text-gray-600 uppercase tracking-widest mb-4">Legal</p>
+              <p className="text-[11px] font-bold text-[#8a9a8a] uppercase tracking-widest mb-4">Legal</p>
               <ul className="space-y-2.5">
                 {[
                   { label: "Privacy Policy",   href: "/privacy"  },
@@ -143,7 +143,7 @@ export default function Home() {
                   { label: "Refund Policy",    href: "/refunds"  },
                 ].map((l) => (
                   <li key={l.label}>
-                    <a href={l.href} className="text-[13px] text-gray-500 hover:text-gray-300 transition-colors">{l.label}</a>
+                    <a href={l.href} className="text-[13px] text-[#5a6059] hover:text-[#181d1b] transition-colors">{l.label}</a>
                   </li>
                 ))}
               </ul>
@@ -151,13 +151,13 @@ export default function Home() {
           </div>
 
           {/* Bottom */}
-          <div className="border-t border-white/[0.05] pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p className="text-[11px] text-gray-600">
+          <div className="border-t border-[#bbcbba]/40 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p className="text-[11px] text-[#8a9a8a]">
               Forecasts are AI-generated estimates, not financial guarantees.
             </p>
             <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00D26A]" />
-              <span className="text-[11px] text-gray-600">All systems operational</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#006d34]" />
+              <span className="text-[11px] text-[#8a9a8a]">All systems operational</span>
             </div>
           </div>
         </div>

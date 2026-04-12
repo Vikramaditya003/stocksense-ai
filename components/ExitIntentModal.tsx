@@ -42,26 +42,26 @@ export default function ExitIntentModal() {
         role="dialog"
         aria-modal="true"
         aria-labelledby="exit-modal-title"
-        className="relative w-full max-w-md rounded-[10px] border border-white/[0.08] bg-[#111614] p-8 shadow-2xl shadow-black/80"
+        className="relative w-full max-w-md rounded-[10px] border border-[#bbcbba]/60 bg-white p-8 shadow-xl shadow-black/10"
       >
         <button
           type="button"
           onClick={() => setVisible(false)}
           aria-label="Close"
-          className="absolute top-4 right-4 text-gray-600 hover:text-gray-300 transition-colors p-1 rounded-[4px] focus-visible:outline-2 focus-visible:outline-[#00D26A]"
+          className="absolute top-4 right-4 text-[#8a9a8a] hover:text-[#181d1b] transition-colors p-1 rounded-[4px] focus-visible:outline-2 focus-visible:outline-[#006d34]"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
 
-        <p className="text-[11px] font-medium text-gray-500 uppercase tracking-[0.18em] mb-3">
+        <p className="text-[11px] font-medium text-[#8a9a8a] uppercase tracking-[0.18em] mb-3">
           Before you go
         </p>
-        <h2 id="exit-modal-title" className="text-[28px] font-bold text-[#fafafa] tracking-[-0.03em] leading-tight mb-3">
+        <h2 id="exit-modal-title" className="text-[28px] font-bold text-[#181d1b] tracking-[-0.03em] leading-tight mb-3">
           Get your first forecast free.
         </h2>
-        <p className="text-[14px] text-gray-400 leading-relaxed mb-6">
+        <p className="text-[14px] text-[#5a6059] leading-relaxed mb-6">
           No install. No credit card. Upload a CSV and see exact stockout dates
           for every SKU in 30 seconds.
         </p>
@@ -69,7 +69,7 @@ export default function ExitIntentModal() {
         <Link
           href="/forecast"
           onClick={() => setVisible(false)}
-          className="btn-primary flex items-center justify-center gap-2 w-full text-[15px] font-semibold text-[#0a0f0a] bg-[#00D26A] py-3 rounded-[6px] mb-3"
+          className="btn-primary btn-gradient flex items-center justify-center gap-2 w-full text-[15px] font-semibold text-white py-3 rounded-[6px] mb-3"
         >
           Run free forecast
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -79,7 +79,7 @@ export default function ExitIntentModal() {
         <button
           type="button"
           onClick={() => setVisible(false)}
-          className="w-full text-center text-[13px] text-gray-600 hover:text-gray-400 transition-colors py-1"
+          className="w-full text-center text-[13px] text-[#8a9a8a] hover:text-[#5a6059] transition-colors py-1"
         >
           No thanks, I&apos;ll pass
         </button>

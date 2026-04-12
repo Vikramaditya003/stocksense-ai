@@ -5,16 +5,16 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-background: #0a0f0a;
-  --color-foreground: #fafafa;
-  --color-card: #111614;
-  --color-card-foreground: #fafafa;
-  --color-muted: #1a1f1a;
-  --color-muted-foreground: #6b7280;
-  --color-border: rgba(255,255,255,0.08);
-  --color-input: #1a1f1a;
-  --color-primary: #00D26A;
-  --color-primary-foreground: #0a0f0a;
+  --color-background: #f6faf6;
+  --color-foreground: #181d1b;
+  --color-card: #ffffff;
+  --color-card-foreground: #181d1b;
+  --color-muted: #eaefeb;
+  --color-muted-foreground: #5a6059;
+  --color-border: #bbcbba;
+  --color-input: #eaefeb;
+  --color-primary: #006d34;
+  --color-primary-foreground: #ffffff;
   --color-ring: #00D26A;
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
@@ -50,38 +50,38 @@
 }
 
 :root {
-  --background: #0a0f0a;
-  --foreground: #fafafa;
-  --card: #111614;
-  --card-foreground: #fafafa;
-  --popover: #111614;
-  --popover-foreground: #fafafa;
-  --primary: #00D26A;
-  --primary-foreground: #0a0f0a;
-  --secondary: #1a1f1a;
-  --secondary-foreground: #fafafa;
-  --muted: #1a1f1a;
-  --muted-foreground: #6b7280;
-  --accent: #1a1f1a;
-  --accent-foreground: #fafafa;
-  --destructive: #ef4444;
-  --border: rgba(255, 255, 255, 0.08);
-  --input: #1a1f1a;
-  --ring: #00D26A;
+  --background: #f6faf6;
+  --foreground: #181d1b;
+  --card: #ffffff;
+  --card-foreground: #181d1b;
+  --popover: #ffffff;
+  --popover-foreground: #181d1b;
+  --primary: #006d34;
+  --primary-foreground: #ffffff;
+  --secondary: #eaefeb;
+  --secondary-foreground: #181d1b;
+  --muted: #eaefeb;
+  --muted-foreground: #5a6059;
+  --accent: #eaefeb;
+  --accent-foreground: #181d1b;
+  --destructive: #ba1a1a;
+  --border: #bbcbba;
+  --input: #eaefeb;
+  --ring: #006d34;
   --radius: 0.625rem;
-  --chart-1: #00D26A;
-  --chart-2: #0D9488;
-  --chart-3: #0F766E;
-  --chart-4: #115E59;
-  --chart-5: #134E4A;
-  --sidebar: #111614;
-  --sidebar-foreground: #fafafa;
-  --sidebar-primary: #00D26A;
-  --sidebar-primary-foreground: #0a0f0a;
-  --sidebar-accent: #1a1f1a;
-  --sidebar-accent-foreground: #fafafa;
-  --sidebar-border: rgba(255, 255, 255, 0.08);
-  --sidebar-ring: #00D26A;
+  --chart-1: #006d34;
+  --chart-2: #00D26A;
+  --chart-3: #0D9488;
+  --chart-4: #0F766E;
+  --chart-5: #115E59;
+  --sidebar: #f6faf6;
+  --sidebar-foreground: #181d1b;
+  --sidebar-primary: #006d34;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eaefeb;
+  --sidebar-accent-foreground: #181d1b;
+  --sidebar-border: #bbcbba;
+  --sidebar-ring: #006d34;
 }
 
 /* ── Base reset ───────────────────────────────────────────── */
@@ -137,23 +137,24 @@ h1, h2, h3, h4 {
 
 /* ── Gradient primary CTA ──────────────────────────────────── */
 .btn-gradient {
-  background: linear-gradient(135deg, #00a852 0%, #00D26A 100%);
+  background: linear-gradient(135deg, #005a28 0%, #008a45 100%);
+  color: #ffffff;
 }
 .btn-gradient:hover:not(:disabled) {
-  background: linear-gradient(135deg, #00bf5e 0%, #14e57a 100%);
+  background: linear-gradient(135deg, #006d34 0%, #00a852 100%);
 }
 
-/* ── Card depth (dark theme) ───────────────────────────────── */
+/* ── Card depth (light theme) ──────────────────────────────── */
 .card-depth {
-  box-shadow: 0 4px 24px -6px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.04) inset;
+  box-shadow: 0 4px 16px -4px rgba(24,29,27,0.10), 0 1px 0 rgba(255,255,255,0.9) inset;
 }
 .card-depth:hover {
-  box-shadow: 0 8px 32px -8px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.06) inset;
+  box-shadow: 0 8px 24px -6px rgba(24,29,27,0.14), 0 1px 0 rgba(255,255,255,0.9) inset;
 }
 
 /* ── Pro pricing card glow ─────────────────────────────────── */
 .card-pro-glow {
-  box-shadow: 0 0 0 1px rgba(0,210,106,0.08), 0 8px 32px -8px rgba(0,210,106,0.15);
+  box-shadow: 0 0 0 1px rgba(0,109,52,0.12), 0 8px 32px -8px rgba(0,109,52,0.18);
 }
 .btn-primary:active:not(:disabled) {
   transform: translateY(1px) scale(0.98);
@@ -285,15 +286,25 @@ h1, h2, h3, h4 {
 
 /* ── Dot grid background ──────────────────────────────────── */
 .dot-grid {
-  background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(0,0,0,0.06) 1px, transparent 1px);
   background-size: 24px 24px;
+}
+
+/* ── Light theme nav + shadow utilities ────────────────────── */
+.glass-nav {
+  background: rgba(246, 250, 246, 0.80);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+.ambient-shadow {
+  box-shadow: 0 4px 24px -6px rgba(24, 29, 27, 0.10), 0 1px 0 rgba(255,255,255,0.8) inset;
 }
 
 /* ── Scrollbar ─────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.07); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.14); }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.22); }
 
 /* ── Health bar (progress element) ─────────────────────────── */
 progress.health-bar {

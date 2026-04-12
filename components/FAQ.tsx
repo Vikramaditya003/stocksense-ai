@@ -33,16 +33,16 @@ function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border-b border-white/[0.06] last:border-0">
+    <div className="border-b border-[#bbcbba]/40 last:border-0">
       <button
         type="button"
         onClick={() => setOpen(!open)}
         aria-expanded={open ? "true" : "false"}
-        className="w-full flex items-center justify-between gap-4 py-5 text-left focus-visible:outline-2 focus-visible:outline-[#00D26A] focus-visible:outline-offset-2 rounded-[4px]"
+        className="w-full flex items-center justify-between gap-4 py-5 text-left focus-visible:outline-2 focus-visible:outline-[#006d34] focus-visible:outline-offset-2 rounded-[4px]"
       >
-        <span className="text-[15px] font-semibold text-gray-100 leading-snug">{q}</span>
+        <span className="text-[15px] font-semibold text-[#181d1b] leading-snug">{q}</span>
         <span
-          className={`flex-shrink-0 w-5 h-5 flex items-center justify-center text-gray-600 transition-transform duration-200 ${open ? "rotate-45" : ""}`}
+          className={`flex-shrink-0 w-5 h-5 flex items-center justify-center text-[#5a6059] transition-transform duration-200 ${open ? "rotate-45" : ""}`}
           aria-hidden="true"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -53,7 +53,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 
       <div className={`faq-answer ${open ? "open" : ""}`}>
         <div>
-          <p className="text-[14px] text-gray-400 leading-relaxed pb-5">{a}</p>
+          <p className="text-[14px] text-[#5a6059] leading-relaxed pb-5">{a}</p>
         </div>
       </div>
     </div>
@@ -62,17 +62,17 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 
 export default function FAQ() {
   return (
-    <section className="py-28 bg-[#0d1210]">
+    <section className="py-28 bg-[#f6faf6]">
       <div className="max-w-[860px] mx-auto px-4 sm:px-6">
 
         <div className="mb-12">
-          <span className="inline-flex items-center text-[10px] font-bold text-[#00D26A] uppercase tracking-[0.18em] bg-[#00D26A]/[0.07] border border-[#00D26A]/20 px-3 py-1 rounded-full mb-6">FAQ</span>
-          <h2 className="text-[48px] sm:text-[56px] font-bold leading-[0.93] tracking-[-0.03em] text-[#fafafa]">
+          <span className="inline-flex items-center text-[10px] font-bold text-[#006d34] uppercase tracking-[0.18em] bg-[#006d34]/[0.07] border border-[#006d34]/20 px-3 py-1 rounded-full mb-6">FAQ</span>
+          <h2 className="text-[48px] sm:text-[56px] font-bold leading-[0.93] tracking-[-0.03em] text-[#181d1b]">
             Common questions.
           </h2>
         </div>
 
-        <div className="rounded-[10px] border border-white/[0.08] bg-[#111614] px-6">
+        <div className="rounded-[10px] border border-[#bbcbba]/60 bg-white px-6 card-depth">
           {faqs.map((item) => (
             <FAQItem key={item.q} q={item.q} a={item.a} />
           ))}
