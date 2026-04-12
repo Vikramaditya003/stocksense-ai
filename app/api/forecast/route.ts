@@ -137,7 +137,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { salesData, adSpendData, leadTimeDays, currency: requestedCurrency } = body;
+    const { salesData, adSpendData, leadTimeDays, perProductLeadTimes, currency: requestedCurrency } = body;
 
     if (!salesData || typeof salesData !== "string") {
       return NextResponse.json(
@@ -211,8 +211,18 @@ export async function POST(req: NextRequest) {
       ? String(adSpendData).replace(/<[^>]*>/g, "").substring(0, 500)
       : "";
 
+    // Build per-product lead time context for the AI prompt
+    const hasPerProductLeadTimes = perProductLeadTimes && typeof perProductLeadTimes === "object" && Object.keys(perProductLeadTimes).length > 0;
+    const leadTimeNote = hasPerProductLeadTimes
+      ? `Per-product lead times (use these instead of the global default where available):\n${
+          Object.entries(perProductLeadTimes as Record<string, number>)
+            .map(([p, d]) => `  - ${p}: ${d} days`)
+            .join("\n")
+        }`
+      : `Global lead time: ${leadTime} days (applies to all products)`;
+
     const userMessage = `Today's date: ${today}
-Lead time for restocking: ${leadTime} days
+${leadTimeNote}
 Currency: ${currency} (use ${sym} as the symbol for all monetary values)
 ${adSpend ? `Upcoming ad spend: ${adSpend}` : ""}
 

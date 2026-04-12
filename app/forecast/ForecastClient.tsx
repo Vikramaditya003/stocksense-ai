@@ -86,29 +86,29 @@ function countUniqueProducts(csv: string): number {
 // ─── Sample CSV download ───────────────────────────────────────────────────
 function downloadSampleCSV() {
   const sample = [
-    "product,sku,date,units_sold,current_stock,price",
-    "Premium Yoga Mat,YM-001,2024-03-01,8,45,1299",
-    "Premium Yoga Mat,YM-001,2024-03-02,11,34,1299",
-    "Premium Yoga Mat,YM-001,2024-03-03,6,28,1299",
-    "Premium Yoga Mat,YM-001,2024-03-04,9,19,1299",
-    "Water Bottle XL,WB-004,2024-03-01,18,120,499",
-    "Water Bottle XL,WB-004,2024-03-02,22,98,499",
-    "Water Bottle XL,WB-004,2024-03-03,25,73,499",
-    "Water Bottle XL,WB-004,2024-03-04,20,53,499",
-    "Resistance Bands Set,RB-002,2024-03-01,3,87,799",
-    "Resistance Bands Set,RB-002,2024-03-02,4,83,799",
-    "Resistance Bands Set,RB-002,2024-03-03,2,81,799",
-    "Resistance Bands Set,RB-002,2024-03-04,3,78,799",
-    "Foam Roller Pro,FR-003,2024-03-01,2,203,1599",
-    "Foam Roller Pro,FR-003,2024-03-02,3,200,1599",
-    "Foam Roller Pro,FR-003,2024-03-03,1,199,1599",
-    "Foam Roller Pro,FR-003,2024-03-04,2,197,1599",
+    "product,sku,date,units_sold,current_stock,price,lead_time",
+    "Premium Yoga Mat,YM-001,2024-03-01,8,45,1299,7",
+    "Premium Yoga Mat,YM-001,2024-03-02,11,34,1299,7",
+    "Premium Yoga Mat,YM-001,2024-03-03,6,28,1299,7",
+    "Premium Yoga Mat,YM-001,2024-03-04,9,19,1299,7",
+    "Water Bottle XL,WB-004,2024-03-01,18,120,499,3",
+    "Water Bottle XL,WB-004,2024-03-02,22,98,499,3",
+    "Water Bottle XL,WB-004,2024-03-03,25,73,499,3",
+    "Water Bottle XL,WB-004,2024-03-04,20,53,499,3",
+    "Resistance Bands Set,RB-002,2024-03-01,3,87,799,21",
+    "Resistance Bands Set,RB-002,2024-03-02,4,83,799,21",
+    "Resistance Bands Set,RB-002,2024-03-03,2,81,799,21",
+    "Resistance Bands Set,RB-002,2024-03-04,3,78,799,21",
+    "Foam Roller Pro,FR-003,2024-03-01,2,203,1599,14",
+    "Foam Roller Pro,FR-003,2024-03-02,3,200,1599,14",
+    "Foam Roller Pro,FR-003,2024-03-03,1,199,1599,14",
+    "Foam Roller Pro,FR-003,2024-03-04,2,197,1599,14",
   ].join("\n");
   const blob = new Blob([sample], { type: "text/csv" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "stocksense-sample.csv";
+  a.download = "forestock-sample.csv";
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -190,9 +190,11 @@ const CSV_ALIASES: Record<string, string[]> = {
   // current_stock is optional — Shopify orders exports don't have it
   current_stock: ["current_stock", "stock", "inventory", "qty", "on_hand", "stock_quantity", "available"],
   price:         ["price", "unit_price", "avg_price", "selling_price", "mrp"],
+  // per-product lead time — falls back to global default if column missing
+  lead_time:     ["lead_time", "lead_days", "leadtime", "supplier_lead_time", "days_lead"],
 };
 
-// Required columns — current_stock excluded (optional, AI infers from velocity)
+// Required columns — everything else is optional
 const REQUIRED_COLUMNS = ["product", "units_sold"] as const;
 
 function validateCsv(csv: string): string[] {
@@ -239,6 +241,33 @@ function validateCsv(csv: string): string[] {
     }
   }
   return errors;
+}
+
+// ─── Per-product lead time extraction ─────────────────────────────────────
+// Returns a map of { productName: leadDays } using the lead_time column.
+// Products without a lead_time value fall back to the global default.
+function extractPerProductLeadTimes(csv: string, globalDefault: number): Record<string, number> {
+  const lines = csv.trim().split("\n").filter(l => l.trim());
+  if (lines.length < 2) return {};
+  const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase());
+  const productIdx  = headers.findIndex(h => CSV_ALIASES.product.includes(h));
+  const leadIdx     = headers.findIndex(h => CSV_ALIASES.lead_time.includes(h));
+  if (productIdx === -1 || leadIdx === -1) return {};
+
+  const map: Record<string, number> = {};
+  for (let i = 1; i < lines.length; i++) {
+    const cols = parseCSVLine(lines[i]);
+    const name = cols[productIdx]?.trim();
+    const raw  = cols[leadIdx]?.trim();
+    if (!name) continue;
+    const days = raw ? parseInt(raw, 10) : NaN;
+    if (!isNaN(days) && days > 0 && map[name] === undefined) {
+      map[name] = days;
+    } else if (map[name] === undefined) {
+      map[name] = globalDefault;
+    }
+  }
+  return map;
 }
 
 // ─── Upgrade Modal ────────────────────────────────────────────────────────────
@@ -1005,6 +1034,9 @@ export default function ForecastClient() {
     const validationErrors = validateCsv(data);
     if (validationErrors.length) { setError(validationErrors[0]); return; }
 
+    // Extract per-product lead times if column present — falls back to global default
+    const perProductLeadTimes = extractPerProductLeadTimes(data, parseInt(leadTime) || 14);
+
     setError(null); setAnalysis(null);
     setStep("parsing"); await new Promise((r) => setTimeout(r, 600));
     setStep("analyzing"); await new Promise((r) => setTimeout(r, 800));
@@ -1013,7 +1045,7 @@ export default function ForecastClient() {
       const res = await fetch("/api/forecast", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ salesData: data, adSpendData: adSpend.trim() || undefined, leadTimeDays: parseInt(leadTime) || 14, currency }),
+        body: JSON.stringify({ salesData: data, adSpendData: adSpend.trim() || undefined, leadTimeDays: parseInt(leadTime) || 14, perProductLeadTimes, currency }),
       });
       const json = await res.json();
       if (!json.success) {
@@ -1245,9 +1277,9 @@ export default function ForecastClient() {
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-amber-400">Free plan: first {FREE_PRODUCT_LIMIT} products only</p>
                     <p className="text-xs text-slate-500 mt-0.5">
-                      Your CSV has {productCountInCsv} products. We&apos;ll analyze the first {FREE_PRODUCT_LIMIT}. &nbsp;
+                      Your CSV has {productCountInCsv} products. The {productCountInCsv - FREE_PRODUCT_LIMIT} we&apos;re not analyzing could have significant revenue at risk. &nbsp;
                       <button onClick={() => setUpgradeModal("Unlimited Products")} className="text-[#22C55E] hover:underline font-medium">Upgrade to Pro</button>
-                      {" "}for the full catalog.
+                      {" "}to see all of them.
                     </p>
                   </div>
                 </div>
@@ -1676,10 +1708,28 @@ export default function ForecastClient() {
                     {/* Overlay CTA */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-t from-[#0A1415] via-[#0A1415]/80 to-transparent">
                       <div className="text-center px-6 py-4">
-                        <p className="text-sm font-semibold text-white mb-1">
-                          {sortedProducts.length - FREE_PRODUCT_LIMIT} more product{sortedProducts.length - FREE_PRODUCT_LIMIT > 1 ? "s" : ""} hidden
-                        </p>
-                        <p className="text-xs text-slate-500 mb-3">Free plan shows {FREE_PRODUCT_LIMIT} SKUs. Upgrade to analyze your full catalog.</p>
+                        {(() => {
+                          const hiddenCount = sortedProducts.length - FREE_PRODUCT_LIMIT;
+                          const hiddenRar = sortedProducts.slice(FREE_PRODUCT_LIMIT).reduce((sum, p) => sum + (p.rarAmount ?? 0), 0);
+                          const rarStr = hiddenRar > 0
+                            ? (currency === "INR"
+                                ? `₹${hiddenRar.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`
+                                : `$${hiddenRar.toLocaleString("en-US", { maximumFractionDigits: 0 })}`)
+                            : null;
+                          return (
+                            <>
+                              <p className="text-sm font-semibold text-white mb-1">
+                                {hiddenCount} product{hiddenCount > 1 ? "s" : ""} locked
+                              </p>
+                              <p className="text-xs text-slate-400 mb-3">
+                                {rarStr
+                                  ? <>The {hiddenCount} SKUs we&apos;re not showing have <span className="text-red-400 font-semibold">{rarStr}+ at risk</span>. Upgrade to see all of them.</>
+                                  : <>Free plan shows {FREE_PRODUCT_LIMIT} SKUs. Upgrade to analyze your full catalog.</>
+                                }
+                              </p>
+                            </>
+                          );
+                        })()}
                         <button
                           onClick={() => setUpgradeModal("Unlimited Products")}
                           className="inline-flex items-center gap-2 bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] font-bold text-xs px-4 py-2 rounded-lg transition-all shadow-lg shadow-[#22C55E]/20"

@@ -165,8 +165,8 @@ export default function Pricing() {
             <div className="mb-6">
               <div className="flex items-center gap-2 mb-1">
                 <p className="text-[13px] font-semibold text-gray-300">Pro</p>
-                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest border border-white/[0.08] px-1.5 py-0.5 rounded-[4px]">
-                  Coming Q2 2025
+                <span className="text-[10px] font-bold text-[#00D26A] uppercase tracking-widest border border-[#00D26A]/25 bg-[#00D26A]/10 px-1.5 py-0.5 rounded-[4px]">
+                  Early Bird
                 </span>
               </div>
               <p className="text-[13px] text-gray-600 mb-5">For stores that can&apos;t afford stockouts.</p>
@@ -174,7 +174,7 @@ export default function Pricing() {
                 <span className="text-[42px] font-bold text-[#fafafa] tracking-tight leading-none">{proPrice}</span>
                 <span className="text-[14px] text-gray-500 mb-2">/{proBilling.replace("per ", "")}</span>
               </div>
-              <p className="text-[12px] text-gray-600">Early-bird discount at launch</p>
+              <p className="text-[12px] text-gray-600">Lock in early-bird pricing — raises at launch</p>
             </div>
 
             <div className="mb-7">
