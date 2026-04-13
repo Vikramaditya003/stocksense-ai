@@ -3,24 +3,24 @@ import dynamic from "next/dynamic";
 
 // ── Shimmer primitive ─────────────────────────────────────────────────────────
 const S = ({ className }: { className: string }) => (
-  <div className={`animate-pulse rounded-lg bg-white/[0.06] ${className}`} />
+  <div className={`animate-pulse rounded-lg bg-black/[0.06] ${className}`} />
 );
 
 // ── Skeleton that mirrors the real dashboard layout exactly ───────────────────
 function DashboardSkeleton() {
   return (
-    <div className="min-h-screen bg-[#060C0D] flex">
+    <div className="min-h-screen bg-[#f6faf6] flex">
 
-      {/* Sidebar ghost — matches AppSidebar collapsed=false width */}
+      {/* Sidebar ghost — dark, matches AppSidebar */}
       <div className="flex-shrink-0 w-[210px] bg-[#07100F] border-r border-[#22C55E]/[0.08] h-screen sticky top-0 flex flex-col p-4 gap-3 overflow-hidden">
-        <S className="h-9 w-36 mb-2" />
-        <S className="h-8 w-full rounded-xl" />
+        <div className="animate-pulse rounded-lg bg-white/[0.06] h-9 w-36 mb-2" />
+        <div className="animate-pulse rounded-xl bg-white/[0.06] h-8 w-full" />
         <div className="mt-1 space-y-1.5">
-          {[...Array(5)].map((_, i) => <S key={i} className="h-9 w-full rounded-xl" />)}
+          {[...Array(5)].map((_, i) => <div key={i} className="animate-pulse rounded-xl bg-white/[0.06] h-9 w-full" />)}
         </div>
         <div className="mt-auto space-y-2">
-          <S className="h-3 w-24 rounded" />
-          <S className="h-8 w-full rounded-xl" />
+          <div className="animate-pulse rounded bg-white/[0.06] h-3 w-24" />
+          <div className="animate-pulse rounded-xl bg-white/[0.06] h-8 w-full" />
         </div>
       </div>
 
@@ -28,7 +28,7 @@ function DashboardSkeleton() {
       <div className="flex-1 flex flex-col min-w-0">
 
         {/* Header — h-12 matches the real sticky header */}
-        <div className="h-12 border-b border-[#22C55E]/[0.08] flex items-center px-4 gap-4 flex-shrink-0">
+        <div className="h-12 border-b border-[#bbcbba]/40 bg-white/90 flex items-center px-4 gap-4 flex-shrink-0">
           <S className="h-4 w-44" />
           <div className="ml-auto flex items-center gap-2">
             <S className="h-7 w-28 hidden sm:block rounded-lg" />

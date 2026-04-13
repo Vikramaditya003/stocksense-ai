@@ -218,20 +218,20 @@ h1, h2, h3, h4 {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #475569;
+  color: #5a6059;
   padding: 0.7rem 1rem;
   border-bottom: 1px solid var(--border);
   white-space: nowrap;
-  background: #111614;
+  background: #f0f5f1;
 }
 .data-table td {
   padding: 0.85rem 1rem;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
   vertical-align: middle;
 }
 .data-table tbody tr:last-child td { border-bottom: none; }
 .data-table tbody tr { transition: background 0.12s; }
-.data-table tbody tr:hover { background: rgba(0,210,106,0.03); }
+.data-table tbody tr:hover { background: rgba(0,109,52,0.03); }
 
 /* ── Gauge animation ───────────────────────────────────────── */
 @keyframes dashOffset {
@@ -265,7 +265,7 @@ h1, h2, h3, h4 {
   100% { background-position:  200% center; }
 }
 .shimmer {
-  background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 75%);
+  background: linear-gradient(90deg, rgba(0,0,0,0.04) 25%, rgba(0,0,0,0.07) 50%, rgba(0,0,0,0.04) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.8s infinite;
 }
