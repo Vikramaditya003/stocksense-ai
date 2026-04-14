@@ -144,6 +144,17 @@ h1, h2, h3, h4 {
   background: linear-gradient(135deg, #006d34 0%, #00a852 100%);
 }
 
+/* ── Emerald brand gradients ────────────────────────────────── */
+.bg-emerald-brand {
+  background: linear-gradient(135deg, #006d34 0%, #00d26a 100%);
+}
+.bg-emerald-signin {
+  background: linear-gradient(135deg, #022c22 0%, #064e3b 60%, #052e16 100%);
+}
+.bg-emerald-sidebar {
+  background: linear-gradient(135deg, #006d34 0%, #00d26a 100%);
+}
+
 /* ── Card depth (light theme) ──────────────────────────────── */
 .card-depth {
   box-shadow: 0 4px 16px -4px rgba(24,29,27,0.10), 0 1px 0 rgba(255,255,255,0.9) inset;

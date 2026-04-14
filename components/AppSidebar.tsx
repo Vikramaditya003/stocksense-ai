@@ -114,10 +114,7 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
       {/* ── Logo ── */}
       <div className={`h-14 flex items-center gap-3 px-4 flex-shrink-0 ${collapsed ? "justify-center" : ""}`}>
         <Link href="/" className="flex items-center gap-3 min-w-0 flex-1">
-          <div
-            className="w-9 h-9 flex-shrink-0 rounded-xl flex items-center justify-center text-white shadow-lg"
-            style={{ background: "linear-gradient(135deg, #006d34 0%, #00d26a 100%)" }}
-          >
+          <div className="bg-emerald-brand w-9 h-9 flex-shrink-0 rounded-xl flex items-center justify-center text-white shadow-lg">
             <LogoMark size={20} />
           </div>
           {!collapsed && (
@@ -272,8 +269,7 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
         <div className="px-3 pb-3 flex-shrink-0">
           <Link
             href="/upgrade"
-            className="w-full flex items-center justify-center gap-2 text-white font-semibold text-[13px] py-3 rounded-xl shadow-lg hover:opacity-90 transition-all"
-            style={{ background: "linear-gradient(135deg, #006d34 0%, #00d26a 100%)" }}
+            className="bg-emerald-brand w-full flex items-center justify-center gap-2 text-white font-semibold text-[13px] py-3 rounded-xl shadow-lg hover:opacity-90 transition-all"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />

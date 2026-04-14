@@ -823,8 +823,7 @@ export default function DashboardClient() {
               <p className="text-[11px] text-emerald-100/50 mb-4">Get notified at launch — early-bird discount included.</p>
               <a
                 href="mailto:support@getforestock.com?subject=Notify me when Pro launches&body=Hi, please notify me when the Forestock Pro plan goes live."
-                className="block w-full text-center text-[12px] font-bold text-white py-2.5 rounded-xl transition-all"
-                style={{ background: "linear-gradient(135deg, #006d34 0%, #00d26a 100%)" }}
+                className="bg-emerald-brand block w-full text-center text-[12px] font-bold text-white py-2.5 rounded-xl transition-all"
               >
                 Notify me when live →
               </a>
@@ -1235,8 +1234,7 @@ export default function DashboardClient() {
                 <button
                   type="button"
                   onClick={() => setUploadOpen(true)}
-                  className="flex items-center gap-1.5 text-[12px] font-bold text-white px-4 py-2 rounded-xl transition-all shadow-md flex-shrink-0"
-                  style={{ background: "linear-gradient(135deg, #006d34 0%, #00d26a 100%)" }}
+                  className="bg-emerald-brand flex items-center gap-1.5 text-[12px] font-bold text-white px-4 py-2 rounded-xl transition-all shadow-md flex-shrink-0"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
                   New Forecast
