@@ -109,37 +109,55 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
 
   return (
     <aside
-      className={`hidden md:flex flex-shrink-0 ${collapsed ? "w-[52px]" : "w-[210px]"} transition-all duration-200 bg-[#07100F] border-r border-[#22C55E]/[0.08] flex-col h-screen sticky top-0 z-30 overflow-hidden`}
+      className={`hidden md:flex flex-shrink-0 ${collapsed ? "w-[60px]" : "w-[220px]"} transition-all duration-200 bg-emerald-950 flex-col h-screen sticky top-0 z-30 overflow-hidden`}
     >
       {/* ── Logo ── */}
-      <div className="h-12 flex items-center gap-3 px-3 border-b border-[#22C55E]/[0.07] flex-shrink-0">
-        <Link href="/" className="flex items-center gap-2.5 min-w-0 flex-1">
-          <LogoMark size={32} />
+      <div className={`h-14 flex items-center gap-3 px-4 flex-shrink-0 ${collapsed ? "justify-center" : ""}`}>
+        <Link href="/" className="flex items-center gap-3 min-w-0 flex-1">
+          <div
+            className="w-9 h-9 flex-shrink-0 rounded-xl flex items-center justify-center text-white shadow-lg"
+            style={{ background: "linear-gradient(135deg, #006d34 0%, #00d26a 100%)" }}
+          >
+            <LogoMark size={20} />
+          </div>
           {!collapsed && (
-            <span className="text-[16px] font-extrabold truncate tracking-[-0.03em]">
-              <span className="text-white">Fore</span><span className="text-[#22C55E] drop-shadow-[0_0_8px_rgba(34,197,94,0.4)]">stock</span>
-            </span>
+            <div className="min-w-0">
+              <p className="text-[15px] font-bold tracking-tight text-white leading-none">Forestock</p>
+              <p className="text-[10px] font-semibold text-emerald-400/60 uppercase tracking-widest leading-none mt-0.5">Inventory Hub</p>
+            </div>
           )}
         </Link>
-        <button
-          type="button"
-          onClick={() => setCollapsed(c => !c)}
-          className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-slate-600 hover:text-slate-300 hover:bg-white/[0.05] rounded-lg transition-all"
-          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            {collapsed
-              ? <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-              : <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />}
-          </svg>
-        </button>
+        {!collapsed && (
+          <button
+            type="button"
+            onClick={() => setCollapsed(c => !c)}
+            className="flex-shrink-0 w-7 h-7 flex items-center justify-center text-emerald-400/40 hover:text-emerald-400 hover:bg-emerald-900/40 rounded-lg transition-all"
+            aria-label="Collapse sidebar"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+          </button>
+        )}
+        {collapsed && (
+          <button
+            type="button"
+            onClick={() => setCollapsed(false)}
+            className="w-9 h-9 flex items-center justify-center text-emerald-400/40 hover:text-emerald-400 hover:bg-emerald-900/40 rounded-lg transition-all"
+            aria-label="Expand sidebar"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+          </button>
+        )}
       </div>
 
       {/* ── Search ── */}
       {!collapsed && (
-        <div className="px-3 pt-3 pb-1 flex-shrink-0">
-          <div className="flex items-center gap-2 bg-white/[0.04] border border-white/[0.06] rounded-xl px-3 py-2 group focus-within:border-[#22C55E]/30 focus-within:bg-[#22C55E]/[0.03] transition-all">
-            <svg className="w-3.5 h-3.5 text-slate-600 group-focus-within:text-[#22C55E] transition-colors flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <div className="px-3 pb-2 flex-shrink-0">
+          <div className="flex items-center gap-2 bg-emerald-900/40 border border-emerald-800/30 rounded-xl px-3 py-2 group focus-within:border-emerald-600/40 focus-within:bg-emerald-900/60 transition-all">
+            <svg className="w-3.5 h-3.5 text-emerald-400/40 group-focus-within:text-emerald-400 transition-colors flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
             </svg>
             <input
@@ -156,22 +174,21 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
               }}
               placeholder="Search products…"
               aria-label="Search products"
-              className="bg-transparent text-[12px] text-white placeholder:text-slate-600 outline-none w-full"
+              className="bg-transparent text-[12px] text-white placeholder:text-emerald-400/40 outline-none w-full"
             />
             {search && (
-              <button type="button" onClick={() => setSearch("")} aria-label="Clear search" className="text-slate-600 hover:text-slate-400 transition-colors">
+              <button type="button" onClick={() => setSearch("")} aria-label="Clear search" className="text-emerald-400/40 hover:text-emerald-400 transition-colors">
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
             )}
           </div>
-          <p className="text-[9px] text-slate-700 mt-1.5 px-1">Press Enter to search · Esc to clear</p>
         </div>
       )}
       {collapsed && (
         <button
           type="button"
           onClick={() => { setCollapsed(false); setTimeout(() => searchRef.current?.focus(), 150); }}
-          className="mx-auto mt-3 mb-1 w-9 h-9 flex items-center justify-center text-slate-600 hover:text-slate-300 hover:bg-white/[0.05] rounded-xl transition-all flex-shrink-0"
+          className="mx-auto mb-2 w-9 h-9 flex items-center justify-center text-emerald-400/40 hover:text-emerald-400 hover:bg-emerald-900/40 rounded-xl transition-all flex-shrink-0"
           aria-label="Search"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>
@@ -179,11 +196,7 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
       )}
 
       {/* ── Main Nav ── */}
-      <nav className="flex-1 overflow-y-auto px-2.5 py-3 space-y-0.5">
-        {!collapsed && (
-          <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest px-2.5 mb-2">Menu</p>
-        )}
-
+      <nav className="flex-1 overflow-y-auto px-3 py-2 space-y-1">
         {NAV.map((item) => {
           const active = isActive(item.href);
           const alerts = item.alertBadge ? alertCount : 0;
@@ -193,10 +206,10 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl mb-2 font-semibold text-[13px] transition-all group ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg font-semibold text-[13px] transition-all ${
                   active
-                    ? "bg-[#22C55E] text-[#060C0D] shadow-lg shadow-[#22C55E]/25"
-                    : "bg-[#22C55E]/10 text-[#22C55E] border border-[#22C55E]/20 hover:bg-[#22C55E]/15"
+                    ? "text-white bg-emerald-700/60"
+                    : "text-emerald-300 hover:text-white hover:bg-emerald-900/50"
                 }`}
                 title={collapsed ? item.label : undefined}
               >
@@ -210,10 +223,10 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all relative group ${
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all relative ${
                 active
-                  ? "bg-[#22C55E]/10 text-[#22C55E] border border-[#22C55E]/15"
-                  : "text-slate-500 hover:text-slate-200 hover:bg-white/[0.04] border border-transparent"
+                  ? "text-emerald-400 font-semibold bg-emerald-900/50"
+                  : "text-emerald-100/70 hover:text-white hover:bg-emerald-900/30"
               }`}
               title={collapsed ? item.label : undefined}
             >
@@ -235,16 +248,16 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
           );
         })}
 
-        {/* Bottom nav section */}
-        <div className="pt-4 mt-4 border-t border-white/[0.05] space-y-0.5">
+        {/* Support section */}
+        <div className="pt-3 mt-2 border-t border-emerald-900/60 space-y-1">
           {!collapsed && (
-            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest px-2.5 mb-2">Support</p>
+            <p className="text-[10px] font-bold text-emerald-500/40 uppercase tracking-widest px-3 pb-1">Support</p>
           )}
           {BOTTOM_NAV.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium text-slate-600 hover:text-slate-300 hover:bg-white/[0.04] border border-transparent transition-all"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium text-emerald-100/50 hover:text-white hover:bg-emerald-900/30 transition-all"
               title={collapsed ? item.label : undefined}
             >
               <span className="flex-shrink-0">{item.icon}</span>
@@ -254,70 +267,64 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
         </div>
       </nav>
 
-      {/* ── Upgrade Banner ── */}
+      {/* ── Upgrade CTA ── */}
       {!collapsed && (
-        <div className="px-3 pb-3">
+        <div className="px-3 pb-3 flex-shrink-0">
           <Link
             href="/upgrade"
-            className="flex items-center gap-2.5 bg-gradient-to-r from-[#22C55E]/10 to-cyan-500/5 border border-[#22C55E]/20 px-3 py-2.5 rounded-xl hover:border-[#22C55E]/35 transition-all group"
+            className="w-full flex items-center justify-center gap-2 text-white font-semibold text-[13px] py-3 rounded-xl shadow-lg hover:opacity-90 transition-all"
+            style={{ background: "linear-gradient(135deg, #006d34 0%, #00d26a 100%)" }}
           >
-            <div className="w-7 h-7 rounded-lg bg-[#22C55E]/15 flex items-center justify-center flex-shrink-0">
-              <svg className="w-3.5 h-3.5 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-              </svg>
-            </div>
-            <div className="min-w-0">
-              <p className="text-[12px] font-bold text-[#22C55E] truncate">Upgrade to Pro</p>
-              <p className="text-[10px] text-slate-600 truncate">Unlimited SKUs · 90-day forecasts</p>
-            </div>
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            Upgrade to Pro
           </Link>
         </div>
       )}
 
       {/* ── User profile ── */}
-      <div className={`flex-shrink-0 border-t border-[#22C55E]/[0.07] p-3 flex items-center gap-3 ${collapsed ? "justify-center" : ""}`}>
+      <div className={`flex-shrink-0 border-t border-emerald-900/60 p-3 flex items-center gap-3 ${collapsed ? "justify-center" : ""}`}>
         <UserButton
           appearance={{
             variables: {
-              colorBackground: "#0A1415",
-              colorInputBackground: "#0F1C1E",
-              colorText: "#E2F4F4",
-              colorTextSecondary: "#7DB8BC",
-              colorPrimary: "#22C55E",
+              colorBackground: "#022c22",
+              colorInputBackground: "#064e3b",
+              colorText: "#ecfdf5",
+              colorTextSecondary: "#6ee7b7",
+              colorPrimary: "#00d26a",
               colorDanger: "#f87171",
               borderRadius: "0.75rem",
               fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
             },
             elements: {
-              // Popover
-              avatarBox: "w-8 h-8 !ring-1 !ring-[#22C55E]/20",
-              userButtonPopoverCard: "!bg-[#0D1B1D] !border !border-[#22C55E]/20 !shadow-2xl !shadow-black/80 !rounded-xl",
-              userButtonPopoverMain: "!bg-[#0D1B1D]",
-              userButtonPopoverHeader: "!bg-[#0D1B1D] !border-b !border-white/[0.05]",
-              userButtonPopoverActions: "!bg-[#0D1B1D]",
-              userButtonPopoverActionButton: "!text-slate-200 hover:!bg-white/[0.05] !rounded-lg",
-              userButtonPopoverActionButtonText: "!text-slate-200 !font-medium",
-              userButtonPopoverActionButtonIcon: "!text-slate-500",
+              avatarBox: "w-8 h-8 !ring-1 !ring-emerald-400/20",
+              userButtonPopoverCard: "!bg-emerald-950 !border !border-emerald-800/40 !shadow-2xl !shadow-black/80 !rounded-xl",
+              userButtonPopoverMain: "!bg-emerald-950",
+              userButtonPopoverHeader: "!bg-emerald-950 !border-b !border-emerald-900/60",
+              userButtonPopoverActions: "!bg-emerald-950",
+              userButtonPopoverActionButton: "!text-emerald-100 hover:!bg-emerald-900/40 !rounded-lg",
+              userButtonPopoverActionButtonText: "!text-emerald-100 !font-medium",
+              userButtonPopoverActionButtonIcon: "!text-emerald-400/60",
               userButtonPopoverFooter: "!hidden",
               userPreviewMainIdentifier: "!text-white !font-semibold",
-              userPreviewSecondaryIdentifier: "!text-slate-500",
-              // Manage Account modal
-              modalContent: "!bg-[#0A1415] !border !border-[#22C55E]/15 !shadow-2xl !shadow-black/80 !rounded-2xl",
-              modalCloseButton: "!text-slate-500 hover:!text-white hover:!bg-white/[0.05] !rounded-lg",
-              navbar: "!bg-[#07100F] !border-r !border-[#22C55E]/[0.08]",
-              navbarButton: "!text-slate-400 hover:!text-white hover:!bg-white/[0.04] !rounded-lg !font-medium",
-              navbarButtonActive: "!text-[#22C55E] !bg-[#22C55E]/10 !rounded-lg",
-              pageScrollBox: "!bg-[#0A1415]",
+              userPreviewSecondaryIdentifier: "!text-emerald-400/60",
+              modalContent: "!bg-emerald-950 !border !border-emerald-800/40 !shadow-2xl !shadow-black/80 !rounded-2xl",
+              modalCloseButton: "!text-emerald-400/60 hover:!text-white hover:!bg-emerald-900/40 !rounded-lg",
+              navbar: "!bg-emerald-950 !border-r !border-emerald-900/60",
+              navbarButton: "!text-emerald-100/70 hover:!text-white hover:!bg-emerald-900/30 !rounded-lg !font-medium",
+              navbarButtonActive: "!text-emerald-400 !bg-emerald-900/50 !rounded-lg",
+              pageScrollBox: "!bg-emerald-950",
               profileSectionTitleText: "!text-white !font-semibold",
-              profileSectionTitle: "!border-b !border-[#22C55E]/[0.08]",
-              profileSectionPrimaryButton: "!text-[#22C55E] hover:!text-[#16A34A] !font-medium",
-              badge: "!bg-[#22C55E]/10 !text-[#22C55E] !border !border-[#22C55E]/20 !font-semibold",
-              formFieldInput: "!bg-[#0F1C1E] !border-[#22C55E]/20 !text-white focus:!border-[#22C55E]/50",
-              formFieldLabel: "!text-slate-300 !font-medium",
-              formButtonPrimary: "!bg-[#22C55E] hover:!bg-[#16A34A] !text-[#060C0D] !font-semibold",
-              formButtonReset: "!text-slate-400 hover:!text-white !border !border-white/10",
-              menuList: "!bg-[#0D1B1D] !border !border-[#22C55E]/15 !rounded-xl !shadow-xl !shadow-black/60",
-              menuItem: "!text-slate-300 hover:!bg-white/[0.05] hover:!text-white",
+              profileSectionTitle: "!border-b !border-emerald-900/60",
+              profileSectionPrimaryButton: "!text-emerald-400 hover:!text-emerald-300 !font-medium",
+              badge: "!bg-emerald-900/40 !text-emerald-400 !border !border-emerald-700/30 !font-semibold",
+              formFieldInput: "!bg-emerald-900/40 !border-emerald-700/30 !text-white focus:!border-emerald-500/50",
+              formFieldLabel: "!text-emerald-100/70 !font-medium",
+              formButtonPrimary: "!bg-emerald-600 hover:!bg-emerald-500 !text-white !font-semibold",
+              formButtonReset: "!text-emerald-400/60 hover:!text-white !border !border-emerald-800/40",
+              menuList: "!bg-emerald-950 !border !border-emerald-800/40 !rounded-xl !shadow-xl !shadow-black/60",
+              menuItem: "!text-emerald-100/70 hover:!bg-emerald-900/30 hover:!text-white",
               menuItemDestructive: "!text-red-400 hover:!bg-red-500/[0.06]",
             },
           }}
@@ -327,7 +334,7 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
             <p className="text-[13px] font-semibold text-white truncate">
               {user.firstName ?? user.username ?? "User"}
             </p>
-            <p className="text-[11px] text-slate-600 truncate">
+            <p className="text-[11px] text-emerald-100/40 truncate">
               {user.primaryEmailAddress?.emailAddress ?? ""}
             </p>
           </div>

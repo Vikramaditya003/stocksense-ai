@@ -457,16 +457,19 @@ export default function DashboardClient() {
         </div>
       )}
 
-      {/* ── KPI row — Lifetimely-style: big number + inline delta badge ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+      {/* ── KPI row ── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
 
         {/* Revenue at risk */}
-        <div className={`card p-4 border-l-2 ${activeAnalysis?.totalRarAmount ? "border-l-red-500" : "border-l-transparent"}`}>
-          <p className="text-[11px] font-semibold text-[#5a6059] uppercase tracking-wider mb-3">Revenue at Risk</p>
+        <div className="bg-white rounded-xl border border-[#bbcbba]/20 shadow-sm p-5">
+          <p className="text-[11px] font-semibold text-[#5a6059] uppercase tracking-widest mb-3">Revenue at Risk</p>
           <div className="flex items-end gap-2 mb-1">
-            <p className={`text-[30px] font-bold tabular-nums tracking-tight leading-none ${activeAnalysis?.totalRarAmount ? "text-red-600" : "text-[#8a9a8a]"}`}>
+            <p className={`text-3xl font-bold tabular-nums tracking-tight leading-none ${activeAnalysis?.totalRarAmount ? "text-red-600" : "text-[#8a9a8a]"}`}>
               {activeAnalysis?.totalRarAmount ? activeAnalysis.revenueAtRisk : formatMoney(0, activeCurrency)}
             </p>
+            {activeAnalysis?.totalRarAmount && (
+              <span className="mb-1 flex items-center gap-0.5 text-xs font-bold text-red-700 bg-red-50 px-1.5 py-0.5 rounded-full">Critical</span>
+            )}
           </div>
           <p className="text-[11px] text-[#5a6059]">
             {activeAnalysis?.totalRarAmount ? "if you don't reorder now" : "No losses detected"}
@@ -474,33 +477,28 @@ export default function DashboardClient() {
         </div>
 
         {/* Stock health */}
-        <div className={`card p-4 border-l-2 ${
-          activeAnalysis
-            ? activeAnalysis.healthScore >= 66 ? "border-l-green-500" : activeAnalysis.healthScore >= 51 ? "border-l-yellow-500" : "border-l-red-500"
-            : "border-l-transparent"
-        }`}>
-          <p className="text-[11px] font-semibold text-[#5a6059] uppercase tracking-wider mb-3">Stock Health</p>
+        <div className="bg-white rounded-xl border border-[#bbcbba]/20 shadow-sm p-5">
+          <p className="text-[11px] font-semibold text-[#5a6059] uppercase tracking-widest mb-3">Stock Health</p>
           <div className="flex items-end gap-2 mb-1">
-            <p className={`text-[30px] font-bold tabular-nums tracking-tight leading-none ${
+            <p className={`text-3xl font-bold tabular-nums tracking-tight leading-none ${
               activeAnalysis ? activeAnalysis.healthScore >= 66 ? "text-green-700" : activeAnalysis.healthScore >= 51 ? "text-yellow-700" : "text-red-600" : "text-[#8a9a8a]"
             }`}>
               {activeAnalysis ? activeAnalysis.healthScore : "—"}
               {activeAnalysis && <span className="text-sm font-normal text-[#5a6059] ml-0.5">/100</span>}
             </p>
             {delta && delta.health !== 0 && (
-              <span className={`mb-1 flex items-center gap-0.5 text-xs font-bold px-1.5 py-0.5 rounded-md ${
+              <span className={`mb-1 flex items-center gap-0.5 text-xs font-bold px-1.5 py-0.5 rounded-full ${
                 delta.health > 0 ? "text-green-700 bg-green-50" : "text-red-700 bg-red-50"
               }`}>
                 {delta.health > 0 ? "↑" : "↓"} {delta.health > 0 ? "+" : ""}{delta.health}
               </span>
             )}
           </div>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mb-2">
             <p className="text-[11px] text-[#5a6059]">{activeAnalysis ? healthLabel(activeAnalysis.healthScore) : "Run a forecast"}</p>
-            {delta && <p className="text-[10px] text-[#8a9a8a]">vs {delta.since}</p>}
           </div>
           {activeAnalysis && (
-            <div className="mt-2.5 h-1 rounded-full bg-[#eaefeb] overflow-hidden">
+            <div className="h-1.5 rounded-full bg-[#eaefeb] overflow-hidden">
               <div className={`h-full rounded-full transition-all duration-700 ${activeAnalysis.healthScore >= 66 ? "bg-green-500" : activeAnalysis.healthScore >= 51 ? "bg-yellow-500" : "bg-red-500"}`}
                 style={{ width: `${activeAnalysis.healthScore}%` }} aria-hidden="true" />
             </div>
@@ -508,65 +506,60 @@ export default function DashboardClient() {
         </div>
 
         {/* Critical SKUs */}
-        <div className={`card p-4 border-l-2 ${(activeAnalysis?.criticalCount ?? 0) > 0 ? "border-l-orange-500" : "border-l-transparent"}`}>
-          <p className="text-[11px] font-semibold text-[#5a6059] uppercase tracking-wider mb-3">Need Reorder</p>
+        <div className="bg-white rounded-xl border border-[#bbcbba]/20 shadow-sm p-5">
+          <p className="text-[11px] font-semibold text-[#5a6059] uppercase tracking-widest mb-3">Restock Alerts</p>
           <div className="flex items-end gap-2 mb-1">
-            <p className={`text-[30px] font-bold tabular-nums tracking-tight leading-none ${(activeAnalysis?.criticalCount ?? 0) > 0 ? "text-orange-600" : "text-[#8a9a8a]"}`}>
+            <p className={`text-3xl font-bold tabular-nums tracking-tight leading-none ${(activeAnalysis?.criticalCount ?? 0) > 0 ? "text-[#181d1b]" : "text-[#8a9a8a]"}`}>
               {activeAnalysis ? (activeAnalysis.criticalCount + activeAnalysis.atRiskCount) : "—"}
-              {activeAnalysis && <span className="text-sm font-normal text-[#5a6059] ml-1">SKUs</span>}
             </p>
+            {(activeAnalysis?.criticalCount ?? 0) > 0 && (
+              <span className="mb-1 text-xs font-bold text-red-600">Critical</span>
+            )}
             {delta && delta.critical !== 0 && (
-              <span className={`mb-1 flex items-center gap-0.5 text-xs font-bold px-1.5 py-0.5 rounded-md ${
+              <span className={`mb-1 flex items-center gap-0.5 text-xs font-bold px-1.5 py-0.5 rounded-full ${
                 delta.critical > 0 ? "text-red-700 bg-red-50" : "text-green-700 bg-green-50"
               }`}>
                 {delta.critical > 0 ? "↑" : "↓"} {delta.critical > 0 ? "+" : ""}{delta.critical}
               </span>
             )}
           </div>
-          <div className="flex items-center justify-between">
-            <p className="text-[11px] text-[#5a6059]">
-              {activeAnalysis ? `${activeAnalysis.criticalCount} critical · ${activeAnalysis.atRiskCount} high` : "No data yet"}
-            </p>
-            {delta && delta.critical !== 0 && <p className="text-[10px] text-[#8a9a8a]">vs {delta.since}</p>}
-          </div>
+          <p className="text-[11px] text-[#5a6059]">
+            {activeAnalysis ? `${activeAnalysis.criticalCount} critical · ${activeAnalysis.atRiskCount} high` : "No data yet"}
+          </p>
         </div>
 
-        {/* Inventory value */}
-        <div className="card p-4 border-l-2 border-l-transparent">
-          <p className="text-[11px] font-semibold text-[#5a6059] uppercase tracking-wider mb-3">Inventory Value</p>
-          <div className="flex items-end gap-2 mb-1">
-            <p className="text-[30px] font-bold tabular-nums tracking-tight leading-none text-[#181d1b]">
-              {fmtInventoryValue}
-            </p>
-            {delta && delta.skus !== 0 && (
-              <span className={`mb-1 flex items-center gap-0.5 text-xs font-bold px-1.5 py-0.5 rounded-md ${
-                delta.skus > 0 ? "text-green-700 bg-green-50" : "text-[#5a6059] bg-[#eaefeb]"
-              }`}>
-                {delta.skus > 0 ? "+" : ""}{delta.skus} SKUs
-              </span>
+        {/* Fulfillment / Inventory value — dark accent card */}
+        <div className="bg-emerald-900 rounded-xl shadow-lg p-5 relative overflow-hidden group">
+          <div className="relative z-10">
+            <p className="text-[11px] font-semibold text-emerald-100/50 uppercase tracking-widest mb-3">Inventory Value</p>
+            <p className="text-3xl font-bold tabular-nums tracking-tight leading-none text-white mb-3">{fmtInventoryValue}</p>
+            {activeAnalysis && (
+              <div className="w-full bg-emerald-800 rounded-full h-1.5">
+                <div
+                  className="bg-emerald-400 h-full rounded-full transition-all duration-700"
+                  style={{ width: `${(activeAnalysis.safeCount / Math.max(activeAnalysis.totalSkuCount, 1)) * 100}%` }}
+                  aria-hidden="true"
+                />
+              </div>
             )}
+            <p className="text-[11px] text-emerald-100/50 mt-2">
+              {activeAnalysis ? `${activeAnalysis.safeCount}/${activeAnalysis.totalSkuCount} SKUs safe` : "No data yet"}
+            </p>
           </div>
-          <p className="text-[11px] text-[#5a6059]">
-            {activeAnalysis ? `${activeAnalysis.totalSkuCount} SKUs tracked` : "No data yet"}
-          </p>
-          {activeAnalysis && (
-            <div className="flex gap-0.5 mt-2.5 h-1 rounded-full overflow-hidden">
-              <div className="bg-green-500 rounded-l-full" style={{ width: `${(activeAnalysis.safeCount / activeAnalysis.totalSkuCount) * 100}%` }} aria-hidden="true" />
-              <div className="bg-yellow-500" style={{ width: `${(activeAnalysis.atRiskCount / activeAnalysis.totalSkuCount) * 100}%` }} aria-hidden="true" />
-              <div className="bg-red-500 rounded-r-full" style={{ width: `${(activeAnalysis.criticalCount / activeAnalysis.totalSkuCount) * 100}%` }} aria-hidden="true" />
-            </div>
-          )}
+          <svg className="absolute -right-4 -bottom-4 w-24 h-24 text-emerald-800 opacity-30 group-hover:rotate-12 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+          </svg>
         </div>
       </div>
 
       {/* ── Main two-column ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_256px] gap-2.5">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_256px] gap-4">
 
         {/* LEFT: action table */}
-        <div className="card overflow-hidden">
-          <div className="px-4 py-3 border-b border-[#bbcbba]/40 flex items-center justify-between gap-3">
+        <div className="bg-white rounded-2xl border border-[#bbcbba]/20 shadow-sm overflow-hidden">
+          <div className="px-5 py-4 border-b border-[#bbcbba]/20 bg-[#f0f5f1]/50 flex items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-semibold text-[#181d1b]">
+              <p className="text-sm font-bold text-[#181d1b]">
                 {activeAnalysis && alertProducts.length > 0 ? "Reorder action required" : "Products overview"}
               </p>
               <p className="text-xs text-[#5a6059] mt-0.5">
@@ -727,18 +720,18 @@ export default function DashboardClient() {
         </div>
 
         {/* RIGHT: sticky action panel */}
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
 
           {/* Protection score */}
-          <div className="card p-4">
-            <p className="text-xs font-medium text-[#5a6059] mb-3">Stock health</p>
+          <div className="bg-white rounded-xl border border-[#bbcbba]/20 shadow-sm p-5">
+            <p className="text-xs font-semibold text-[#5a6059] uppercase tracking-widest mb-3">Stock health</p>
             {activeAnalysis ? (
               <>
                 <div className="relative flex items-center justify-center mb-4">
                   <svg viewBox="0 0 100 100" className="w-28 h-28 -rotate-90">
                     <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="8" />
                     <circle cx="50" cy="50" r="40" fill="none"
-                      stroke={activeAnalysis.healthScore >= 66 ? "#4ade80" : activeAnalysis.healthScore >= 51 ? "#facc15" : "#f87171"}
+                      stroke={activeAnalysis.healthScore >= 66 ? "#16a34a" : activeAnalysis.healthScore >= 51 ? "#ca8a04" : "#dc2626"}
                       strokeWidth="8" strokeLinecap="round"
                       strokeDasharray={`${(activeAnalysis.healthScore / 100) * 251} 251`}
                       className="gauge-fill"
@@ -752,7 +745,7 @@ export default function DashboardClient() {
                     <p className="text-xs text-[#5a6059] mt-0.5">{healthLabel(activeAnalysis.healthScore)}</p>
                   </div>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2.5">
                   {[
                     { label: "Safe", count: activeAnalysis.safeCount, color: "text-green-700", bg: "bg-green-500" },
                     { label: "At risk", count: activeAnalysis.atRiskCount, color: "text-yellow-700", bg: "bg-yellow-500" },
@@ -777,9 +770,9 @@ export default function DashboardClient() {
 
           {/* What to do next (AI actions) */}
           {(activeAnalysis?.topRecommendations?.length ?? 0) > 0 && (
-            <div className="card p-4">
-              <p className="text-xs font-medium text-[#5a6059] mb-3">Action plan</p>
-              <ol className="space-y-2.5">
+            <div className="bg-white rounded-xl border border-[#bbcbba]/20 shadow-sm p-5">
+              <p className="text-xs font-semibold text-[#5a6059] uppercase tracking-widest mb-3">Action plan</p>
+              <ol className="space-y-3">
                 {activeAnalysis?.topRecommendations.slice(0, 3).map((r, i) => (
                   <li key={i} className="flex items-start gap-2.5">
                     <span className="w-5 h-5 rounded-full bg-[#006d34]/10 border border-[#006d34]/20 text-[#006d34] text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
@@ -791,10 +784,10 @@ export default function DashboardClient() {
           )}
 
           {/* Past forecasts */}
-          <div className="card p-4 flex-1">
+          <div className="bg-white rounded-xl border border-[#bbcbba]/20 shadow-sm p-5 flex-1">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-xs font-medium text-[#5a6059]">Past analyses</p>
-              <a href="/history" className="text-xs text-[#006d34] hover:text-[#005a28] transition-colors">View all</a>
+              <p className="text-xs font-semibold text-[#5a6059] uppercase tracking-widest">Past analyses</p>
+              <a href="/history" className="text-xs font-bold text-[#006d34] hover:text-[#005a28] transition-colors">VIEW ALL</a>
             </div>
             {histLoading ? (
               <div className="space-y-2">{[1,2,3].map(i => <div key={i} className="h-10 rounded-lg shimmer" />)}</div>
@@ -804,10 +797,10 @@ export default function DashboardClient() {
               <div className="space-y-1">
                 {history.slice(0, 4).map((f) => (
                   <button key={f.id} type="button" onClick={() => loadDetail(f.id, f.created_at)}
-                    className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left transition-colors ${activeDate === f.created_at ? "bg-[#006d34]/[0.05] border border-[#006d34]/20" : "hover:bg-[#f0f5f1] border border-transparent"}`}>
+                    className={`w-full flex items-center gap-2.5 px-2.5 py-2.5 rounded-xl text-left transition-colors ${activeDate === f.created_at ? "bg-[#006d34]/[0.05] border border-[#006d34]/20" : "hover:bg-[#f0f5f1] border border-transparent"}`}>
                     <div className={`w-2 h-2 rounded-full flex-shrink-0 ${f.health_score >= 66 ? "bg-green-500" : f.health_score >= 51 ? "bg-yellow-500" : "bg-red-500"}`} />
                     <div className="min-w-0 flex-1">
-                      <p className="text-xs font-medium text-[#181d1b] leading-tight">{fmt(f.created_at)}</p>
+                      <p className="text-xs font-semibold text-[#181d1b] leading-tight">{fmt(f.created_at)}</p>
                       <p className="text-[11px] text-[#5a6059] leading-tight mt-0.5">{f.sku_count} SKUs · {f.critical_count} critical</p>
                     </div>
                     <span className={`text-sm font-bold tabular-nums ${f.health_score >= 66 ? "text-green-700" : f.health_score >= 51 ? "text-yellow-700" : "text-red-600"}`}>
@@ -820,31 +813,38 @@ export default function DashboardClient() {
           </div>
 
           {/* Upsell CTA */}
-          <div className="rounded-xl bg-gradient-to-br from-[#006d34]/[0.07] to-[#006d34]/[0.02] border border-[#006d34]/20 p-4">
-            <div className="flex items-center gap-1.5 mb-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#006d34] animate-pulse" />
-              <p className="text-[11px] font-black text-[#006d34] uppercase tracking-widest">Pro · Launching soon</p>
+          <div className="rounded-xl bg-emerald-900 p-5 relative overflow-hidden">
+            <div className="relative z-10">
+              <div className="flex items-center gap-1.5 mb-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <p className="text-[11px] font-black text-emerald-400 uppercase tracking-widest">Pro · Launching soon</p>
+              </div>
+              <p className="text-[13px] text-white font-semibold mb-0.5">90-day forecasts · Unlimited SKUs</p>
+              <p className="text-[11px] text-emerald-100/50 mb-4">Get notified at launch — early-bird discount included.</p>
+              <a
+                href="mailto:support@getforestock.com?subject=Notify me when Pro launches&body=Hi, please notify me when the Forestock Pro plan goes live."
+                className="block w-full text-center text-[12px] font-bold text-white py-2.5 rounded-xl transition-all"
+                style={{ background: "linear-gradient(135deg, #006d34 0%, #00d26a 100%)" }}
+              >
+                Notify me when live →
+              </a>
             </div>
-            <p className="text-[12px] text-[#181d1b] font-semibold mb-0.5">90-day forecasts · Unlimited SKUs</p>
-            <p className="text-[10px] text-[#5a6059] mb-3">Get notified at launch — early-bird discount included.</p>
-            <a
-              href="mailto:support@getforestock.com?subject=Notify me when Pro launches&body=Hi, please notify me when the Forestock Pro plan goes live."
-              className="block w-full text-center text-[12px] font-bold bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] py-2 rounded-lg transition-all shadow-md shadow-[#22C55E]/20">
-              Notify me when live →
-            </a>
+            <svg className="absolute -right-4 -bottom-4 w-24 h-24 text-emerald-800 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+            </svg>
           </div>
         </div>
       </div>
 
       {/* ── Trend chart ── */}
       {history.length >= 2 && (
-        <div className="card p-4">
-          <div className="flex items-center justify-between mb-4">
+        <div className="bg-white rounded-2xl border border-[#bbcbba]/20 shadow-sm p-6">
+          <div className="flex items-center justify-between mb-6">
             <div>
-              <p className="text-sm font-bold text-[#181d1b]">Stock Health Over Time</p>
+              <p className="text-base font-bold text-[#181d1b]">Inventory Trends</p>
               <p className="text-[11px] text-[#5a6059] mt-0.5">{history.length} analyses · health score + critical SKUs per run</p>
             </div>
-            <div className="flex items-center gap-1.5 text-[10px] text-[#5a6059] bg-[#eaefeb] border border-[#bbcbba]/40 px-2.5 py-1 rounded-lg">
+            <div className="flex items-center gap-1.5 text-[10px] text-[#5a6059] bg-[#eaefeb] border border-[#bbcbba]/40 px-2.5 py-1 rounded-full">
               <span className="w-1.5 h-1.5 rounded-full bg-[#006d34] animate-pulse" />
               Last run: {timeAgo(history[0].created_at)}
             </div>
@@ -856,9 +856,9 @@ export default function DashboardClient() {
   );
 
   const renderProducts = () => (
-    <div className="card overflow-hidden">
-      {/* Filter tabs + search — Raygun-style */}
-      <div className="px-5 py-3 border-b border-[#bbcbba]/40 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+    <div className="bg-white rounded-2xl border border-[#bbcbba]/20 shadow-sm overflow-hidden">
+      {/* Filter tabs + search */}
+      <div className="px-5 py-4 border-b border-[#bbcbba]/20 bg-[#f0f5f1]/50 flex flex-col sm:flex-row items-start sm:items-center gap-3">
         <div className="flex items-center gap-1 flex-wrap">
           {(["all", "critical", "high", "medium", "low"] as FilterTab[]).map((tab) => {
             const colors: Record<FilterTab, string> = {
@@ -1095,9 +1095,9 @@ export default function DashboardClient() {
   );
 
   const renderAlerts = () => (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {alertProducts.length === 0 ? (
-        <div className="card p-12 text-center">
+        <div className="bg-white rounded-2xl border border-[#bbcbba]/20 shadow-sm p-12 text-center">
           <div className="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center mx-auto mb-3">
             <svg className="w-6 h-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
           </div>
@@ -1159,69 +1159,95 @@ export default function DashboardClient() {
 
       {/* ── Main ── */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Top bar */}
-        <header className="border-b border-[#bbcbba]/40 bg-white/90 backdrop-blur-md sticky top-0 z-20 flex-shrink-0">
-          <div className="flex items-center gap-2 px-4 h-12">
-            {/* Page title + breadcrumb */}
-            <div className="min-w-0 flex-1 flex items-center gap-2">
-              <p className="text-[13px] font-semibold text-[#181d1b] truncate">
-                {section === "overview" ? "Overview" : section === "products" ? "Products" : "Alerts"}
-              </p>
-              {activeAnalysis && (
-                <span className="hidden sm:inline text-[11px] text-[#8a9a8a]">·</span>
-              )}
-              {activeAnalysis && (
-                <span className="hidden sm:inline text-[11px] text-[#5a6059] truncate">
-                  {activeAnalysis.totalSkuCount} SKUs · {activeAnalysis.criticalCount + activeAnalysis.atRiskCount} need action
-                </span>
-              )}
+        {/* Top bar — white glass, matches mockup */}
+        <header className="border-b border-[#bbcbba]/30 bg-white/70 backdrop-blur-xl sticky top-0 z-20 flex-shrink-0 shadow-sm">
+          <div className="flex items-center gap-4 px-6 h-14">
+            {/* Search */}
+            <div className="relative flex-1 max-w-sm group">
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8a9a8a] group-focus-within:text-[#006d34] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+              </svg>
+              <input
+                type="text"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search products, SKUs…"
+                className="w-full pl-9 pr-4 py-2 bg-[#f0f5f1] border-none rounded-full text-sm text-[#181d1b] placeholder-[#8a9a8a] outline-none focus:ring-2 focus:ring-[#006d34]/20 transition-all"
+              />
             </div>
 
-            {/* Status pills row */}
-            <div className="hidden md:flex items-center gap-1.5">
-              {activeDate && (
-                <div className="flex items-center gap-1.5 text-[11px] text-[#5a6059] bg-[#eaefeb] border border-[#bbcbba]/40 px-2 py-1 rounded-md">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#006d34] animate-pulse" />
-                  {timeAgo(activeDate)}
-                </div>
-              )}
-              {activeAnalysis?.forecastConfidence != null && (
-                <div className={`flex items-center gap-1 text-[11px] px-2 py-1 rounded-md border ${
-                  activeAnalysis.forecastConfidence >= 75
-                    ? "text-green-700 bg-green-50 border-green-200"
-                    : activeAnalysis.forecastConfidence >= 50
-                    ? "text-yellow-700 bg-yellow-50 border-yellow-200"
-                    : "text-[#5a6059] bg-[#eaefeb] border-[#bbcbba]/40"
-                }`}>
-                  {activeAnalysis.forecastConfidence}% conf.
-                </div>
-              )}
-              {activeAnalysis && (
-                <div className={`flex items-center gap-1 text-[11px] px-2 py-1 rounded-md border ${
-                  activeAnalysis.healthScore >= 66
-                    ? "text-green-700 bg-green-50 border-green-200"
-                    : activeAnalysis.healthScore >= 51
-                    ? "text-yellow-700 bg-yellow-50 border-yellow-200"
-                    : "text-red-700 bg-red-50 border-red-200"
-                }`}>
-                  Health {activeAnalysis.healthScore}/100
-                </div>
-              )}
-            </div>
+            {/* Right side */}
+            <div className="ml-auto flex items-center gap-5">
+              {/* Status pills */}
+              <div className="hidden md:flex items-center gap-2">
+                {activeDate && (
+                  <div className="flex items-center gap-1.5 text-[11px] text-[#5a6059] bg-[#eaefeb] border border-[#bbcbba]/40 px-2.5 py-1 rounded-full">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#006d34] animate-pulse" />
+                    {timeAgo(activeDate)}
+                  </div>
+                )}
+                {activeAnalysis && (
+                  <div className={`flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-full border ${
+                    activeAnalysis.healthScore >= 66
+                      ? "text-green-700 bg-green-50 border-green-200"
+                      : activeAnalysis.healthScore >= 51
+                      ? "text-yellow-700 bg-yellow-50 border-yellow-200"
+                      : "text-red-700 bg-red-50 border-red-200"
+                  }`}>
+                    Health {activeAnalysis.healthScore}/100
+                  </div>
+                )}
+              </div>
 
-            <button
-              type="button"
-              onClick={() => setUploadOpen(true)}
-              className="flex items-center gap-1.5 text-[11px] font-semibold bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] px-3 py-1.5 rounded-lg transition-all shadow-lg shadow-[#22C55E]/20 flex-shrink-0"
-            >
-              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-              New Forecast
-            </button>
+              {/* Icon buttons */}
+              <div className="hidden md:flex items-center gap-3 text-[#5a6059]">
+                <button
+                  type="button"
+                  onClick={() => setUploadOpen(true)}
+                  className="relative hover:text-[#006d34] transition-colors"
+                  aria-label="Upload new forecast"
+                  title="New Forecast"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                  </svg>
+                  {(alertProducts.length > 0) && (
+                    <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#00d26a] rounded-full" />
+                  )}
+                </button>
+              </div>
+
+              {/* Divider */}
+              <div className="hidden md:block h-7 w-px bg-[#bbcbba]/30" />
+
+              {/* User info + New Forecast CTA */}
+              <div className="flex items-center gap-3">
+                {activeAnalysis && (
+                  <div className="hidden lg:block text-right">
+                    <p className="text-[10px] font-semibold text-[#8a9a8a] uppercase tracking-widest leading-none mb-0.5">
+                      {section === "overview" ? "Overview" : section === "products" ? "Products" : "Alerts"}
+                    </p>
+                    <p className="text-[13px] font-bold text-[#181d1b] leading-none">
+                      {activeAnalysis.totalSkuCount} SKUs tracked
+                    </p>
+                  </div>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setUploadOpen(true)}
+                  className="flex items-center gap-1.5 text-[12px] font-bold text-white px-4 py-2 rounded-xl transition-all shadow-md flex-shrink-0"
+                  style={{ background: "linear-gradient(135deg, #006d34 0%, #00d26a 100%)" }}
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                  New Forecast
+                </button>
+              </div>
+            </div>
           </div>
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-3 sm:p-4 pb-24 md:pb-4">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 pb-24 md:pb-6">
           <AnimatePresence mode="wait">
             <motion.div
               key={section}
