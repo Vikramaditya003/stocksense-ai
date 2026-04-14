@@ -381,7 +381,16 @@ export default function DashboardClient() {
     ? [...activeAnalysis.products].sort((a, b) => (RISK_ORDER[a.stockoutRisk] ?? 9) - (RISK_ORDER[b.stockoutRisk] ?? 9))
     : [];
 
-  const activeCurrency = activeAnalysis?.currency ?? "USD";
+  // Detect currency from stored field, then fall back to sniffing pre-formatted strings
+  // (handles older forecasts saved before the currency field was added)
+  const activeCurrency = activeAnalysis?.currency
+    || (/₹/.test(activeAnalysis?.revenueAtRisk ?? "") ? "INR"
+      : /£/.test(activeAnalysis?.revenueAtRisk ?? "") ? "GBP"
+      : /€/.test(activeAnalysis?.revenueAtRisk ?? "") ? "EUR"
+      : /A\$/.test(activeAnalysis?.revenueAtRisk ?? "") ? "AUD"
+      : /C\$/.test(activeAnalysis?.revenueAtRisk ?? "") ? "CAD"
+      : /S\$/.test(activeAnalysis?.revenueAtRisk ?? "") ? "SGD"
+      : "USD");
   const inventoryValue = activeAnalysis?.products
     ? activeAnalysis.products.reduce((sum, p) => sum + p.currentStock * (p.price ?? 0), 0)
     : 0;

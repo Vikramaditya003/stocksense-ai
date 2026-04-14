@@ -19,7 +19,7 @@ Return ONLY valid JSON with this exact structure (no markdown, no extra text):
   "healthScore": <number 0-100, higher = healthier>,
   "healthLabel": "critical" | "at-risk" | "fair" | "good" | "excellent",
   "summary": "<2-3 sentence plain-English summary focused on revenue impact, not just stock levels>",
-  "revenueAtRisk": "<INR estimate of total revenue at stake if critical/high products stock out, e.g. '₹45,000–₹1,20,000 at risk this week'>",
+  "revenueAtRisk": "<formatted total revenue at stake if critical/high products stock out, using the currency symbol from the user message — e.g. '$1,200–$3,500 at risk this week' or '₹45,000–₹1,20,000 at risk this week'>",
   "keyInsights": ["<insight 1 — always mention money or days>", "<insight 2>", "<insight 3>"],
   "totalSkuCount": <number>,
   "criticalCount": <number>,
@@ -44,7 +44,7 @@ Return ONLY valid JSON with this exact structure (no markdown, no extra text):
       "trendPercent": <number — positive for growth, negative for decline>,
       "seasonalNote": "<brief seasonal pattern note or empty string>",
       "riskReason": "<WHY this product is at risk — be specific: e.g. 'Sales velocity jumped 34% in last 3 days but stock is nearly depleted' or 'Declining trend + current stock will not cover 30-day forecast'>",
-      "estimatedRevenueLoss": "<INR estimate if this product stocks out for 7 days, based on avgDailySales × price estimate — e.g. '₹12,000–₹20,000' — or null if low/no risk>"
+      "estimatedRevenueLoss": "<formatted estimate if this product stocks out for 7 days, based on avgDailySales × price — use the same currency symbol from the user message, e.g. '$220–$440' or '₹12,000–₹20,000' — or null if low/no risk>"
     }
   ],
   "topRecommendations": [
