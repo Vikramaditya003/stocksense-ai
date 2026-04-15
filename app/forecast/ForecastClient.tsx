@@ -7,6 +7,7 @@ import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
 import type { ForecastAnalysis, ForecastStep, InputMode, ProductForecast } from "@/lib/types";
 import { formatMoney, detectCurrencyFromCsv, CURRENCIES } from "@/lib/currency";
 import FeedbackPopup from "@/components/FeedbackPopup";
+import { LogoMark } from "@/components/StocksenseLogo";
 
 const _clerkKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ?? "";
 const CLERK_READY =
@@ -36,28 +37,28 @@ function ForecastNavAuth({ onReset, showReset }: { onReset: () => void; showRese
           <UserButton
             appearance={{
               variables: {
-                colorBackground: "#0A1415",
-                colorText: "#e2f4f4",
-                colorTextSecondary: "#94a3b8",
-                colorPrimary: "#e2f4f4",
-                colorDanger: "#f87171",
+                colorBackground: "#ffffff",
+                colorText: "#181d1b",
+                colorTextSecondary: "#5a6059",
+                colorPrimary: "#006d34",
+                colorDanger: "#ef4444",
                 borderRadius: "0.75rem",
                 fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
                 fontSize: "14px",
               },
               elements: {
                 avatarBox: "w-8 h-8",
-                userButtonPopoverCard: "!bg-[#0D1B1D] !border !border-[#22C55E]/20 !shadow-2xl !shadow-black/80 !rounded-xl",
-                userButtonPopoverMain: "!bg-[#0D1B1D]",
-                userButtonPopoverHeader: "!bg-[#0D1B1D] !border-b !border-white/[0.05]",
-                userButtonPopoverActions: "!bg-[#0D1B1D]",
-                userButtonPopoverActionButton: "!text-slate-200 hover:!bg-white/[0.05] !rounded-lg",
-                userButtonPopoverActionButtonText: "!text-slate-200 !font-medium",
-                userButtonPopoverActionButtonIconBox: "!text-slate-400",
+                userButtonPopoverCard: "!bg-white !border !border-[#bbcbba]/40 !shadow-xl !shadow-black/10 !rounded-xl",
+                userButtonPopoverMain: "!bg-white",
+                userButtonPopoverHeader: "!bg-white !border-b !border-[#bbcbba]/40",
+                userButtonPopoverActions: "!bg-white",
+                userButtonPopoverActionButton: "!text-[#181d1b] hover:!bg-[#f0f5f1] !rounded-lg",
+                userButtonPopoverActionButtonText: "!text-[#181d1b] !font-medium",
+                userButtonPopoverActionButtonIconBox: "!text-[#5a6059]",
                 userButtonPopoverFooter: "!hidden",
-                userPreviewMainIdentifier: "!text-white !font-semibold",
-                userPreviewSecondaryIdentifier: "!text-slate-500",
-                userPreviewTextContainer: "!text-white",
+                userPreviewMainIdentifier: "!text-[#181d1b] !font-semibold",
+                userPreviewSecondaryIdentifier: "!text-[#5a6059]",
+                userPreviewTextContainer: "!text-[#181d1b]",
               },
             }}
           />
@@ -1111,10 +1112,8 @@ export default function ForecastClient() {
       {/* Nav */}
       <nav className="border-b border-[#bbcbba]/30 px-4 sm:px-6 h-16 flex items-center justify-between sticky top-0 z-40 bg-white/90 backdrop-blur-md shadow-sm">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-emerald-brand flex items-center justify-center shadow-lg shadow-[#006d34]/20">
-            <svg className="w-4.5 h-4.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 20V14M9 20V8M14 20V11M19 20V4" />
-            </svg>
+          <div className="w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center shadow-lg shadow-[#006d34]/20 flex-shrink-0">
+            <LogoMark size={36} />
           </div>
           <span className="text-[16px] font-semibold text-[#181d1b] tracking-tight">Fore<span className="text-[#006d34]">stock</span></span>
         </Link>
@@ -1143,169 +1142,216 @@ export default function ForecastClient() {
           {/* ── IDLE ── */}
           {step === "idle" && (
             <motion.div key="idle" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.25 }}>
-              <div className="mb-8">
-                <h1 className="text-3xl font-light text-[#181d1b] tracking-tight mb-1.5">Inventory Forecast</h1>
-                <p className="text-[15px] text-[#5a6059]">Upload your Shopify orders CSV or Excel file — get stockout dates, reorder quantities, and revenue at risk in 30 seconds.</p>
+
+              {/* Page header */}
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-[10px] font-bold tracking-widest text-[#8a9a8a] uppercase">Inventory</span>
+                    <svg className="w-3 h-3 text-[#bbcbba]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+                    <span className="text-[10px] font-bold tracking-widest text-[#006d34] uppercase">Forecast</span>
+                  </div>
+                  <h1 className="text-3xl font-bold text-[#181d1b] tracking-tight mb-2">Generate Prediction</h1>
+                  <p className="text-[15px] text-[#5a6059] max-w-lg">Upload your Shopify orders CSV or Excel file — get stockout dates, reorder quantities, and revenue at risk in 30 seconds.</p>
+                </div>
+                <button
+                  onClick={downloadSampleCSV}
+                  className="flex items-center gap-2 bg-white border border-[#bbcbba]/60 text-[#5a6059] hover:text-[#181d1b] hover:bg-[#f0f5f1] font-medium py-2.5 px-4 rounded-xl transition-all text-sm shadow-sm flex-shrink-0"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}><path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+                  Download Sample CSV
+                </button>
               </div>
 
-              {/* Input card */}
-              <div className="card p-6 mb-4">
-                {/* Mode tabs */}
-                <div className="flex items-center gap-1 bg-[#eaefeb] border border-[#bbcbba]/60 rounded-lg p-1 w-fit mb-5">
-                  {(["csv", "manual"] as InputMode[]).map((mode) => (
-                    <button
-                      key={mode}
-                      onClick={() => setInputMode(mode)}
-                      className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
-                        inputMode === mode ? "bg-white text-[#181d1b] shadow-sm border border-[#bbcbba]/60" : "text-[#5a6059] hover:text-[#181d1b]"
-                      }`}
-                    >
-                      {mode === "csv" ? "Upload CSV" : "Paste Data"}
-                    </button>
-                  ))}
-                </div>
+              {/* Main bento grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
 
-                {inputMode === "csv" ? (
-                  <div
-                    onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-                    onDragLeave={() => setDragOver(false)}
-                    onDrop={handleDrop}
-                    onClick={() => fileRef.current?.click()}
-                    className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-all duration-150 ${
-                      dragOver ? "border-[#006d34] bg-[#006d34]/[0.04]" :
-                      fileName ? "border-[#006d34]/40 bg-[#006d34]/[0.04]" :
-                      "border-[#bbcbba]/60 hover:border-[#006d34]/30 hover:bg-[#006d34]/[0.02]"
-                    }`}
-                  >
-                    <input ref={fileRef} id="csv-upload" type="file" accept=".csv,.xlsx,.xls,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" title="Upload CSV or Excel file" aria-label="Upload inventory CSV or Excel file" className="hidden" onChange={(e) => { if (e.target.files?.[0]) handleFile(e.target.files[0]); }} />
-                    {fileName ? (
-                      <>
-                        <div className="w-12 h-12 rounded-xl bg-[#006d34]/[0.08] border border-[#006d34]/20 flex items-center justify-center mx-auto mb-3">
-                          <svg className="w-6 h-6 text-[#006d34]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                        </div>
-                        <p className="text-[#006d34] font-semibold text-sm">{fileName}</p>
-                        {detectedFormat === "shopify-orders" && (
-                          <p className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#006d34] bg-[#006d34]/[0.08] border border-[#006d34]/20 px-2 py-0.5 rounded-full mt-2">
-                            ✓ Shopify orders format detected — auto-converted
-                          </p>
+                {/* ── Left: Upload panel ── */}
+                <div className="lg:col-span-8">
+                  <div className="bg-white rounded-2xl border border-[#bbcbba]/40 shadow-sm p-8 relative overflow-hidden group">
+                    {/* Subtle hover glow */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#006d34]/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+                    {/* Mode tabs */}
+                    <div className="flex items-center gap-1 bg-[#eaefeb] border border-[#bbcbba]/60 rounded-lg p-1 w-fit mb-6">
+                      {(["csv", "manual"] as InputMode[]).map((mode) => (
+                        <button
+                          key={mode}
+                          onClick={() => setInputMode(mode)}
+                          className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
+                            inputMode === mode ? "bg-white text-[#181d1b] shadow-sm border border-[#bbcbba]/60" : "text-[#5a6059] hover:text-[#181d1b]"
+                          }`}
+                        >
+                          {mode === "csv" ? "Upload CSV" : "Paste Data"}
+                        </button>
+                      ))}
+                    </div>
+
+                    {inputMode === "csv" ? (
+                      <div
+                        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                        onDragLeave={() => setDragOver(false)}
+                        onDrop={handleDrop}
+                        onClick={() => fileRef.current?.click()}
+                        className={`relative z-10 flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-14 cursor-pointer transition-all duration-200 ${
+                          dragOver ? "border-[#006d34] bg-[#006d34]/[0.05]" :
+                          fileName ? "border-[#006d34]/50 bg-[#006d34]/[0.04]" :
+                          "border-[#bbcbba]/60 hover:border-[#006d34]/40 hover:bg-[#006d34]/[0.02]"
+                        }`}
+                      >
+                        <input ref={fileRef} id="csv-upload" type="file" accept=".csv,.xlsx,.xls,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" title="Upload CSV or Excel file" aria-label="Upload inventory CSV or Excel file" className="hidden" onChange={(e) => { if (e.target.files?.[0]) handleFile(e.target.files[0]); }} />
+                        {fileName ? (
+                          <>
+                            <div className="w-16 h-16 rounded-full bg-[#006d34]/[0.08] border border-[#006d34]/20 flex items-center justify-center mb-5">
+                              <svg className="w-8 h-8 text-[#006d34]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            </div>
+                            <p className="text-[#006d34] font-semibold text-base">{fileName}</p>
+                            {detectedFormat === "shopify-orders" && (
+                              <p className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#006d34] bg-[#006d34]/[0.08] border border-[#006d34]/20 px-2.5 py-1 rounded-full mt-3">
+                                ✓ Shopify orders format detected — auto-converted
+                              </p>
+                            )}
+                            <p className="text-[#8a9a8a] text-xs mt-3">Click to replace file</p>
+                          </>
+                        ) : (
+                          <>
+                            <div className="w-16 h-16 rounded-full bg-[#eaefeb] flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
+                              <svg className="w-8 h-8 text-[#006d34]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+                              </svg>
+                            </div>
+                            <h4 className="text-lg font-semibold text-[#181d1b] mb-1.5">Select files or drag and drop</h4>
+                            <p className="text-[#8a9a8a] text-sm text-center max-w-xs mb-6">Supported: CSV, XLSX · Shopify orders exports work directly — no reformatting needed.</p>
+                            <div className="flex gap-3">
+                              <span className="bg-[#006d34] text-white text-sm font-semibold px-6 py-2.5 rounded-full shadow-md shadow-[#006d34]/20">Browse Files</span>
+                              <span className="bg-[#eaefeb] text-[#5a6059] text-sm font-medium px-6 py-2.5 rounded-full">Shopify: Orders → Export</span>
+                            </div>
+                          </>
                         )}
-                        <p className="text-[#8a9a8a] text-xs mt-2">Click to replace</p>
-                      </>
+                      </div>
                     ) : (
-                      <>
-                        <div className="w-12 h-12 rounded-xl bg-[#eaefeb] border border-[#bbcbba]/60 flex items-center justify-center mx-auto mb-3">
-                          <svg className="w-6 h-6 text-[#5a6059]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-                          </svg>
+                      <textarea
+                        value={csvText}
+                        onChange={(e) => setCsvText(e.target.value)}
+                        placeholder={`product,sku,date,units_sold,current_stock\nYoga Mat,YM-001,2024-01-01,8,45`}
+                        rows={10}
+                        className="w-full bg-[#f0f5f1] rounded-xl border border-[#bbcbba]/60 focus:border-[#006d34]/40 outline-none p-4 text-sm text-[#181d1b] placeholder:text-[#bbcbba] font-mono resize-none transition-colors"
+                      />
+                    )}
+
+                    {/* Error */}
+                    {error && (
+                      <div className="mt-5 bg-red-50 border border-red-200 rounded-xl px-4 py-3.5">
+                        <div className="flex items-start gap-2 text-red-600 text-sm mb-2">
+                          <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>
+                          <span className="font-medium">{error}</span>
                         </div>
-                        <p className="text-[#181d1b] font-medium text-sm mb-1">Drop your file here</p>
-                        <p className="text-[#8a9a8a] text-xs">CSV or Excel (.xlsx) · Shopify exports work directly</p>
-                      </>
+                        <button onClick={downloadSampleCSV} className="text-xs text-[#006d34] hover:underline font-medium ml-6">↓ Download sample CSV template</button>
+                      </div>
+                    )}
+
+                    {/* Over-limit warning */}
+                    {isOverLimit && (
+                      <div className="mt-5 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3.5">
+                        <svg className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold text-amber-700">Free plan: first {FREE_PRODUCT_LIMIT} products only</p>
+                          <p className="text-xs text-[#5a6059] mt-0.5">
+                            Your CSV has {productCountInCsv} products. The {productCountInCsv - FREE_PRODUCT_LIMIT} we&apos;re skipping could have{" "}
+                            {currency === "INR"
+                              ? `₹${((productCountInCsv - FREE_PRODUCT_LIMIT) * 2000).toLocaleString("en-IN")}`
+                              : `$${((productCountInCsv - FREE_PRODUCT_LIMIT) * 25).toLocaleString("en-US")}`}+ at risk. &nbsp;
+                            <button onClick={() => setUpgradeModal("Unlimited Products")} className="text-[#006d34] hover:underline font-medium">Upgrade to Pro</button>
+                            {" "}to see all.
+                          </p>
+                        </div>
+                      </div>
                     )}
                   </div>
-                ) : (
-                  <textarea
-                    value={csvText}
-                    onChange={(e) => setCsvText(e.target.value)}
-                    placeholder={`product,sku,date,units_sold,current_stock\nYoga Mat,YM-001,2024-01-01,8,45`}
-                    rows={8}
-                    className="w-full bg-[#f0f5f1] rounded-xl border border-[#bbcbba]/60 focus:border-[#006d34]/40 outline-none p-4 text-sm text-[#181d1b] placeholder:text-[#bbcbba] font-mono resize-none transition-colors"
-                  />
-                )}
-
-                {/* Optional fields */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
-                  <div>
-                    <label htmlFor="lead-time" className="block text-xs font-medium text-[#5a6059] mb-1.5 uppercase tracking-wider">Lead Time (days)</label>
-                    <input
-                      id="lead-time" type="number" value={leadTime} onChange={(e) => setLeadTime(e.target.value)} min={1} max={120}
-                      placeholder="14"
-                      className="w-full bg-[#f0f5f1] rounded-lg border border-[#bbcbba]/60 focus:border-[#006d34]/40 outline-none px-3 py-2 text-sm text-[#181d1b] transition-colors"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="ad-spend" className="block text-xs font-medium text-[#5a6059] mb-1.5 uppercase tracking-wider flex items-center gap-2">
-                      Upcoming Ad Spend
-                      <span className="text-[9px] font-bold text-white bg-emerald-brand px-1.5 py-0.5 rounded-full tracking-wider">PRO</span>
-                    </label>
-                    <input
-                      id="ad-spend" type="text" value={adSpend} onChange={(e) => setAdSpend(e.target.value)}
-                      placeholder="e.g. ₹50,000 Meta campaign starting Apr 1"
-                      className="w-full bg-[#f0f5f1] rounded-lg border border-[#bbcbba]/60 focus:border-[#006d34]/40 outline-none px-3 py-2 text-sm text-[#181d1b] placeholder:text-[#bbcbba] transition-colors"
-                    />
-                  </div>
                 </div>
 
-                {/* Format help */}
-                <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
-                  <div className="flex items-center gap-1.5">
-                    <svg className="w-3.5 h-3.5 text-[#8a9a8a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-                    </svg>
-                    <span className="text-xs text-[#8a9a8a]">Shopify: Orders → Export → Last 90 days</span>
-                  </div>
-                  <span className="text-[#bbcbba] text-xs">·</span>
-                  <button onClick={downloadSampleCSV} className="text-xs text-[#006d34] hover:underline font-medium">
-                    Download sample CSV
-                  </button>
-                </div>
-
-                {error && (
-                  <div className="mt-4 bg-red-50 border border-red-200 rounded-xl px-4 py-3.5">
-                    <div className="flex items-start gap-2 text-red-600 text-sm mb-2">
-                      <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-                      </svg>
-                      <span className="font-medium">{error}</span>
+                {/* ── Right: Parameters panel ── */}
+                <div className="lg:col-span-4 flex flex-col gap-4">
+                  <div className="bg-[#eaefeb] rounded-2xl p-6 flex flex-col flex-1">
+                    <div className="flex items-center gap-2.5 mb-6">
+                      <svg className="w-4.5 h-4.5 text-[#006d34]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}><path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>
+                      <h4 className="text-base font-bold text-[#181d1b]">Forecast Parameters</h4>
                     </div>
-                    <button onClick={downloadSampleCSV} className="text-xs text-[#006d34] hover:underline font-medium ml-6">
-                      ↓ Download sample CSV template
-                    </button>
-                  </div>
-                )}
-              </div>
 
-              {/* Over-limit warning */}
-              {isOverLimit && (
-                <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3.5 mb-4">
-                  <svg className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-                  </svg>
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold text-amber-700">Free plan: first {FREE_PRODUCT_LIMIT} products only</p>
-                    <p className="text-xs text-[#5a6059] mt-0.5">
-                      Your CSV has {productCountInCsv} products. The {productCountInCsv - FREE_PRODUCT_LIMIT} we&apos;re not analyzing could have{" "}
-                      {currency === "INR"
-                        ? `₹${((productCountInCsv - FREE_PRODUCT_LIMIT) * 2000).toLocaleString("en-IN")}`
-                        : `$${((productCountInCsv - FREE_PRODUCT_LIMIT) * 25).toLocaleString("en-US")}`}+ at risk. &nbsp;
-                      <button onClick={() => setUpgradeModal("Unlimited Products")} className="text-[#006d34] hover:underline font-medium">Upgrade to Pro</button>
-                      {" "}to see all of them.
-                    </p>
+                    <div className="space-y-5 flex-1">
+                      {/* Lead time */}
+                      <div>
+                        <label htmlFor="lead-time" className="block text-[10px] font-bold text-[#5a6059] uppercase tracking-widest mb-2">Lead Time (days)</label>
+                        <input
+                          id="lead-time" type="number" value={leadTime} onChange={(e) => setLeadTime(e.target.value)} min={1} max={120}
+                          placeholder="14"
+                          className="w-full bg-white rounded-xl border border-[#bbcbba]/60 focus:border-[#006d34]/40 outline-none px-4 py-3 text-xl font-bold text-[#181d1b] transition-colors"
+                        />
+                        <p className="mt-1.5 text-[11px] text-[#8a9a8a] italic">Avg. duration from order to warehouse receipt.</p>
+                      </div>
+
+                      {/* Ad spend */}
+                      <div>
+                        <label htmlFor="ad-spend" className="block text-[10px] font-bold text-[#5a6059] uppercase tracking-widest mb-2 flex items-center gap-2">
+                          Upcoming Ad Spend
+                          <span className="text-[9px] font-bold text-white bg-emerald-brand px-1.5 py-0.5 rounded-full tracking-wider">PRO</span>
+                        </label>
+                        <input
+                          id="ad-spend" type="text" value={adSpend} onChange={(e) => setAdSpend(e.target.value)}
+                          placeholder="e.g. ₹50,000 Meta campaign starting Apr 1"
+                          className="w-full bg-white rounded-xl border border-[#bbcbba]/60 focus:border-[#006d34]/40 outline-none px-4 py-3 text-sm text-[#181d1b] placeholder:text-[#bbcbba] transition-colors"
+                        />
+                        <p className="mt-1.5 text-[11px] text-[#8a9a8a] italic">Adjusts forecast based on planned marketing spend.</p>
+                      </div>
+                    </div>
+
+                    {/* CTA buttons */}
+                    <div className="mt-8 space-y-3">
+                      <button
+                        onClick={() => runForecast()}
+                        className="w-full flex items-center justify-center gap-2 bg-emerald-brand text-white font-bold py-4 px-6 rounded-2xl transition-all shadow-lg shadow-[#006d34]/20 hover:opacity-90 hover:-translate-y-0.5 text-sm"
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z" /></svg>
+                        Run AI Forecast
+                      </button>
+                      <button
+                        onClick={loadDemo}
+                        className="w-full flex items-center justify-center gap-2 bg-white hover:bg-[#f0f5f1] border border-[#bbcbba]/60 text-[#5a6059] hover:text-[#181d1b] font-medium py-3 px-5 rounded-2xl transition-all text-sm"
+                      >
+                        Try Demo Data
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Engine status card */}
+                  <div className="bg-[#006d34]/[0.05] border border-[#006d34]/10 rounded-2xl p-5">
+                    <div className="flex items-center gap-2.5 mb-2">
+                      <span className="w-2 h-2 bg-[#006d34] rounded-full animate-pulse flex-shrink-0" />
+                      <span className="text-[10px] font-bold tracking-widest text-[#006d34] uppercase">Engine Ready</span>
+                    </div>
+                    <p className="text-sm text-[#5a6059] leading-relaxed">AI model is warmed up and ready. Upload your CSV to get stockout dates and reorder quantities instantly.</p>
                   </div>
                 </div>
-              )}
-
-              {/* Actions */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                <button
-                  onClick={() => runForecast()}
-                  className="flex-1 flex items-center justify-center gap-2 bg-emerald-brand text-white font-bold py-3 px-6 rounded-xl transition-all shadow-lg hover:opacity-90 hover:-translate-y-0.5 text-sm"
-                >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-                  </svg>
-                  Run AI Forecast
-                </button>
-                <button
-                  onClick={loadDemo}
-                  className="sm:w-auto flex items-center justify-center gap-2 bg-white hover:bg-[#f0f5f1] border border-[#bbcbba]/60 text-[#5a6059] hover:text-[#181d1b] font-medium py-3 px-5 rounded-xl transition-all text-sm shadow-sm"
-                >
-                  Try Demo Data
-                </button>
               </div>
-              <p className="text-center text-xs text-[#8a9a8a] mt-4">Free plan · up to 5 products · no sign-up required</p>
+
+              {/* Bottom info strip */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {[
+                  { label: "Avg. Time", value: "~30s", sub: "per forecast run" },
+                  { label: "Free Plan", value: "5 SKUs", sub: "no sign-up required" },
+                  { label: "AI Model", value: "GROQ", sub: "real-time inference" },
+                  { label: "Formats", value: "CSV · XLSX", sub: "Shopify exports included" },
+                ].map((s) => (
+                  <div key={s.label} className="bg-white rounded-xl border border-[#bbcbba]/40 p-4 shadow-sm">
+                    <p className="text-[10px] font-bold text-[#8a9a8a] uppercase tracking-widest mb-1">{s.label}</p>
+                    <p className="text-base font-bold text-[#181d1b] tabular-nums">{s.value}</p>
+                    <p className="text-[11px] text-[#8a9a8a] mt-0.5">{s.sub}</p>
+                  </div>
+                ))}
+              </div>
+
             </motion.div>
           )}
 
