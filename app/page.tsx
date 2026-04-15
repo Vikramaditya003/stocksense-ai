@@ -121,14 +121,15 @@ export default function Home() {
             <div>
               <p className="text-[11px] font-bold text-[#8a9a8a] uppercase tracking-widest mb-4">Resources</p>
               <ul className="space-y-2.5">
-                {[
-                  { label: "Blog",       href: "/blog"                              },
-                  { label: "Contact Us", href: "mailto:support@getforestock.com"    },
-                ].map((l) => (
-                  <li key={l.label}>
-                    <a href={l.href} className="text-[13px] text-[#5a6059] hover:text-[#181d1b] transition-colors">{l.label}</a>
-                  </li>
-                ))}
+                <li>
+                  <a href="/blog" className="text-[13px] text-[#5a6059] hover:text-[#181d1b] transition-colors">Blog</a>
+                </li>
+                <li>
+                  <a href="mailto:support@getforestock.com" className="text-[13px] text-[#5a6059] hover:text-[#181d1b] transition-colors">Contact Us</a>
+                </li>
+                <li>
+                  <a href="mailto:support@getforestock.com" className="text-[12px] text-[#8a9a8a] hover:text-[#006d34] transition-colors font-mono">support@getforestock.com</a>
+                </li>
               </ul>
             </div>
 

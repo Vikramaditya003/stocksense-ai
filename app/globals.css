@@ -219,7 +219,7 @@ h1, h2, h3, h4 {
 .badge-medium   { background: rgba(234,179,8,0.1);  color: #facc15; border-color: rgba(234,179,8,0.18); }
 .badge-low      { background: rgba(16,185,129,0.1); color: #34d399; border-color: rgba(16,185,129,0.18); }
 .badge-done     { background: rgba(16,185,129,0.1); color: #34d399; border-color: rgba(16,185,129,0.18); }
-.badge-neutral  { background: rgba(255,255,255,0.05); color: #71717a; border-color: rgba(255,255,255,0.08); }
+.badge-neutral  { background: #eaefeb; color: #5a6059; border-color: #bbcbba; }
 
 /* ── Table ─────────────────────────────────────────────────── */
 .data-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }

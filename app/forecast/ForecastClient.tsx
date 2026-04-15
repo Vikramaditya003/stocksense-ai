@@ -18,7 +18,7 @@ function ForecastNavAuth({ onReset, showReset }: { onReset: () => void; showRese
   return (
     <div className="flex items-center gap-3">
       {showReset && (
-        <button onClick={onReset} className="text-sm text-slate-400 hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+        <button onClick={onReset} className="text-sm text-[#5a6059] hover:text-[#181d1b] transition-colors flex items-center gap-1.5 font-medium">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
           </svg>
@@ -27,10 +27,10 @@ function ForecastNavAuth({ onReset, showReset }: { onReset: () => void; showRese
       )}
       {isLoaded && isSignedIn ? (
         <>
-          <Link href="/history" className="text-xs font-medium text-slate-400 hover:text-white transition-colors">
+          <Link href="/history" className="text-xs font-medium text-[#5a6059] hover:text-[#181d1b] transition-colors">
             History
           </Link>
-          <Link href="/#pricing" className="text-xs font-semibold text-slate-400 hover:text-white transition-colors">
+          <Link href="/#pricing" className="text-xs font-semibold text-[#5a6059] hover:text-[#181d1b] transition-colors">
             Upgrade to Pro
           </Link>
           <UserButton
@@ -64,7 +64,7 @@ function ForecastNavAuth({ onReset, showReset }: { onReset: () => void; showRese
         </>
       ) : (
         <SignInButton mode="redirect">
-          <button className="text-xs font-semibold bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] px-3.5 py-1.5 rounded-lg transition-colors shadow-lg shadow-[#22C55E]/20">
+          <button className="text-xs font-semibold bg-emerald-brand text-white px-3.5 py-1.5 rounded-lg transition-all hover:opacity-90 shadow-md">
             Sign in
           </button>
         </SignInButton>
@@ -478,13 +478,13 @@ function HealthGauge({ score, label }: { score: number; label: string }) {
     <div className="flex flex-col items-center">
       <div className="relative w-32 h-20">
         <svg viewBox="0 0 100 54" className="w-full h-full">
-          <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="7" strokeLinecap="round" />
+          <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="rgba(0,0,0,0.07)" strokeWidth="7" strokeLinecap="round" />
           <path
             d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke={color} strokeWidth="7" strokeLinecap="round"
             strokeDasharray={`${half} ${half}`} strokeDashoffset={offset}
             style={{ filter: `drop-shadow(0 0 8px ${color}50)`, transition: "stroke-dashoffset 1s ease-out" }}
           />
-          <text x="50" y="46" textAnchor="middle" fill="white" fontSize="17" fontWeight="800" fontFamily="inherit">{score}</text>
+          <text x="50" y="46" textAnchor="middle" fill="#181d1b" fontSize="17" fontWeight="800" fontFamily="inherit">{score}</text>
         </svg>
       </div>
       <span className="text-xs font-semibold uppercase tracking-widest mt-0.5" style={{ color }}>{label}</span>
@@ -498,12 +498,12 @@ function StatCard({ label, value, sub, color, icon }: { label: string; value: st
   return (
     <div className="card p-4 flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{label}</p>
-        {icon && <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: `${color ?? "#22C55E"}18` }}>{icon}</div>}
+        <p className="text-xs font-semibold text-[#8a9a8a] uppercase tracking-wider">{label}</p>
+        {icon && <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: `${color ?? "#006d34"}18` }}>{icon}</div>}
       </div>
       <div>
-        <p className="text-2xl font-bold tracking-tight tabular-nums" style={{ color: color ?? "#fafafa" }}>{value}</p>
-        {sub && <p className="text-xs text-slate-500 mt-0.5">{sub}</p>}
+        <p className="text-2xl font-bold tracking-tight tabular-nums" style={{ color: color ?? "#181d1b" }}>{value}</p>
+        {sub && <p className="text-xs text-[#8a9a8a] mt-0.5">{sub}</p>}
       </div>
     </div>
   );
@@ -517,10 +517,10 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade, currency 
   const alreadyLate = product.daysOfStockRemaining > 0 && product.daysOfStockRemaining <= leadTime;
 
   const riskConfig = {
-    critical: { bar: "bg-red-500",    text: "text-red-400",    badge: "text-red-400 bg-red-500/[0.08] border-red-500/20",    dot: "bg-red-400" },
-    high:     { bar: "bg-orange-500", text: "text-orange-400", badge: "text-orange-400 bg-orange-500/[0.08] border-orange-500/20", dot: "bg-orange-400" },
-    medium:   { bar: "bg-yellow-500", text: "text-yellow-400", badge: "text-yellow-400 bg-yellow-500/[0.08] border-yellow-500/20", dot: "bg-yellow-400" },
-    low:      { bar: "bg-green-500",  text: "text-green-400",  badge: "text-[#22C55E] bg-[#22C55E]/[0.08] border-[#22C55E]/20",  dot: "bg-green-400" },
+    critical: { bar: "bg-red-500",    text: "text-red-600",    badge: "text-red-600 bg-red-50 border-red-200",    dot: "bg-red-500" },
+    high:     { bar: "bg-orange-500", text: "text-orange-600", badge: "text-orange-600 bg-orange-50 border-orange-200", dot: "bg-orange-500" },
+    medium:   { bar: "bg-yellow-500", text: "text-yellow-700", badge: "text-yellow-700 bg-yellow-50 border-yellow-200", dot: "bg-yellow-500" },
+    low:      { bar: "bg-green-500",  text: "text-[#006d34]",  badge: "text-[#006d34] bg-[#006d34]/[0.08] border-[#006d34]/20",  dot: "bg-green-500" },
   };
   const cfg = riskConfig[product.stockoutRisk] ?? riskConfig.low;
 
@@ -547,9 +547,9 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade, currency 
           <div className="flex items-center gap-0">
             <div className={`w-[3px] self-stretch rounded-l-sm mr-3 flex-shrink-0 ${cfg.bar} opacity-80`} />
             <div className="min-w-0 py-0.5">
-              <p className="font-semibold text-[#F1F5F9] text-sm leading-tight truncate max-w-[180px]">{product.productName}</p>
+              <p className="font-semibold text-[#181d1b] text-sm leading-tight truncate max-w-[180px]">{product.productName}</p>
               <div className="flex items-center gap-2 mt-0.5">
-                {product.sku && <p className="text-[11px] text-[#475569] font-mono">{product.sku}</p>}
+                {product.sku && <p className="text-[11px] text-[#8a9a8a] font-mono">{product.sku}</p>}
                 {trendIcon}
               </div>
               {alreadyLate && (
@@ -575,7 +575,7 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade, currency 
             <span className={`text-sm font-bold tabular-nums ${product.daysOfStockRemaining <= 0 ? "text-red-400" : cfg.text}`}>
               {product.daysOfStockRemaining <= 0 ? "OUT" : `${product.daysOfStockRemaining}d`}
             </span>
-            <div className="w-16 h-[5px] rounded-full bg-white/[0.06] overflow-hidden">
+            <div className="w-16 h-[5px] rounded-full bg-[#eaefeb] overflow-hidden">
               <div className={`h-full rounded-full ${cfg.bar} opacity-80`} style={{ width: `${daysBarPct}%` }} />
             </div>
           </div>
@@ -583,18 +583,18 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade, currency 
 
         {/* Stock — no "u" label */}
         <td>
-          <span className="tabular-nums text-[#94A3B8] text-sm">{product.currentStock.toLocaleString()}</span>
+          <span className="tabular-nums text-[#5a6059] text-sm">{product.currentStock.toLocaleString()}</span>
         </td>
 
         {/* Reorder action — more prominent */}
         <td>
           {product.reorderByDate ? (
             <div>
-              <p className="text-sm font-semibold text-[#F1F5F9]">{product.reorderByDate}</p>
-              <p className="text-[11px] text-[#475569] mt-0.5">{product.reorderQuantity} units</p>
+              <p className="text-sm font-semibold text-[#181d1b]">{product.reorderByDate}</p>
+              <p className="text-[11px] text-[#8a9a8a] mt-0.5">{product.reorderQuantity} units</p>
             </div>
           ) : (
-            <span className="text-[#475569] text-xs">—</span>
+            <span className="text-[#8a9a8a] text-xs">—</span>
           )}
         </td>
 
@@ -602,13 +602,13 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade, currency 
         <td>
           {product.estimatedRevenueLoss ? (
             <div>
-              <span className="text-red-400 text-sm font-bold">{product.estimatedRevenueLoss}</span>
+              <span className="text-red-600 text-sm font-bold">{product.estimatedRevenueLoss}</span>
               {product.price && product.rarAmount && (
-                <p className="text-[11px] text-[#475569] mt-0.5 tabular-nums">{product.avgDailySales.toFixed(1)}/d × {leadTime}d × {formatMoney(product.price, currency)}</p>
+                <p className="text-[11px] text-[#8a9a8a] mt-0.5 tabular-nums">{product.avgDailySales.toFixed(1)}/d × {leadTime}d × {formatMoney(product.price, currency)}</p>
               )}
             </div>
           ) : (
-            <span className="text-[#475569] text-sm">—</span>
+            <span className="text-[#8a9a8a] text-sm">—</span>
           )}
         </td>
 
@@ -618,12 +618,12 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade, currency 
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); setOpen(true); }}
-              className="hidden group-hover:inline-flex items-center text-[11px] font-semibold text-[#22C55E] border border-[#22C55E]/30 hover:bg-[#22C55E]/10 px-2 py-0.5 rounded transition-colors whitespace-nowrap"
+              className="hidden group-hover:inline-flex items-center text-[11px] font-semibold text-[#006d34] border border-[#006d34]/30 hover:bg-[#006d34]/10 px-2 py-0.5 rounded transition-colors whitespace-nowrap"
             >
               Details
             </button>
             <div onClick={(e) => { e.stopPropagation(); setOpen(!open); }} className="cursor-pointer">
-              <svg className={`w-4 h-4 text-[#475569] group-hover:text-slate-400 transition-all duration-200 ${open ? "rotate-180 !text-[#22C55E]" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className={`w-4 h-4 text-[#bbcbba] group-hover:text-[#5a6059] transition-all duration-200 ${open ? "rotate-180 !text-[#006d34]" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
               </svg>
             </div>
@@ -642,30 +642,30 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade, currency 
                 transition={{ duration: 0.18 }}
                 className="overflow-hidden"
               >
-                <div className="px-4 py-4 bg-[#0A1415]/60 border-t border-white/[0.04] grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="px-4 py-4 bg-[#f0f5f1] border-t border-[#bbcbba]/40 grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {/* Why at risk */}
                   {product.riskReason && (
                     <div className="sm:col-span-2">
-                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Why at risk</p>
-                      <p className="text-sm text-slate-300 leading-relaxed">{product.riskReason}</p>
+                      <p className="text-[10px] font-bold text-[#8a9a8a] uppercase tracking-wider mb-1.5">Why at risk</p>
+                      <p className="text-sm text-[#5a6059] leading-relaxed">{product.riskReason}</p>
                     </div>
                   )}
 
                   {/* Reorder action */}
-                  <div className="card-sm p-4 bg-[#22C55E]/[0.03] border-[#22C55E]/15">
-                    <p className="text-[10px] font-bold text-[#22C55E] uppercase tracking-wider mb-2.5">Reorder Action</p>
-                    <p className="text-sm text-slate-200 mb-0.5 font-medium">
-                      Order <span className="font-bold text-white">{product.reorderQuantity} units</span>
+                  <div className="card-sm p-4 bg-[#006d34]/[0.04] border-[#006d34]/15">
+                    <p className="text-[10px] font-bold text-[#006d34] uppercase tracking-wider mb-2.5">Reorder Action</p>
+                    <p className="text-sm text-[#181d1b] mb-0.5 font-medium">
+                      Order <span className="font-bold text-[#181d1b]">{product.reorderQuantity} units</span>
                       {reorderDurationDays > 0 && (
-                        <span className="text-slate-400 font-normal"> → lasts ~{reorderDurationDays} days</span>
+                        <span className="text-[#5a6059] font-normal"> → lasts ~{reorderDurationDays} days</span>
                       )}
                     </p>
-                    <p className="text-xs text-slate-500 mb-2">Reorder point: {product.reorderPoint} units · {product.avgDailySales.toFixed(1)} sold/day</p>
+                    <p className="text-xs text-[#8a9a8a] mb-2">Reorder point: {product.reorderPoint} units · {product.avgDailySales.toFixed(1)} sold/day</p>
                     {product.reorderByDate && (
-                      <p className="text-xs font-bold text-orange-400 mb-1.5">{product.reorderByDate}</p>
+                      <p className="text-xs font-bold text-orange-600 mb-1.5">{product.reorderByDate}</p>
                     )}
                     {alreadyLate && (
-                      <div className="flex items-center gap-1.5 text-xs font-semibold text-red-400 bg-red-500/10 border border-red-500/15 px-2.5 py-1.5 rounded-lg">
+                      <div className="flex items-center gap-1.5 text-xs font-semibold text-red-600 bg-red-50 border border-red-200 px-2.5 py-1.5 rounded-lg">
                         <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
                         </svg>
@@ -676,7 +676,7 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade, currency 
 
                   {/* Demand forecast */}
                   <div className="sm:col-span-2">
-                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Demand Forecast</p>
+                    <p className="text-[10px] font-bold text-[#8a9a8a] uppercase tracking-wider mb-2">Demand Forecast</p>
                     <div className="grid grid-cols-3 gap-2">
                       {[
                         { label: "30 Days", value: product.forecast30Days, locked: false },
@@ -684,23 +684,23 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade, currency 
                         { label: "90 Days", value: product.forecast90Days, locked: isFreeTier },
                       ].map((f) => (
                         f.locked ? (
-                          <button key={f.label} onClick={() => onUpgrade("60 & 90-day Forecasts")} className="card-sm p-3 text-center relative overflow-hidden hover:border-[#22C55E]/20 transition-colors group">
-                            <p className="text-base font-bold text-white blur-sm select-none">000</p>
-                            <p className="text-xs text-slate-600">{f.label}</p>
-                            <div className="absolute inset-0 flex items-center justify-center bg-[#0A1415]/70 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <svg className="w-4 h-4 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+                          <button key={f.label} onClick={() => onUpgrade("60 & 90-day Forecasts")} className="card-sm p-3 text-center relative overflow-hidden hover:border-[#006d34]/20 transition-colors group">
+                            <p className="text-base font-bold text-[#181d1b] blur-sm select-none">000</p>
+                            <p className="text-xs text-[#8a9a8a]">{f.label}</p>
+                            <div className="absolute inset-0 flex items-center justify-center bg-white/80 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <svg className="w-4 h-4 text-[#006d34]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
                             </div>
                           </button>
                         ) : (
                           <div key={f.label} className="card-sm p-3 text-center">
-                            <p className="text-lg font-bold text-white tabular-nums">{f.value}</p>
-                            <p className="text-xs text-slate-600">{f.label}</p>
+                            <p className="text-lg font-bold text-[#181d1b] tabular-nums">{f.value}</p>
+                            <p className="text-xs text-[#8a9a8a]">{f.label}</p>
                           </div>
                         )
                       ))}
                     </div>
                     {isFreeTier && (
-                      <button onClick={() => onUpgrade("60 & 90-day Forecasts")} className="mt-2 flex items-center gap-1.5 text-[11px] text-[#22C55E] hover:text-white transition-colors">
+                      <button onClick={() => onUpgrade("60 & 90-day Forecasts")} className="mt-2 flex items-center gap-1.5 text-[11px] text-[#006d34] hover:text-[#181d1b] transition-colors">
                         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
                         Unlock 60 & 90-day forecasts with Pro
                       </button>
@@ -709,7 +709,7 @@ function ProductRow({ product, index, leadTime, isFreeTier, onUpgrade, currency 
 
                   {/* Seasonal note */}
                   {product.seasonalNote && (
-                    <div className="sm:col-span-3 flex items-start gap-2 text-xs text-slate-500 bg-white/[0.02] rounded-lg px-3 py-2.5 border border-white/[0.04]">
+                    <div className="sm:col-span-3 flex items-start gap-2 text-xs text-[#5a6059] bg-[#eaefeb] rounded-lg px-3 py-2.5 border border-[#bbcbba]/40">
                       <svg className="w-3.5 h-3.5 text-[#22C55E] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
                       {product.seasonalNote}
                     </div>
@@ -741,7 +741,7 @@ function CriticalAlerts({ products, leadTime, currency }: { products: ProductFor
             <span className={`w-2 h-2 rounded-full flex-shrink-0 animate-pulse ${isCritical ? "bg-red-400" : "bg-orange-400"}`} />
             <div className="flex-1 min-w-0 flex flex-wrap items-center gap-x-2 gap-y-0.5">
               <span className={`text-sm font-semibold ${isCritical ? "text-red-400" : "text-orange-400"}`}>{p.productName}</span>
-              <span className="text-sm text-slate-500">— stockout in</span>
+              <span className="text-sm text-[#5a6059]">— stockout in</span>
               <span className={`text-sm font-bold ${isCritical ? "text-red-300" : "text-orange-300"}`}>{p.daysOfStockRemaining} days</span>
               {alreadyLate && (
                 <span className="text-xs font-semibold text-red-400 bg-red-500/10 border border-red-500/15 px-2 py-0.5 rounded-md">
@@ -755,7 +755,7 @@ function CriticalAlerts({ products, leadTime, currency }: { products: ProductFor
                   {p.estimatedRevenueLoss} at risk
                 </span>
                 {p.price && p.rarAmount && (
-                  <span className="text-[10px] text-slate-500 whitespace-nowrap tabular-nums">
+                  <span className="text-[10px] text-[#8a9a8a] whitespace-nowrap tabular-nums">
                     {p.avgDailySales.toFixed(1)} u/day × {leadTime}d × {formatMoney(p.price, currency)}
                   </span>
                 )}
@@ -811,8 +811,8 @@ function POGenerator({ products }: { products: ProductForecast[] }) {
       onClick={handleGenerate}
       className={`inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 ${
         done
-          ? "bg-[#22C55E]/10 border border-[#22C55E]/20 text-[#22C55E]"
-          : "bg-white/[0.05] border border-white/[0.08] text-slate-300 hover:bg-white/[0.08] hover:text-white"
+          ? "bg-[#006d34]/[0.08] border border-[#006d34]/20 text-[#006d34]"
+          : "bg-[#f0f5f1] border border-[#bbcbba]/60 text-[#5a6059] hover:bg-[#eaefeb] hover:text-[#181d1b]"
       }`}
     >
       {done ? (
@@ -840,10 +840,10 @@ function ResultsSignupPrompt({ onDismiss }: { onDismiss: () => void }) {
   const { isSignedIn, isLoaded } = useUser();
   if (!isLoaded || isSignedIn) return null;
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center gap-4 bg-[#22C55E]/[0.04] border border-[#22C55E]/20 rounded-2xl px-5 py-4 mb-5 relative">
+    <div className="flex flex-col sm:flex-row sm:items-center gap-4 bg-[#006d34]/[0.04] border border-[#006d34]/20 rounded-2xl px-5 py-4 mb-5 relative">
       <button
         onClick={onDismiss}
-        className="absolute top-3 right-3 text-slate-700 hover:text-slate-400 transition-colors p-1"
+        className="absolute top-3 right-3 text-[#8a9a8a] hover:text-[#5a6059] transition-colors p-1"
         aria-label="Dismiss"
       >
         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -851,23 +851,23 @@ function ResultsSignupPrompt({ onDismiss }: { onDismiss: () => void }) {
         </svg>
       </button>
 
-      <div className="w-10 h-10 rounded-xl bg-[#22C55E]/15 border border-[#22C55E]/25 flex items-center justify-center flex-shrink-0">
+      <div className="w-10 h-10 rounded-xl bg-[#006d34]/[0.10] border border-[#006d34]/20 flex items-center justify-center flex-shrink-0">
         <svg className="w-5 h-5 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
         </svg>
       </div>
 
       <div className="flex-1 min-w-0 pr-6 sm:pr-0">
-        <p className="text-[14px] font-semibold text-white tracking-tight">
+        <p className="text-[14px] font-semibold text-[#181d1b] tracking-tight">
           Get email alerts 7 days before each stockout
         </p>
-        <p className="text-[12px] text-slate-500 mt-0.5">
+        <p className="text-[12px] text-[#5a6059] mt-0.5">
           Sign up free to save this forecast, track history, and get automated reorder alerts.
         </p>
       </div>
 
       <SignUpButton mode="redirect">
-        <button className="flex-shrink-0 text-[13px] font-semibold text-[#060C0D] bg-[#22C55E] hover:bg-[#16A34A] px-4 py-2.5 rounded-xl transition-all shadow-lg shadow-[#22C55E]/20 whitespace-nowrap w-full sm:w-auto text-center">
+        <button className="flex-shrink-0 text-[13px] font-semibold text-white bg-emerald-brand hover:opacity-90 px-4 py-2.5 rounded-xl transition-all shadow-lg whitespace-nowrap w-full sm:w-auto text-center">
           Save forecast free →
         </button>
       </SignUpButton>
@@ -888,17 +888,17 @@ function StepIndicator({ step }: { step: ForecastStep }) {
     <div className="flex items-center gap-2 justify-center mb-6">
       {steps.map((s, i) => (
         <div key={s.key} className="flex items-center gap-2">
-          <div className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${i <= activeIdx ? "text-[#22C55E]" : "text-slate-600"}`}>
+          <div className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${i <= activeIdx ? "text-[#006d34]" : "text-[#8a9a8a]"}`}>
             <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold border transition-all ${
-              i < activeIdx ? "bg-[#22C55E] border-[#22C55E] text-[#060C0D]" :
-              i === activeIdx ? "border-[#22C55E] text-[#22C55E] animate-pulse" :
-              "border-white/10 text-slate-600"
+              i < activeIdx ? "bg-[#006d34] border-[#006d34] text-white" :
+              i === activeIdx ? "border-[#006d34] text-[#006d34] animate-pulse" :
+              "border-[#bbcbba]/60 text-[#8a9a8a]"
             }`}>
               {i < activeIdx ? "✓" : i + 1}
             </div>
             {s.label}
           </div>
-          {i < steps.length - 1 && <div className={`w-8 h-px transition-colors ${i < activeIdx ? "bg-[#22C55E]" : "bg-white/10"}`} />}
+          {i < steps.length - 1 && <div className={`w-8 h-px transition-colors ${i < activeIdx ? "bg-[#006d34]" : "bg-[#bbcbba]/60"}`} />}
         </div>
       ))}
     </div>
@@ -1090,13 +1090,13 @@ export default function ForecastClient() {
   }) : [];
 
   const SortIcon = ({ col }: { col: SortKey }) => (
-    <span className={`ml-1 ${sortKey === col ? "text-[#22C55E]" : "text-slate-700"}`}>
+    <span className={`ml-1 ${sortKey === col ? "text-[#006d34]" : "text-[#8a9a8a]"}`}>
       {sortKey === col ? (sortDir === "asc" ? "↑" : "↓") : "↕"}
     </span>
   );
 
   return (
-    <div className="min-h-screen bg-[#060C0D] relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#f6faf6] relative overflow-x-hidden">
       <AnimatePresence>
         {upgradeModal && <UpgradeModal feature={upgradeModal} onClose={() => setUpgradeModal(null)} />}
       </AnimatePresence>
@@ -1107,31 +1107,30 @@ export default function ForecastClient() {
           onClose={() => setShowFeedback(false)}
         />
       )}
-      <div className="absolute top-[-15%] left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#00D26A]/[0.04] blur-[120px] rounded-full pointer-events-none" />
 
       {/* Nav */}
-      <nav className="border-b border-[#22C55E]/10 px-4 sm:px-6 h-16 flex items-center justify-between sticky top-0 z-40 bg-[#060C0D]/90 backdrop-blur-md">
+      <nav className="border-b border-[#bbcbba]/30 px-4 sm:px-6 h-16 flex items-center justify-between sticky top-0 z-40 bg-white/90 backdrop-blur-md shadow-sm">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-[#22C55E] flex items-center justify-center shadow-lg shadow-[#22C55E]/25">
-            <svg className="w-4.5 h-4.5 text-[#060C0D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <div className="w-9 h-9 rounded-xl bg-emerald-brand flex items-center justify-center shadow-lg shadow-[#006d34]/20">
+            <svg className="w-4.5 h-4.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 20V14M9 20V8M14 20V11M19 20V4" />
             </svg>
           </div>
-          <span className="text-[16px] font-semibold text-white tracking-tight">Forestock<span className="text-[#22C55E]">AI</span></span>
+          <span className="text-[16px] font-semibold text-[#181d1b] tracking-tight">Fore<span className="text-[#006d34]">stock</span></span>
         </Link>
         {CLERK_READY ? (
           <ForecastNavAuth onReset={reset} showReset={step === "done"} />
         ) : (
           <div className="flex items-center gap-3">
             {step === "done" && (
-              <button onClick={reset} className="text-sm text-slate-400 hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+              <button onClick={reset} className="text-sm text-[#5a6059] hover:text-[#181d1b] transition-colors flex items-center gap-1.5 font-medium">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                 </svg>
                 New Forecast
               </button>
             )}
-            <Link href="/#pricing" className="text-xs font-semibold bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] px-3.5 py-1.5 rounded-lg transition-colors shadow-lg shadow-[#22C55E]/20">
+            <Link href="/#pricing" className="text-xs font-semibold bg-emerald-brand text-white px-3.5 py-1.5 rounded-lg transition-all hover:opacity-90 shadow-md">
               Upgrade to Pro
             </Link>
           </div>
@@ -1145,20 +1144,20 @@ export default function ForecastClient() {
           {step === "idle" && (
             <motion.div key="idle" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.25 }}>
               <div className="mb-8">
-                <h1 className="text-3xl font-light text-white tracking-tight mb-1.5">Inventory Forecast</h1>
-                <p className="text-[15px] text-slate-500">Upload your Shopify orders CSV or Excel file — get stockout dates, reorder quantities, and revenue at risk in 30 seconds.</p>
+                <h1 className="text-3xl font-light text-[#181d1b] tracking-tight mb-1.5">Inventory Forecast</h1>
+                <p className="text-[15px] text-[#5a6059]">Upload your Shopify orders CSV or Excel file — get stockout dates, reorder quantities, and revenue at risk in 30 seconds.</p>
               </div>
 
               {/* Input card */}
               <div className="card p-6 mb-4">
                 {/* Mode tabs */}
-                <div className="flex items-center gap-1 bg-[#0A1415] border border-[#22C55E]/10 rounded-lg p-1 w-fit mb-5">
+                <div className="flex items-center gap-1 bg-[#eaefeb] border border-[#bbcbba]/60 rounded-lg p-1 w-fit mb-5">
                   {(["csv", "manual"] as InputMode[]).map((mode) => (
                     <button
                       key={mode}
                       onClick={() => setInputMode(mode)}
                       className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
-                        inputMode === mode ? "bg-[#0F1C1E] text-white shadow-sm border border-[#22C55E]/15" : "text-slate-500 hover:text-slate-300"
+                        inputMode === mode ? "bg-white text-[#181d1b] shadow-sm border border-[#bbcbba]/60" : "text-[#5a6059] hover:text-[#181d1b]"
                       }`}
                     >
                       {mode === "csv" ? "Upload CSV" : "Paste Data"}
@@ -1173,36 +1172,36 @@ export default function ForecastClient() {
                     onDrop={handleDrop}
                     onClick={() => fileRef.current?.click()}
                     className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-all duration-150 ${
-                      dragOver ? "border-[#22C55E] bg-[#22C55E]/[0.04]" :
-                      fileName ? "border-[#22C55E]/40 bg-[#22C55E]/[0.04]" :
-                      "border-[#22C55E]/15 hover:border-[#22C55E]/30 hover:bg-[#22C55E]/[0.02]"
+                      dragOver ? "border-[#006d34] bg-[#006d34]/[0.04]" :
+                      fileName ? "border-[#006d34]/40 bg-[#006d34]/[0.04]" :
+                      "border-[#bbcbba]/60 hover:border-[#006d34]/30 hover:bg-[#006d34]/[0.02]"
                     }`}
                   >
                     <input ref={fileRef} id="csv-upload" type="file" accept=".csv,.xlsx,.xls,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" title="Upload CSV or Excel file" aria-label="Upload inventory CSV or Excel file" className="hidden" onChange={(e) => { if (e.target.files?.[0]) handleFile(e.target.files[0]); }} />
                     {fileName ? (
                       <>
-                        <div className="w-12 h-12 rounded-xl bg-[#22C55E]/10 border border-[#22C55E]/20 flex items-center justify-center mx-auto mb-3">
-                          <svg className="w-6 h-6 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <div className="w-12 h-12 rounded-xl bg-[#006d34]/[0.08] border border-[#006d34]/20 flex items-center justify-center mx-auto mb-3">
+                          <svg className="w-6 h-6 text-[#006d34]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                         </div>
-                        <p className="text-[#22C55E] font-semibold text-sm">{fileName}</p>
+                        <p className="text-[#006d34] font-semibold text-sm">{fileName}</p>
                         {detectedFormat === "shopify-orders" && (
-                          <p className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#22C55E] bg-[#22C55E]/10 border border-[#22C55E]/20 px-2 py-0.5 rounded-full mt-2">
+                          <p className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#006d34] bg-[#006d34]/[0.08] border border-[#006d34]/20 px-2 py-0.5 rounded-full mt-2">
                             ✓ Shopify orders format detected — auto-converted
                           </p>
                         )}
-                        <p className="text-slate-600 text-xs mt-2">Click to replace</p>
+                        <p className="text-[#8a9a8a] text-xs mt-2">Click to replace</p>
                       </>
                     ) : (
                       <>
-                        <div className="w-12 h-12 rounded-xl bg-[#0A1415] border border-[#22C55E]/15 flex items-center justify-center mx-auto mb-3">
-                          <svg className="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <div className="w-12 h-12 rounded-xl bg-[#eaefeb] border border-[#bbcbba]/60 flex items-center justify-center mx-auto mb-3">
+                          <svg className="w-6 h-6 text-[#5a6059]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                           </svg>
                         </div>
-                        <p className="text-slate-200 font-medium text-sm mb-1">Drop your file here</p>
-                        <p className="text-slate-600 text-xs">CSV or Excel (.xlsx) · Shopify exports work directly</p>
+                        <p className="text-[#181d1b] font-medium text-sm mb-1">Drop your file here</p>
+                        <p className="text-[#8a9a8a] text-xs">CSV or Excel (.xlsx) · Shopify exports work directly</p>
                       </>
                     )}
                   </div>
@@ -1212,29 +1211,29 @@ export default function ForecastClient() {
                     onChange={(e) => setCsvText(e.target.value)}
                     placeholder={`product,sku,date,units_sold,current_stock\nYoga Mat,YM-001,2024-01-01,8,45`}
                     rows={8}
-                    className="w-full bg-[#0A1415] rounded-xl border border-[#22C55E]/15 focus:border-[#22C55E]/40 outline-none p-4 text-sm text-slate-300 placeholder:text-slate-700 font-mono resize-none transition-colors"
+                    className="w-full bg-[#f0f5f1] rounded-xl border border-[#bbcbba]/60 focus:border-[#006d34]/40 outline-none p-4 text-sm text-[#181d1b] placeholder:text-[#bbcbba] font-mono resize-none transition-colors"
                   />
                 )}
 
                 {/* Optional fields */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
                   <div>
-                    <label htmlFor="lead-time" className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">Lead Time (days)</label>
+                    <label htmlFor="lead-time" className="block text-xs font-medium text-[#5a6059] mb-1.5 uppercase tracking-wider">Lead Time (days)</label>
                     <input
                       id="lead-time" type="number" value={leadTime} onChange={(e) => setLeadTime(e.target.value)} min={1} max={120}
                       placeholder="14"
-                      className="w-full bg-[#0A1415] rounded-lg border border-[#22C55E]/15 focus:border-[#22C55E]/40 outline-none px-3 py-2 text-sm text-white transition-colors"
+                      className="w-full bg-[#f0f5f1] rounded-lg border border-[#bbcbba]/60 focus:border-[#006d34]/40 outline-none px-3 py-2 text-sm text-[#181d1b] transition-colors"
                     />
                   </div>
                   <div>
-                    <label htmlFor="ad-spend" className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider flex items-center gap-2">
+                    <label htmlFor="ad-spend" className="block text-xs font-medium text-[#5a6059] mb-1.5 uppercase tracking-wider flex items-center gap-2">
                       Upcoming Ad Spend
-                      <span className="text-[9px] font-bold text-[#060C0D] bg-[#22C55E] px-1.5 py-0.5 rounded-full tracking-wider">PRO</span>
+                      <span className="text-[9px] font-bold text-white bg-emerald-brand px-1.5 py-0.5 rounded-full tracking-wider">PRO</span>
                     </label>
                     <input
                       id="ad-spend" type="text" value={adSpend} onChange={(e) => setAdSpend(e.target.value)}
                       placeholder="e.g. ₹50,000 Meta campaign starting Apr 1"
-                      className="w-full bg-[#0A1415] rounded-lg border border-[#22C55E]/15 focus:border-[#22C55E]/40 outline-none px-3 py-2 text-sm text-slate-300 placeholder:text-slate-700 transition-colors"
+                      className="w-full bg-[#f0f5f1] rounded-lg border border-[#bbcbba]/60 focus:border-[#006d34]/40 outline-none px-3 py-2 text-sm text-[#181d1b] placeholder:text-[#bbcbba] transition-colors"
                     />
                   </div>
                 </div>
@@ -1242,26 +1241,26 @@ export default function ForecastClient() {
                 {/* Format help */}
                 <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
                   <div className="flex items-center gap-1.5">
-                    <svg className="w-3.5 h-3.5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <svg className="w-3.5 h-3.5 text-[#8a9a8a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
                     </svg>
-                    <span className="text-xs text-slate-600">Shopify: Orders → Export → Last 90 days</span>
+                    <span className="text-xs text-[#8a9a8a]">Shopify: Orders → Export → Last 90 days</span>
                   </div>
-                  <span className="text-slate-700 text-xs">·</span>
-                  <button onClick={downloadSampleCSV} className="text-xs text-[#22C55E] hover:underline font-medium">
+                  <span className="text-[#bbcbba] text-xs">·</span>
+                  <button onClick={downloadSampleCSV} className="text-xs text-[#006d34] hover:underline font-medium">
                     Download sample CSV
                   </button>
                 </div>
 
                 {error && (
-                  <div className="mt-4 bg-red-500/[0.06] border border-red-500/15 rounded-xl px-4 py-3.5">
-                    <div className="flex items-start gap-2 text-red-400 text-sm mb-2">
+                  <div className="mt-4 bg-red-50 border border-red-200 rounded-xl px-4 py-3.5">
+                    <div className="flex items-start gap-2 text-red-600 text-sm mb-2">
                       <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
                       </svg>
                       <span className="font-medium">{error}</span>
                     </div>
-                    <button onClick={downloadSampleCSV} className="text-xs text-[#22C55E] hover:underline font-medium ml-6">
+                    <button onClick={downloadSampleCSV} className="text-xs text-[#006d34] hover:underline font-medium ml-6">
                       ↓ Download sample CSV template
                     </button>
                   </div>
@@ -1270,18 +1269,18 @@ export default function ForecastClient() {
 
               {/* Over-limit warning */}
               {isOverLimit && (
-                <div className="flex items-start gap-3 bg-amber-500/[0.06] border border-amber-500/20 rounded-xl px-4 py-3.5 mb-4">
-                  <svg className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3.5 mb-4">
+                  <svg className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
                   </svg>
                   <div className="flex-1">
-                    <p className="text-sm font-semibold text-amber-400">Free plan: first {FREE_PRODUCT_LIMIT} products only</p>
-                    <p className="text-xs text-slate-500 mt-0.5">
+                    <p className="text-sm font-semibold text-amber-700">Free plan: first {FREE_PRODUCT_LIMIT} products only</p>
+                    <p className="text-xs text-[#5a6059] mt-0.5">
                       Your CSV has {productCountInCsv} products. The {productCountInCsv - FREE_PRODUCT_LIMIT} we&apos;re not analyzing could have{" "}
                       {currency === "INR"
                         ? `₹${((productCountInCsv - FREE_PRODUCT_LIMIT) * 2000).toLocaleString("en-IN")}`
                         : `$${((productCountInCsv - FREE_PRODUCT_LIMIT) * 25).toLocaleString("en-US")}`}+ at risk. &nbsp;
-                      <button onClick={() => setUpgradeModal("Unlimited Products")} className="text-[#22C55E] hover:underline font-medium">Upgrade to Pro</button>
+                      <button onClick={() => setUpgradeModal("Unlimited Products")} className="text-[#006d34] hover:underline font-medium">Upgrade to Pro</button>
                       {" "}to see all of them.
                     </p>
                   </div>
@@ -1292,7 +1291,7 @@ export default function ForecastClient() {
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={() => runForecast()}
-                  className="flex-1 flex items-center justify-center gap-2 bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] font-bold py-3 px-6 rounded-xl transition-all shadow-xl shadow-[#22C55E]/20 hover:-translate-y-0.5 text-sm"
+                  className="flex-1 flex items-center justify-center gap-2 bg-emerald-brand text-white font-bold py-3 px-6 rounded-xl transition-all shadow-lg hover:opacity-90 hover:-translate-y-0.5 text-sm"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
@@ -1301,12 +1300,12 @@ export default function ForecastClient() {
                 </button>
                 <button
                   onClick={loadDemo}
-                  className="sm:w-auto flex items-center justify-center gap-2 bg-[#0A1415] hover:bg-[#0F1C1E] border border-[#22C55E]/15 text-slate-300 hover:text-white font-medium py-3 px-5 rounded-xl transition-all text-sm"
+                  className="sm:w-auto flex items-center justify-center gap-2 bg-white hover:bg-[#f0f5f1] border border-[#bbcbba]/60 text-[#5a6059] hover:text-[#181d1b] font-medium py-3 px-5 rounded-xl transition-all text-sm shadow-sm"
                 >
                   Try Demo Data
                 </button>
               </div>
-              <p className="text-center text-xs text-slate-700 mt-4">Free plan · up to 5 products · no sign-up required</p>
+              <p className="text-center text-xs text-[#8a9a8a] mt-4">Free plan · up to 5 products · no sign-up required</p>
             </motion.div>
           )}
 
@@ -1314,24 +1313,24 @@ export default function ForecastClient() {
           {isLoading && (
             <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center min-h-[55vh] text-center">
               <div className="relative w-16 h-16 mb-8">
-                <div className="absolute inset-0 rounded-full border border-[#22C55E]/20 animate-ping" />
-                <div className="absolute inset-2 rounded-full border border-[#22C55E]/30 animate-ping" style={{ animationDelay: "0.3s" }} />
-                <div className="absolute inset-4 rounded-full bg-[#22C55E] flex items-center justify-center shadow-xl shadow-[#22C55E]/30">
-                  <svg className="w-5 h-5 text-[#060C0D] animate-spin" fill="none" viewBox="0 0 24 24">
+                <div className="absolute inset-0 rounded-full border border-[#006d34]/20 animate-ping" />
+                <div className="absolute inset-2 rounded-full border border-[#006d34]/30 animate-ping" style={{ animationDelay: "0.3s" }} />
+                <div className="absolute inset-4 rounded-full bg-emerald-brand flex items-center justify-center shadow-xl shadow-[#006d34]/20">
+                  <svg className="w-5 h-5 text-white animate-spin" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
                 </div>
               </div>
               <StepIndicator step={step} />
-              <h2 className="text-xl font-bold text-white mb-1.5">
+              <h2 className="text-xl font-bold text-[#181d1b] mb-1.5">
                 {step === "parsing" ? "Reading your data..." : step === "analyzing" ? "Analyzing demand patterns..." : "Building your forecast..."}
               </h2>
-              <p className="text-slate-500 text-sm">
+              <p className="text-[#5a6059] text-sm">
                 {step === "parsing" ? "Parsing CSV rows and SKUs" : step === "analyzing" ? "Identifying trends, velocity, and signals" : "Computing 30/60/90-day projections"}
               </p>
               <div className="w-full max-w-md mt-10 space-y-2.5">
-                {[1, 2, 3, 4].map((i) => <div key={i} className="h-12 rounded-xl shimmer border border-white/5" />)}
+                {[1, 2, 3, 4].map((i) => <div key={i} className="h-12 rounded-xl shimmer border border-[#bbcbba]/20" />)}
               </div>
             </motion.div>
           )}
@@ -1339,14 +1338,14 @@ export default function ForecastClient() {
           {/* ── ERROR ── */}
           {step === "error" && (
             <motion.div key="error" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center min-h-[55vh] text-center">
-              <div className="w-16 h-16 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-5">
-                <svg className="w-8 h-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <div className="w-16 h-16 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center mb-5">
+                <svg className="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                 </svg>
               </div>
-              <h2 className="text-xl font-bold text-white mb-2">Forecast Failed</h2>
-              <p className="text-slate-400 text-sm mb-6 max-w-sm">{error}</p>
-              <button onClick={reset} className="bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] font-bold px-6 py-2.5 rounded-xl transition-all text-sm">Try Again</button>
+              <h2 className="text-xl font-bold text-[#181d1b] mb-2">Forecast Failed</h2>
+              <p className="text-[#5a6059] text-sm mb-6 max-w-sm">{error}</p>
+              <button onClick={reset} className="bg-emerald-brand text-white font-bold px-6 py-2.5 rounded-xl transition-all text-sm hover:opacity-90">Try Again</button>
             </motion.div>
           )}
 
@@ -1357,18 +1356,18 @@ export default function ForecastClient() {
               {/* Page title */}
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h1 className="text-xl font-bold text-white tracking-tight">Forecast Report</h1>
-                  <p className="text-xs text-slate-500 mt-0.5">{analysis.totalSkuCount} products analyzed</p>
+                  <h1 className="text-xl font-bold text-[#181d1b] tracking-tight">Forecast Report</h1>
+                  <p className="text-xs text-[#5a6059] mt-0.5">{analysis.totalSkuCount} products analyzed</p>
                 </div>
                 <div className="flex items-center gap-2.5">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-[#22C55E] bg-[#22C55E]/10 border border-[#22C55E]/15 px-2.5 py-1.5 rounded-lg">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-[#006d34] bg-[#006d34]/[0.08] border border-[#006d34]/20 px-2.5 py-1.5 rounded-lg">
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     87% accuracy
                   </div>
-                  <span className="badge badge-neutral text-xs">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] inline-block" />
+                  <span className="badge text-xs text-[#5a6059] bg-[#eaefeb] border-[#bbcbba]/60">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#006d34] inline-block" />
                     AI Analysis
                   </span>
                 </div>
@@ -1407,16 +1406,16 @@ export default function ForecastClient() {
                 {/* Revenue at Risk */}
                 <div className={`card p-4 flex flex-col gap-3 ${analysis.totalRarAmount > 0 ? "border-red-500/20 bg-red-500/[0.02]" : ""}`}>
                   <div className="flex items-center justify-between">
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Revenue at Risk</p>
+                    <p className="text-xs font-semibold text-[#8a9a8a] uppercase tracking-wider">Revenue at Risk</p>
                     <div className="w-7 h-7 rounded-lg bg-red-500/10 flex items-center justify-center">
                       <svg className="w-3.5 h-3.5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126z" /></svg>
                     </div>
                   </div>
                   <div>
-                    <p className={`text-2xl font-bold tracking-tight tabular-nums ${analysis.totalRarAmount > 0 ? "text-red-400" : "text-slate-400"}`}>
+                    <p className={`text-2xl font-bold tracking-tight tabular-nums ${analysis.totalRarAmount > 0 ? "text-red-600" : "text-[#8a9a8a]"}`}>
                       {analysis.totalRarAmount > 0 ? analysis.revenueAtRisk : "—"}
                     </p>
-                    <p className="text-xs text-slate-500 mt-0.5">
+                    <p className="text-xs text-[#8a9a8a] mt-0.5">
                       {analysis.totalRarAmount > 0 ? "if critical SKUs stock out" : "No critical risk"}
                     </p>
                   </div>
@@ -1425,7 +1424,7 @@ export default function ForecastClient() {
                 {/* Health Score */}
                 <div className="card p-4 flex flex-col gap-3">
                   <div className="flex items-center justify-between">
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Inventory Health</p>
+                    <p className="text-xs font-semibold text-[#8a9a8a] uppercase tracking-wider">Inventory Health</p>
                     <div className="w-7 h-7 rounded-lg bg-[#22C55E]/10 flex items-center justify-center">
                       <svg className="w-3.5 h-3.5 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     </div>
@@ -1434,9 +1433,9 @@ export default function ForecastClient() {
                     <div className="flex items-end gap-2">
                       <p className={`text-2xl font-bold tracking-tight tabular-nums ${
                         analysis.healthScore >= 66 ? "text-green-400" : analysis.healthScore >= 51 ? "text-yellow-400" : "text-red-400"
-                      }`}>{analysis.healthScore}<span className="text-sm font-normal text-slate-600">/100</span></p>
+                      }`}>{analysis.healthScore}<span className="text-sm font-normal text-[#8a9a8a]">/100</span></p>
                     </div>
-                    <div className="mt-2 h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+                    <div className="mt-2 h-1.5 rounded-full bg-[#eaefeb] overflow-hidden">
                       <div className="h-full rounded-full transition-all duration-500" style={{
                         width: `${analysis.healthScore}%`,
                         background: analysis.healthScore >= 66 ? "#4ade80" : analysis.healthScore >= 51 ? "#facc15" : "#f87171"
@@ -1448,7 +1447,7 @@ export default function ForecastClient() {
                 {/* First Stockout */}
                 <div className={`card p-4 flex flex-col gap-3 ${analysis.criticalCount > 0 ? "border-orange-500/20 bg-orange-500/[0.02]" : ""}`}>
                   <div className="flex items-center justify-between">
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Next Stockout</p>
+                    <p className="text-xs font-semibold text-[#8a9a8a] uppercase tracking-wider">Next Stockout</p>
                     <div className="w-7 h-7 rounded-lg bg-orange-500/10 flex items-center justify-center">
                       <svg className="w-3.5 h-3.5 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     </div>
@@ -1459,13 +1458,13 @@ export default function ForecastClient() {
                       if (!first || first.stockoutRisk === "low") return (
                         <>
                           <p className="text-2xl font-bold tracking-tight text-green-400">Safe</p>
-                          <p className="text-xs text-slate-500 mt-0.5">All products 30+ days</p>
+                          <p className="text-xs text-[#8a9a8a] mt-0.5">All products 30+ days</p>
                         </>
                       );
                       return (
                         <>
                           <p className="text-2xl font-bold tracking-tight text-orange-400 tabular-nums">{first.daysOfStockRemaining}d</p>
-                          <p className="text-xs text-slate-500 mt-0.5 truncate">{first.productName}</p>
+                          <p className="text-xs text-[#8a9a8a] mt-0.5 truncate">{first.productName}</p>
                         </>
                       );
                     })()}
@@ -1475,7 +1474,7 @@ export default function ForecastClient() {
                 {/* Action Required */}
                 <div className={`card p-4 flex flex-col gap-3 ${(analysis.criticalCount + analysis.atRiskCount) > 0 ? "border-yellow-500/15" : ""}`}>
                   <div className="flex items-center justify-between">
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Need Action</p>
+                    <p className="text-xs font-semibold text-[#8a9a8a] uppercase tracking-wider">Need Action</p>
                     <div className="w-7 h-7 rounded-lg bg-yellow-500/10 flex items-center justify-center">
                       <svg className="w-3.5 h-3.5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zm0 9.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zm9.75-9.75A2.25 2.25 0 0115.75 3.75H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zm0 9.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
                     </div>
@@ -1483,9 +1482,9 @@ export default function ForecastClient() {
                   <div>
                     <p className={`text-2xl font-bold tracking-tight tabular-nums ${(analysis.criticalCount + analysis.atRiskCount) > 0 ? "text-yellow-400" : "text-green-400"}`}>
                       {analysis.criticalCount + analysis.atRiskCount}
-                      <span className="text-sm font-normal text-slate-600"> / {analysis.totalSkuCount}</span>
+                      <span className="text-sm font-normal text-[#8a9a8a]"> / {analysis.totalSkuCount}</span>
                     </p>
-                    <p className="text-xs text-slate-500 mt-0.5">
+                    <p className="text-xs text-[#8a9a8a] mt-0.5">
                       {analysis.criticalCount > 0 ? `${analysis.criticalCount} critical · ${analysis.atRiskCount} at-risk` : analysis.atRiskCount > 0 ? `${analysis.atRiskCount} at-risk` : "All SKUs safe"}
                     </p>
                   </div>
@@ -1494,15 +1493,15 @@ export default function ForecastClient() {
 
               {/* Summary + key insights */}
               <div className="card p-5 mb-5">
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Summary</p>
-                <p className="text-sm text-slate-300 leading-relaxed mb-4">{analysis.summary}</p>
+                <p className="text-xs font-semibold text-[#8a9a8a] uppercase tracking-wider mb-2">Summary</p>
+                <p className="text-sm text-[#5a6059] leading-relaxed mb-4">{analysis.summary}</p>
                 {analysis.keyInsights.length > 0 && (
                   <>
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Key Insights</p>
+                    <p className="text-xs font-semibold text-[#8a9a8a] uppercase tracking-wider mb-2">Key Insights</p>
                     <ul className="space-y-1.5">
                       {analysis.keyInsights.map((insight, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-slate-400">
-                          <span className="text-[#22C55E] mt-0.5 flex-shrink-0">•</span>
+                        <li key={i} className="flex items-start gap-2 text-sm text-[#5a6059]">
+                          <span className="text-[#006d34] mt-0.5 flex-shrink-0">•</span>
                           {insight}
                         </li>
                       ))}
@@ -1523,15 +1522,15 @@ export default function ForecastClient() {
                       </div>
                       <h3 className="text-sm font-semibold text-white">Ad-Spend Impact Forecast</h3>
                     </div>
-                    <p className="text-sm text-slate-400">Your Meta campaign of ₹50,000 will spike demand by +35% on Yoga Mat — stockout 4 days sooner than projected.</p>
+                    <p className="text-sm text-[#5a6059]">Your Meta campaign of ₹50,000 will spike demand by +35% on Yoga Mat — stockout 4 days sooner than projected.</p>
                   </div>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0A1415]/60 backdrop-blur-[1px]">
-                    <span className="text-[10px] font-bold text-[#060C0D] bg-[#22C55E] px-2 py-0.5 rounded-full tracking-wider mb-2">PRO FEATURE</span>
-                    <p className="text-sm font-semibold text-white mb-1">Ad-Spend Impact Forecast</p>
-                    <p className="text-xs text-slate-500 mb-3 text-center max-w-[220px]">See how your Meta/Google spend affects stockout dates.</p>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/80 backdrop-blur-[1px]">
+                    <span className="text-[10px] font-bold text-white bg-emerald-brand px-2 py-0.5 rounded-full tracking-wider mb-2">PRO FEATURE</span>
+                    <p className="text-sm font-semibold text-[#181d1b] mb-1">Ad-Spend Impact Forecast</p>
+                    <p className="text-xs text-[#5a6059] mb-3 text-center max-w-[220px]">See how your Meta/Google spend affects stockout dates.</p>
                     <button
                       onClick={() => setUpgradeModal("AI Ad-Spend Correlation")}
-                      className="inline-flex items-center gap-2 bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] font-bold text-xs px-4 py-2 rounded-lg transition-all"
+                      className="inline-flex items-center gap-2 bg-emerald-brand text-white font-bold text-xs px-4 py-2 rounded-lg transition-all hover:opacity-90"
                     >
                       Unlock with Pro
                     </button>
@@ -1554,21 +1553,21 @@ export default function ForecastClient() {
                   {/* Visual formula */}
                   <div className="flex items-center gap-2 flex-wrap mb-4">
                     <div className="bg-purple-500/[0.08] border border-purple-500/15 rounded-xl px-3.5 py-2.5 text-center">
-                      <p className="text-[10px] text-slate-600 uppercase tracking-widest mb-1">Your Ad Spend</p>
-                      <p className="text-sm font-bold text-white truncate max-w-[120px]">{adSpend || "—"}</p>
+                      <p className="text-[10px] text-[#8a9a8a] uppercase tracking-widest mb-1">Your Ad Spend</p>
+                      <p className="text-sm font-bold text-[#181d1b] truncate max-w-[120px]">{adSpend || "—"}</p>
                     </div>
-                    <span className="text-slate-600 text-lg font-bold">→</span>
-                    <div className="bg-[#22C55E]/[0.08] border border-[#22C55E]/15 rounded-xl px-3.5 py-2.5 text-center">
-                      <p className="text-[10px] text-slate-600 uppercase tracking-widest mb-1">Demand Spike</p>
-                      <p className="text-sm font-bold text-[#22C55E]">+20–40%</p>
+                    <span className="text-[#8a9a8a] text-lg font-bold">→</span>
+                    <div className="bg-[#006d34]/[0.07] border border-[#006d34]/15 rounded-xl px-3.5 py-2.5 text-center">
+                      <p className="text-[10px] text-[#8a9a8a] uppercase tracking-widest mb-1">Demand Spike</p>
+                      <p className="text-sm font-bold text-[#006d34]">+20–40%</p>
                     </div>
-                    <span className="text-slate-600 text-lg font-bold">→</span>
-                    <div className="bg-red-500/[0.08] border border-red-500/15 rounded-xl px-3.5 py-2.5 text-center">
-                      <p className="text-[10px] text-slate-600 uppercase tracking-widest mb-1">Stockout Risk</p>
-                      <p className="text-sm font-bold text-red-400">3–5 days sooner</p>
+                    <span className="text-[#8a9a8a] text-lg font-bold">→</span>
+                    <div className="bg-red-50 border border-red-200 rounded-xl px-3.5 py-2.5 text-center">
+                      <p className="text-[10px] text-[#8a9a8a] uppercase tracking-widest mb-1">Stockout Risk</p>
+                      <p className="text-sm font-bold text-red-600">3–5 days sooner</p>
                     </div>
                   </div>
-                  <p className="text-sm text-slate-400 leading-relaxed">{analysis.adSpendInsight}</p>
+                  <p className="text-sm text-[#5a6059] leading-relaxed">{analysis.adSpendInsight}</p>
                 </div>
               )}
 
@@ -1587,55 +1586,55 @@ export default function ForecastClient() {
                         </svg>
                       </div>
                       <h3 className="text-sm font-semibold text-white">Cash Flow Optimization</h3>
-                      <span className="text-xs text-slate-600 ml-auto">Dead stock tying up working capital</span>
+                      <span className="text-xs text-[#8a9a8a] ml-auto">Dead stock tying up working capital</span>
                     </div>
                     <div className="space-y-2 mb-3">
                       {overstocked.map(p => {
                         const excess = p.currentStock - Math.round(p.forecast90Days * 1.1);
                         return (
                           <div key={p.productName} className="flex flex-wrap items-center gap-2 text-sm">
-                            <span className="text-slate-300 font-medium">{p.productName}</span>
-                            <span className="text-slate-600">—</span>
-                            <span className="text-slate-500">overstock by ~{excess} units</span>
+                            <span className="text-[#181d1b] font-medium">{p.productName}</span>
+                            <span className="text-[#8a9a8a]">—</span>
+                            <span className="text-[#5a6059]">overstock by ~{excess} units</span>
                             <span className="text-amber-400 font-semibold">→ reduce next order quantity</span>
                           </div>
                         );
                       })}
                     </div>
-                    <p className="text-xs text-slate-600">Reducing overstock frees up working capital you can redirect to high-velocity products.</p>
+                    <p className="text-xs text-[#8a9a8a]">Reducing overstock frees up working capital you can redirect to high-velocity products.</p>
                   </div>
                 );
               })()}
 
               {/* Product table */}
               <div className="card overflow-hidden mb-5">
-                <div className="px-5 py-3.5 border-b border-white/[0.06] flex items-center justify-between gap-4">
+                <div className="px-5 py-3.5 border-b border-[#bbcbba]/40 flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3 min-w-0">
-                    <h2 className="text-sm font-semibold text-white flex-shrink-0">Product Forecasts</h2>
+                    <h2 className="text-sm font-semibold text-[#181d1b] flex-shrink-0">Product Forecasts</h2>
                     <div className="hidden sm:flex items-center gap-2 text-xs">
-                      {analysis.criticalCount > 0 && <span className="text-red-400 font-semibold">{analysis.criticalCount} critical</span>}
-                      {analysis.atRiskCount > 0 && <><span className="text-[#475569]">·</span><span className="text-orange-400 font-semibold">{analysis.atRiskCount} high</span></>}
-                      {analysis.safeCount > 0 && <><span className="text-[#475569]">·</span><span className="text-[#475569]">{analysis.safeCount} safe</span></>}
+                      {analysis.criticalCount > 0 && <span className="text-red-600 font-semibold">{analysis.criticalCount} critical</span>}
+                      {analysis.atRiskCount > 0 && <><span className="text-[#8a9a8a]">·</span><span className="text-orange-600 font-semibold">{analysis.atRiskCount} high</span></>}
+                      {analysis.safeCount > 0 && <><span className="text-[#8a9a8a]">·</span><span className="text-[#8a9a8a]">{analysis.safeCount} safe</span></>}
                     </div>
                   </div>
-                  <p className="text-xs text-[#475569] hidden sm:block flex-shrink-0">Click row to expand</p>
+                  <p className="text-xs text-[#8a9a8a] hidden sm:block flex-shrink-0">Click row to expand</p>
                 </div>
 
                 {/* Mobile card list — shown only on small screens */}
-                <div className="sm:hidden divide-y divide-white/[0.04]">
+                <div className="sm:hidden divide-y divide-[#eaefeb]">
                   {sortedProducts.slice(0, FREE_PRODUCT_LIMIT).map((product, i) => {
                     const riskColors: Record<string, string> = {
-                      critical: "text-red-400 bg-red-500/[0.08] border-red-500/20",
-                      high:     "text-orange-400 bg-orange-500/[0.08] border-orange-500/20",
-                      medium:   "text-yellow-400 bg-yellow-500/[0.08] border-yellow-500/20",
-                      low:      "text-[#22C55E] bg-[#22C55E]/[0.08] border-[#22C55E]/20",
+                      critical: "text-red-600 bg-red-50 border-red-200",
+                      high:     "text-orange-600 bg-orange-50 border-orange-200",
+                      medium:   "text-yellow-700 bg-yellow-50 border-yellow-200",
+                      low:      "text-[#006d34] bg-[#006d34]/[0.08] border-[#006d34]/20",
                     };
                     return (
                       <div key={product.sku || product.productName} className="px-4 py-4">
                         <div className="flex items-start justify-between gap-3 mb-2">
                           <div className="min-w-0">
-                            <p className="text-sm font-semibold text-slate-100 leading-tight">{product.productName}</p>
-                            {product.sku && <p className="text-xs text-slate-600 font-mono mt-0.5">{product.sku}</p>}
+                            <p className="text-sm font-semibold text-[#181d1b] leading-tight">{product.productName}</p>
+                            {product.sku && <p className="text-xs text-[#8a9a8a] font-mono mt-0.5">{product.sku}</p>}
                           </div>
                           <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-lg border flex-shrink-0 ${riskColors[product.stockoutRisk] ?? riskColors.low}`}>
                             {product.stockoutRisk.charAt(0).toUpperCase() + product.stockoutRisk.slice(1)}
@@ -1643,24 +1642,24 @@ export default function ForecastClient() {
                         </div>
                         <div className="flex items-center gap-4 flex-wrap">
                           <div>
-                            <p className="text-[10px] text-slate-600 uppercase tracking-wider">Days Left</p>
-                            <p className={`text-lg font-bold tabular-nums ${product.daysOfStockRemaining <= 7 ? "text-red-400" : product.daysOfStockRemaining <= 14 ? "text-amber-400" : "text-slate-200"}`}>
+                            <p className="text-[10px] text-[#8a9a8a] uppercase tracking-wider">Days Left</p>
+                            <p className={`text-lg font-bold tabular-nums ${product.daysOfStockRemaining <= 7 ? "text-red-600" : product.daysOfStockRemaining <= 14 ? "text-amber-600" : "text-[#181d1b]"}`}>
                               {product.daysOfStockRemaining <= 0 ? "OUT" : `${product.daysOfStockRemaining}d`}
                             </p>
                           </div>
                           <div>
-                            <p className="text-[10px] text-slate-600 uppercase tracking-wider">Stock</p>
-                            <p className="text-sm font-medium text-slate-300 tabular-nums">{product.currentStock.toLocaleString()} units</p>
+                            <p className="text-[10px] text-[#8a9a8a] uppercase tracking-wider">Stock</p>
+                            <p className="text-sm font-medium text-[#5a6059] tabular-nums">{product.currentStock.toLocaleString()} units</p>
                           </div>
                           {product.estimatedRevenueLoss && (
                             <div>
-                              <p className="text-[10px] text-slate-600 uppercase tracking-wider">Rev. at Risk</p>
-                              <p className="text-sm font-bold text-red-400">{product.estimatedRevenueLoss}</p>
+                              <p className="text-[10px] text-[#8a9a8a] uppercase tracking-wider">Rev. at Risk</p>
+                              <p className="text-sm font-bold text-red-600">{product.estimatedRevenueLoss}</p>
                             </div>
                           )}
                           {product.reorderByDate && (
                             <div className="w-full mt-1">
-                              <span className="text-xs font-semibold text-orange-300 bg-orange-500/10 border border-orange-500/15 px-2.5 py-1 rounded-lg">
+                              <span className="text-xs font-semibold text-orange-700 bg-orange-50 border border-orange-200 px-2.5 py-1 rounded-lg">
                                 {product.reorderByDate}
                               </span>
                             </div>
@@ -1709,7 +1708,7 @@ export default function ForecastClient() {
                       ))}
                     </div>
                     {/* Overlay CTA */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-t from-[#0A1415] via-[#0A1415]/80 to-transparent">
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-t from-white via-white/80 to-transparent">
                       <div className="text-center px-6 py-4">
                         {(() => {
                           const hiddenCount = sortedProducts.length - FREE_PRODUCT_LIMIT;
@@ -1753,13 +1752,13 @@ export default function ForecastClient() {
               {analysis.topRecommendations.length > 0 && (
                 <div className="card p-5 mb-5">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-sm font-semibold text-white">Top Recommendations</h2>
+                    <h2 className="text-sm font-semibold text-[#181d1b]">Top Recommendations</h2>
                     <POGenerator products={sortedProducts} />
                   </div>
                   <ol className="space-y-3">
                     {analysis.topRecommendations.map((rec, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm text-slate-300">
-                        <span className="w-6 h-6 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/20 text-[#22C55E] text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
+                      <li key={i} className="flex items-start gap-3 text-sm text-[#5a6059]">
+                        <span className="w-6 h-6 rounded-full bg-[#006d34]/[0.08] border border-[#006d34]/20 text-[#006d34] text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
                         {rec}
                       </li>
                     ))}
@@ -1769,16 +1768,16 @@ export default function ForecastClient() {
 
               {/* Email alert capture */}
               {analysis.criticalCount > 0 || analysis.atRiskCount > 0 ? (
-                <div className="card p-5 mb-5 border-orange-500/15 bg-orange-500/[0.02]">
+                <div className="card p-5 mb-5 border-orange-200 bg-orange-50">
                   <div className="flex items-start gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-4.5 h-4.5 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <div className="w-9 h-9 rounded-xl bg-orange-100 border border-orange-200 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-4.5 h-4.5 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                       </svg>
                     </div>
                     <div className="flex-1 min-w-0">
                       {alertStatus === "sent" ? (
-                        <div className="flex items-center gap-2 text-[#22C55E]">
+                        <div className="flex items-center gap-2 text-[#006d34]">
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
@@ -1786,16 +1785,16 @@ export default function ForecastClient() {
                         </div>
                       ) : (
                         <>
-                          <p className="text-sm font-semibold text-white mb-0.5">Get weekly stockout alerts by email</p>
-                          <p className="text-xs text-slate-500 mb-3">We&apos;ll send your top at-risk SKUs to your account email every Monday. Free, no spam.</p>
+                          <p className="text-sm font-semibold text-[#181d1b] mb-0.5">Get weekly stockout alerts by email</p>
+                          <p className="text-xs text-[#5a6059] mb-3">We&apos;ll send your top at-risk SKUs to your account email every Monday. Free, no spam.</p>
                           <button
                             onClick={handleEmailAlert}
                             disabled={alertStatus === "sending"}
-                            className="bg-orange-500/80 hover:bg-orange-500 text-white font-semibold text-xs px-4 py-2 rounded-lg transition-all disabled:opacity-60"
+                            className="bg-orange-500 hover:bg-orange-600 text-white font-semibold text-xs px-4 py-2 rounded-lg transition-all disabled:opacity-60"
                           >
                             {alertStatus === "sending" ? "Sending..." : "Notify me"}
                           </button>
-                          {alertStatus === "error" && <p className="text-xs text-red-400 mt-1.5">Something went wrong. Try again.</p>}
+                          {alertStatus === "error" && <p className="text-xs text-red-600 mt-1.5">Something went wrong. Try again.</p>}
                         </>
                       )}
                     </div>
@@ -1804,12 +1803,12 @@ export default function ForecastClient() {
               ) : null}
 
               {/* Upsell */}
-              <div className="card p-6 border-[#22C55E]/15 bg-gradient-to-r from-[#22C55E]/[0.04] to-[#0D9488]/[0.02] text-center">
+              <div className="rounded-2xl p-6 bg-emerald-950 text-center">
                 <p className="text-white font-semibold mb-1 text-sm">Unlock unlimited forecasts + ad-spend correlation + supplier alerts</p>
-                <p className="text-slate-500 text-xs mb-4">Pro plan — ₹999/mo. 10× cheaper than Prediko. Cancel anytime.</p>
+                <p className="text-emerald-100/50 text-xs mb-4">Pro plan — ₹999/mo. 10× cheaper than Prediko. Cancel anytime.</p>
                 <Link
                   href="/#pricing"
-                  className="inline-flex items-center gap-2 bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] font-bold px-5 py-2.5 rounded-xl transition-all text-sm shadow-lg shadow-[#22C55E]/20 hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 bg-emerald-brand text-white font-bold px-5 py-2.5 rounded-xl transition-all text-sm hover:opacity-90 hover:-translate-y-0.5"
                 >
                   Upgrade to Pro
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
