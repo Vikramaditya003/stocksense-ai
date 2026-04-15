@@ -81,8 +81,8 @@ function TrendChart({ forecasts }: { forecasts: Omit<SavedForecast, "analysis" |
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full min-w-[340px]" onMouseLeave={() => setTip(null)}>
         <defs>
           <linearGradient id="hGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#22C55E" stopOpacity="0.18" />
-            <stop offset="100%" stopColor="#22C55E" stopOpacity="0" />
+            <stop offset="0%" stopColor="#006d34" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="#006d34" stopOpacity="0" />
           </linearGradient>
         </defs>
 
@@ -115,7 +115,7 @@ function TrendChart({ forecasts }: { forecasts: Omit<SavedForecast, "analysis" |
         />
 
         {/* Health line */}
-        <polyline points={linePts} fill="none" stroke="#22C55E" strokeWidth={2} strokeLinejoin="round" />
+        <polyline points={linePts} fill="none" stroke="#006d34" strokeWidth={2} strokeLinejoin="round" />
 
         {/* Data point circles + hover hit area */}
         {pts.map((f, i) => {
@@ -302,7 +302,7 @@ function UploadPanel({ onClose, onResult }: { onClose: () => void; onResult: (a:
         <button
           type="button"
           onClick={run} disabled={loading || !csvText}
-          className="w-full flex items-center justify-center gap-2 bg-[#22C55E] hover:bg-[#16A34A] disabled:opacity-50 text-[#060C0D] font-bold py-3 rounded-xl text-sm transition-all shadow-lg shadow-[#22C55E]/20"
+          className="w-full flex items-center justify-center gap-2 bg-emerald-brand disabled:opacity-50 text-white font-bold py-3 rounded-xl text-sm transition-all shadow-lg shadow-[#006d34]/20 hover:opacity-90"
         >
           {loading ? (
             <><svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>Analyzing…</>
@@ -470,7 +470,7 @@ export default function DashboardClient() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
 
         {/* Revenue at risk */}
-        <div className="bg-white rounded-xl border border-[#bbcbba]/20 shadow-sm p-5">
+        <div className="bg-white rounded-xl border border-[#bbcbba]/20 shadow-sm p-5 border-l-4 border-l-red-500">
           <p className="text-[11px] font-semibold text-[#5a6059] uppercase tracking-widest mb-3">Revenue at Risk</p>
           <div className="flex items-end gap-2 mb-1">
             <p className={`text-3xl font-bold tabular-nums tracking-tight leading-none ${activeAnalysis?.totalRarAmount ? "text-red-600" : "text-[#8a9a8a]"}`}>
@@ -486,7 +486,7 @@ export default function DashboardClient() {
         </div>
 
         {/* Stock health */}
-        <div className="bg-white rounded-xl border border-[#bbcbba]/20 shadow-sm p-5">
+        <div className="bg-white rounded-xl border border-[#bbcbba]/20 shadow-sm p-5 border-l-4 border-l-[#006d34]">
           <p className="text-[11px] font-semibold text-[#5a6059] uppercase tracking-widest mb-3">Stock Health</p>
           <div className="flex items-end gap-2 mb-1">
             <p className={`text-3xl font-bold tabular-nums tracking-tight leading-none ${
@@ -515,7 +515,7 @@ export default function DashboardClient() {
         </div>
 
         {/* Critical SKUs */}
-        <div className="bg-white rounded-xl border border-[#bbcbba]/20 shadow-sm p-5">
+        <div className="bg-white rounded-xl border border-[#bbcbba]/20 shadow-sm p-5 border-l-4 border-l-orange-500">
           <p className="text-[11px] font-semibold text-[#5a6059] uppercase tracking-widest mb-3">Restock Alerts</p>
           <div className="flex items-end gap-2 mb-1">
             <p className={`text-3xl font-bold tabular-nums tracking-tight leading-none ${(activeAnalysis?.criticalCount ?? 0) > 0 ? "text-[#181d1b]" : "text-[#8a9a8a]"}`}>
@@ -583,7 +583,7 @@ export default function DashboardClient() {
               <button
                 type="button"
                 onClick={() => router.push("/dashboard?tab=products")}
-                className="flex-shrink-0 text-xs font-semibold text-[#060C0D] bg-[#22C55E] hover:bg-[#16A34A] px-3 py-1.5 rounded-lg transition-all"
+                className="flex-shrink-0 text-xs font-semibold text-white bg-emerald-brand hover:opacity-90 px-3 py-1.5 rounded-lg transition-all"
               >
                 View all {allProducts.length}
               </button>
@@ -594,8 +594,8 @@ export default function DashboardClient() {
           {!activeAnalysis && !histLoading ? (
             <div className="px-5 py-8">
               <div className="max-w-sm mx-auto text-center mb-6">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#22C55E]/20 to-[#22C55E]/5 border border-[#22C55E]/20 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#22C55E]/10">
-                  <svg className="w-8 h-8 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" /></svg>
+                <div className="w-16 h-16 rounded-2xl bg-[#006d34]/[0.08] border border-[#006d34]/20 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#006d34]/10">
+                  <svg className="w-8 h-8 text-[#006d34]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" /></svg>
                 </div>
                 <h3 className="text-base font-bold text-[#181d1b] mb-1">Find out which products are costing you money</h3>
                 <p className="text-sm text-[#5a6059] leading-relaxed">Upload your Shopify inventory CSV and get exact stockout dates, reorder quantities, and revenue at risk in 30 seconds.</p>
@@ -622,7 +622,7 @@ export default function DashboardClient() {
                 <button
                   type="button"
                   onClick={() => setUploadOpen(true)}
-                  className="inline-flex items-center justify-center gap-2 bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] font-bold text-sm px-6 py-2.5 rounded-xl transition-all shadow-lg shadow-[#22C55E]/25"
+                  className="inline-flex items-center justify-center gap-2 bg-emerald-brand text-white font-bold text-sm px-6 py-2.5 rounded-xl transition-all shadow-lg shadow-[#006d34]/20 hover:opacity-90"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" /></svg>
                   Upload Shopify CSV — Free
@@ -721,7 +721,7 @@ export default function DashboardClient() {
             <div className="px-4 py-2.5 border-t border-[#bbcbba]/30 flex items-center justify-between">
               <p className="text-[11px] text-[#5a6059]">+{alertProducts.length - 7} more products need restocking</p>
               <button type="button" onClick={() => router.push("/dashboard?tab=products")}
-                className="text-[11px] font-bold text-[#22C55E] hover:text-[#16A34A] transition-colors">
+                className="text-[11px] font-bold text-[#006d34] hover:text-[#005a28] transition-colors">
                 See all & export reorder list →
               </button>
             </div>
@@ -860,6 +860,79 @@ export default function DashboardClient() {
           <TrendChart forecasts={history} />
         </div>
       )}
+
+      {/* ── Contextual insights ── */}
+      {activeAnalysis && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          {/* AI forecast recommendation */}
+          <div className="bg-[#eaefeb] rounded-2xl p-7 relative overflow-hidden group">
+            <div className="relative z-10">
+              <span className="text-[10px] font-bold text-[#006d34] uppercase tracking-widest mb-2 block">AI Forecast</span>
+              <h4 className="font-bold text-lg text-[#181d1b] mb-3">
+                {alertProducts.length > 0
+                  ? "Reorder Required — Act Now"
+                  : "All Clear — Inventory Healthy"}
+              </h4>
+              <p className="text-sm text-[#5a6059] mb-5 leading-relaxed">
+                {alertProducts.length > 0
+                  ? <>Based on your sales velocity and current stock, we recommend reordering <span className="font-bold text-[#181d1b]">{alertProducts[0].productName}</span>{alertProducts.length > 1 ? ` and ${alertProducts.length - 1} other product${alertProducts.length > 1 ? "s" : ""}` : ""} to avoid stockouts and protect revenue.</>
+                  : <>Your inventory is in good shape. All {activeAnalysis.totalSkuCount} SKUs have sufficient stock based on current sales velocity. Keep monitoring weekly.</>
+                }
+              </p>
+              <button
+                type="button"
+                onClick={() => router.push("/dashboard?tab=products")}
+                className="inline-flex items-center gap-2 bg-[#181d1b] hover:bg-[#181d1b]/80 text-white text-sm font-bold px-5 py-2.5 rounded-full transition-colors"
+              >
+                View Forecast Data
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+              </button>
+            </div>
+            {/* Decorative icon */}
+            <svg className="absolute -right-5 -bottom-5 w-36 h-36 text-[#006d34] opacity-[0.08] group-hover:scale-110 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+            </svg>
+          </div>
+
+          {/* Stock health distribution */}
+          <div className="bg-white rounded-2xl border border-[#bbcbba]/40 shadow-sm p-7">
+            <h4 className="font-bold text-lg text-[#181d1b] mb-5">Stock Health Distribution</h4>
+            <div className="space-y-4">
+              {[
+                { label: "Healthy", count: activeAnalysis.safeCount, total: activeAnalysis.totalSkuCount, color: "bg-[#006d34]", text: "text-[#006d34]" },
+                { label: "Moderate", count: activeAnalysis.atRiskCount, total: activeAnalysis.totalSkuCount, color: "bg-yellow-500", text: "text-yellow-700" },
+                { label: "Critical", count: activeAnalysis.criticalCount, total: activeAnalysis.totalSkuCount, color: "bg-red-500", text: "text-red-700" },
+              ].map(d => {
+                const pct = activeAnalysis.totalSkuCount > 0
+                  ? Math.round((d.count / activeAnalysis.totalSkuCount) * 100)
+                  : 0;
+                return (
+                  <div key={d.label} className="flex items-center gap-4">
+                    <span className="text-xs font-bold text-[#5a6059] w-20 flex-shrink-0">{d.label}</span>
+                    <div className="flex-1 h-2 bg-[#eaefeb] rounded-full overflow-hidden">
+                      <div className={`h-full rounded-full ${d.color} transition-all duration-700`} style={{ width: `${pct}%` }} />
+                    </div>
+                    <span className={`text-xs font-bold tabular-nums ${d.text} w-10 text-right`}>{pct}%</span>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-5 pt-4 border-t border-[#bbcbba]/30 grid grid-cols-3 gap-3 text-center">
+              {[
+                { label: "Total SKUs", value: activeAnalysis.totalSkuCount, color: "text-[#181d1b]" },
+                { label: "Safe", value: activeAnalysis.safeCount, color: "text-[#006d34]" },
+                { label: "Action needed", value: activeAnalysis.criticalCount + activeAnalysis.atRiskCount, color: activeAnalysis.criticalCount > 0 ? "text-red-600" : "text-yellow-600" },
+              ].map(s => (
+                <div key={s.label}>
+                  <p className={`text-xl font-bold tabular-nums ${s.color}`}>{s.value}</p>
+                  <p className="text-[10px] text-[#8a9a8a] font-medium mt-0.5">{s.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 
@@ -877,7 +950,7 @@ export default function DashboardClient() {
               low: "text-green-700 border-green-500",
             };
             const dots: Record<FilterTab, string> = {
-              all: "bg-[#22C55E]",
+              all: "bg-[#006d34]",
               critical: "bg-red-500",
               high: "bg-orange-500",
               medium: "bg-yellow-500",
