@@ -25,6 +25,8 @@ export default function SignInPage() {
       {/* Clerk card */}
       <div className="relative z-10 w-full flex justify-center">
         <SignIn
+          afterSignInUrl="/dashboard"
+          redirectUrl="/dashboard"
           appearance={{
             variables: {
               colorPrimary: "#00d26a",

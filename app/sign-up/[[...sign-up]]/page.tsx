@@ -92,6 +92,8 @@ export default function SignUpPage() {
 
       <div className="relative z-10 w-full max-w-sm mx-auto">
         <SignUp
+          afterSignUpUrl="/dashboard"
+          redirectUrl="/dashboard"
           appearance={{
             variables: {
               colorPrimary: "#00d26a",
