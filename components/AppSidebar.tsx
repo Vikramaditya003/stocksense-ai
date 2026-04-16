@@ -6,21 +6,29 @@ import { useState, useRef } from "react";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { LogoMark } from "@/components/StocksenseLogo";
 
-const RATINGS = ["😞", "😕", "😐", "😊", "😍"];
-
 function FeedbackModal({ onClose }: { onClose: () => void }) {
-  const [rating, setRating] = useState(-1);
-  const [text, setText] = useState("");
-  const [sent, setSent] = useState(false);
+  const [score, setScore] = useState<number | null>(null);
+  const [improve, setImprove] = useState("");
+  const [feature, setFeature] = useState("");
+  const [status, setStatus] = useState<"idle" | "submitting" | "done">("idle");
 
-  function handleSend() {
-    const subject = encodeURIComponent("Forestock Feedback");
-    const ratingLabel = rating >= 0 ? `${RATINGS[rating]} (${rating + 1}/5)` : "No rating";
-    const body = encodeURIComponent(
-      `Rating: ${ratingLabel}\n\nFeedback:\n${text || "(no additional comments)"}`
-    );
-    window.open(`mailto:support@getforestock.com?subject=${subject}&body=${body}`);
-    setSent(true);
+  async function handleSend() {
+    if (score === null) return;
+    setStatus("submitting");
+    const combined = [
+      improve ? `What to improve: ${improve}` : "",
+      feature ? `Feature request: ${feature}` : "",
+    ].filter(Boolean).join("\n\n");
+    try {
+      await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nps_score: score, message: combined, page: "dashboard" }),
+      });
+    } catch {
+      // silent
+    }
+    setStatus("done");
   }
 
   return (
@@ -29,23 +37,19 @@ function FeedbackModal({ onClose }: { onClose: () => void }) {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl border border-[#bbcbba]/40 shadow-2xl shadow-black/10 p-6 w-full max-w-[360px]"
+        className="bg-white rounded-2xl border border-[#bbcbba]/40 shadow-2xl shadow-black/10 p-6 w-full max-w-[380px]"
         onClick={(e) => e.stopPropagation()}
       >
-        {sent ? (
+        {status === "done" ? (
           <div className="text-center py-4">
             <div className="w-12 h-12 rounded-full bg-[#006d34]/10 flex items-center justify-center mx-auto mb-3">
               <svg className="w-6 h-6 text-[#006d34]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <p className="text-[15px] font-semibold text-[#181d1b] mb-1">Thanks for your feedback!</p>
-            <p className="text-[13px] text-[#5a6059] mb-4">Your email client will open to send it.</p>
-            <button
-              type="button"
-              onClick={onClose}
-              className="text-[13px] font-medium text-[#006d34] hover:text-[#005a28] transition-colors"
-            >
+            <p className="text-[15px] font-semibold text-[#181d1b] mb-1">Thanks — really appreciate it!</p>
+            <p className="text-[13px] text-[#5a6059] mb-4">Your feedback helps us build a better product.</p>
+            <button type="button" onClick={onClose} className="text-[13px] font-medium text-[#006d34] hover:text-[#005a28] transition-colors">
               Close
             </button>
           </div>
@@ -56,59 +60,71 @@ function FeedbackModal({ onClose }: { onClose: () => void }) {
                 <p className="text-[15px] font-semibold text-[#181d1b]">Share your feedback</p>
                 <p className="text-[12px] text-[#8a9a8a] mt-0.5">Help us make Forestock better</p>
               </div>
-              <button
-                type="button"
-                onClick={onClose}
-                className="text-[#8a9a8a] hover:text-[#181d1b] transition-colors p-1 -mr-1 -mt-1"
-                aria-label="Close"
-              >
+              <button type="button" onClick={onClose} className="text-[#8a9a8a] hover:text-[#181d1b] transition-colors p-1 -mr-1 -mt-1" aria-label="Close">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
 
-            <p className="text-[12px] text-[#5a6059] mb-2">How&apos;s your experience?</p>
-            <div className="flex gap-2 mb-4">
-              {RATINGS.map((emoji, i) => (
+            <p className="text-[11px] font-semibold text-[#5a6059] uppercase tracking-wide mb-2">
+              How likely are you to recommend Forestock? (1–10)
+            </p>
+            <div className="flex gap-1 mb-1">
+              {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
                 <button
-                  key={i}
+                  key={n}
                   type="button"
-                  onClick={() => setRating(i)}
-                  className={`flex-1 text-[22px] py-2 rounded-xl border transition-all ${
-                    rating === i
-                      ? "border-[#006d34]/40 bg-[#006d34]/[0.07] scale-110"
-                      : "border-[#bbcbba]/40 hover:border-[#bbcbba] hover:bg-[#f0f5f1]"
+                  onClick={() => setScore(n)}
+                  className={`flex-1 h-8 rounded-lg text-[11px] font-bold transition-all border ${
+                    score === n
+                      ? "bg-[#006d34] text-white border-[#006d34]"
+                      : "bg-[#f6faf6] text-[#5a6059] border-[#bbcbba]/50 hover:bg-[#eaefeb] hover:text-[#181d1b]"
                   }`}
                 >
-                  {emoji}
+                  {n}
                 </button>
               ))}
             </div>
+            <div className="flex justify-between mb-4">
+              <span className="text-[10px] text-[#8a9a8a]">Not likely</span>
+              <span className="text-[10px] text-[#8a9a8a]">Very likely</span>
+            </div>
 
-            <textarea
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder="Tell us more (optional)…"
-              rows={3}
-              className="w-full text-[13px] text-[#181d1b] placeholder:text-[#8a9a8a] bg-[#f6faf6] border border-[#bbcbba]/40 rounded-xl px-3 py-2.5 outline-none focus:border-[#006d34]/40 resize-none mb-4 transition-colors"
-            />
+            <div className="space-y-2.5 mb-4">
+              <div>
+                <label className="text-[11px] font-semibold text-[#5a6059] uppercase tracking-wide block mb-1.5">What should we improve?</label>
+                <textarea
+                  value={improve}
+                  onChange={(e) => setImprove(e.target.value)}
+                  placeholder="e.g. forecast was hard to understand, UI is confusing…"
+                  rows={2}
+                  className="w-full text-[12px] text-[#181d1b] placeholder:text-[#8a9a8a] bg-[#f6faf6] border border-[#bbcbba]/40 rounded-xl px-3 py-2.5 outline-none focus:border-[#006d34]/40 resize-none transition-colors"
+                />
+              </div>
+              <div>
+                <label className="text-[11px] font-semibold text-[#5a6059] uppercase tracking-wide block mb-1.5">Feature you&apos;d love to see?</label>
+                <textarea
+                  value={feature}
+                  onChange={(e) => setFeature(e.target.value)}
+                  placeholder="e.g. Shopify direct sync, email alerts, purchase orders…"
+                  rows={2}
+                  className="w-full text-[12px] text-[#181d1b] placeholder:text-[#8a9a8a] bg-[#f6faf6] border border-[#bbcbba]/40 rounded-xl px-3 py-2.5 outline-none focus:border-[#006d34]/40 resize-none transition-colors"
+                />
+              </div>
+            </div>
 
             <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={onClose}
-                className="flex-1 text-[13px] font-medium text-[#5a6059] hover:text-[#181d1b] border border-[#bbcbba]/60 rounded-xl py-2.5 transition-all hover:bg-[#f0f5f1]"
-              >
+              <button type="button" onClick={onClose} className="flex-1 text-[13px] font-medium text-[#5a6059] hover:text-[#181d1b] border border-[#bbcbba]/60 rounded-xl py-2.5 transition-all hover:bg-[#f0f5f1]">
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleSend}
-                disabled={rating < 0 && !text.trim()}
+                disabled={score === null || status === "submitting"}
                 className="flex-1 text-[13px] font-semibold text-white bg-emerald-brand rounded-xl py-2.5 transition-all hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                Send feedback
+                {status === "submitting" ? "Sending…" : "Send feedback"}
               </button>
             </div>
           </>
