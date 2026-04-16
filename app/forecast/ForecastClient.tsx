@@ -1337,11 +1337,10 @@ export default function ForecastClient() {
               </div>
 
               {/* Bottom info strip */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {[
                   { label: "Avg. Time", value: "~30s", sub: "per forecast run" },
                   { label: "Free Plan", value: "5 SKUs", sub: "no sign-up required" },
-                  { label: "AI Model", value: "GROQ", sub: "real-time inference" },
                   { label: "Formats", value: "CSV · XLSX", sub: "Shopify exports included" },
                 ].map((s) => (
                   <div key={s.label} className="bg-white rounded-xl border border-[#bbcbba]/40 p-4 shadow-sm">

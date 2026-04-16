@@ -42,8 +42,8 @@ function TrendChart({ forecasts }: { forecasts: Omit<SavedForecast, "analysis" |
 
   if (forecasts.length < 2) return (
     <div className="flex flex-col items-center justify-center h-40 text-center">
-      <p className="text-slate-500 text-sm">Run at least 2 forecasts to see your trend</p>
-      <Link href="/forecast" className="mt-2 text-xs text-[#22C55E] hover:underline">Run a forecast →</Link>
+      <p className="text-[#5a6059] text-sm">Run at least 2 forecasts to see your trend</p>
+      <Link href="/forecast" className="mt-2 text-xs text-[#006d34] hover:underline">Run a forecast →</Link>
     </div>
   );
 
@@ -73,17 +73,17 @@ function TrendChart({ forecasts }: { forecasts: Omit<SavedForecast, "analysis" |
             <line
               x1={PAD.left} y1={yOf(g)}
               x2={W - PAD.right} y2={yOf(g)}
-              stroke="rgba(255,255,255,0.05)" strokeWidth={1}
+              stroke="rgba(0,0,0,0.06)" strokeWidth={1}
             />
-            <text x={PAD.left - 6} y={yOf(g) + 4} fontSize={9} fill="#475569" textAnchor="end">{g}</text>
+            <text x={PAD.left - 6} y={yOf(g) + 4} fontSize={9} fill="#8a9a8a" textAnchor="end">{g}</text>
           </g>
         ))}
 
         {/* Gradient fill under line */}
         <defs>
           <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#22C55E" stopOpacity="0.18" />
-            <stop offset="100%" stopColor="#22C55E" stopOpacity="0" />
+            <stop offset="0%" stopColor="#006d34" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="#006d34" stopOpacity="0" />
           </linearGradient>
         </defs>
 
@@ -94,7 +94,7 @@ function TrendChart({ forecasts }: { forecasts: Omit<SavedForecast, "analysis" |
         />
 
         {/* Line */}
-        <polyline points={linePts} fill="none" stroke="#22C55E" strokeWidth={2} strokeLinejoin="round" />
+        <polyline points={linePts} fill="none" stroke="#006d34" strokeWidth={2} strokeLinejoin="round" />
 
         {/* Dots + hover targets */}
         {pts.map((f, i) => {
@@ -118,9 +118,9 @@ function TrendChart({ forecasts }: { forecasts: Omit<SavedForecast, "analysis" |
                 />
               )}
               {/* Dot */}
-              <circle cx={cx} cy={cy} r={tooltip?.i === i ? 6 : 4} fill={color} stroke="#060C0D" strokeWidth={2} />
+              <circle cx={cx} cy={cy} r={tooltip?.i === i ? 6 : 4} fill={color} stroke="#ffffff" strokeWidth={2} />
               {/* X label */}
-              <text x={cx} y={H - 6} fontSize={8} fill="#475569" textAnchor="middle">
+              <text x={cx} y={H - 6} fontSize={8} fill="#8a9a8a" textAnchor="middle">
                 {new Date(f.created_at).toLocaleDateString("en-US", { day: "numeric", month: "short" })}
               </text>
             </g>
@@ -130,13 +130,13 @@ function TrendChart({ forecasts }: { forecasts: Omit<SavedForecast, "analysis" |
         {/* Tooltip */}
         {tooltip !== null && (
           <g>
-            <line x1={tooltip.x} y1={PAD.top} x2={tooltip.x} y2={PAD.top + chartH} stroke="rgba(255,255,255,0.08)" strokeWidth={1} strokeDasharray="3,3" />
-            <rect x={Math.min(tooltip.x + 8, W - 140)} y={PAD.top} width={130} height={56} rx={6} fill="#0D1B1D" stroke="rgba(34,197,94,0.2)" strokeWidth={1} />
-            <text x={Math.min(tooltip.x + 16, W - 132)} y={PAD.top + 16} fontSize={10} fill="#94a3b8">{fmt(pts[tooltip.i].created_at)}</text>
+            <line x1={tooltip.x} y1={PAD.top} x2={tooltip.x} y2={PAD.top + chartH} stroke="rgba(0,0,0,0.08)" strokeWidth={1} strokeDasharray="3,3" />
+            <rect x={Math.min(tooltip.x + 8, W - 140)} y={PAD.top} width={130} height={56} rx={6} fill="#ffffff" stroke="rgba(0,109,52,0.2)" strokeWidth={1} />
+            <text x={Math.min(tooltip.x + 16, W - 132)} y={PAD.top + 16} fontSize={10} fill="#8a9a8a">{fmt(pts[tooltip.i].created_at)}</text>
             <text x={Math.min(tooltip.x + 16, W - 132)} y={PAD.top + 30} fontSize={11} fill={healthColor(pts[tooltip.i].health_score)} fontWeight="bold">
               Health: {pts[tooltip.i].health_score}/100
             </text>
-            <text x={Math.min(tooltip.x + 16, W - 132)} y={PAD.top + 44} fontSize={10} fill="#94a3b8">
+            <text x={Math.min(tooltip.x + 16, W - 132)} y={PAD.top + 44} fontSize={10} fill="#5a6059">
               {pts[tooltip.i].critical_count} critical · {pts[tooltip.i].sku_count} SKUs
             </text>
           </g>
@@ -146,12 +146,12 @@ function TrendChart({ forecasts }: { forecasts: Omit<SavedForecast, "analysis" |
       {/* Legend */}
       <div className="flex items-center gap-4 mt-1 px-1">
         <div className="flex items-center gap-1.5">
-          <div className="w-5 h-0.5 bg-[#22C55E]" />
-          <span className="text-[10px] text-slate-500">Inventory Health Score</span>
+          <div className="w-5 h-0.5 bg-[#006d34]" />
+          <span className="text-[10px] text-[#5a6059]">Inventory Health Score</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-3 h-2 bg-red-400/50 rounded-sm" />
-          <span className="text-[10px] text-slate-500">Critical SKUs</span>
+          <span className="text-[10px] text-[#5a6059]">Critical SKUs</span>
         </div>
       </div>
     </div>
@@ -208,25 +208,25 @@ function ComparePanel({ a, b }: { a: SavedForecast; b: SavedForecast }) {
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="card p-5 mb-5 border-[#22C55E]/15"
+      className="bg-white rounded-2xl border border-[#bbcbba]/40 shadow-sm p-5 mb-5"
     >
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-sm font-bold text-white">Comparison</h2>
-        <p className="text-xs text-slate-500">Select exactly 2 forecasts to compare</p>
+        <h2 className="text-sm font-bold text-[#181d1b]">Comparison</h2>
+        <p className="text-xs text-[#5a6059]">Select exactly 2 forecasts to compare</p>
       </div>
 
       {/* Header row */}
       <div className="grid grid-cols-3 gap-3 mb-3">
         <div />
-        <div className="card-sm p-3 text-center">
-          <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-0.5">Forecast A</p>
-          <p className="text-xs font-semibold text-white">{fmt(a.created_at)}</p>
-          <p className="text-[10px] text-slate-600">{fmtTime(a.created_at)}</p>
+        <div className="bg-[#f0f5f1] border border-[#bbcbba]/40 rounded-xl p-3 text-center">
+          <p className="text-[10px] text-[#5a6059] uppercase tracking-wider mb-0.5">Forecast A</p>
+          <p className="text-xs font-semibold text-[#181d1b]">{fmt(a.created_at)}</p>
+          <p className="text-[10px] text-[#8a9a8a]">{fmtTime(a.created_at)}</p>
         </div>
-        <div className="card-sm p-3 text-center">
-          <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-0.5">Forecast B</p>
-          <p className="text-xs font-semibold text-white">{fmt(b.created_at)}</p>
-          <p className="text-[10px] text-slate-600">{fmtTime(b.created_at)}</p>
+        <div className="bg-[#f0f5f1] border border-[#bbcbba]/40 rounded-xl p-3 text-center">
+          <p className="text-[10px] text-[#5a6059] uppercase tracking-wider mb-0.5">Forecast B</p>
+          <p className="text-xs font-semibold text-[#181d1b]">{fmt(b.created_at)}</p>
+          <p className="text-[10px] text-[#8a9a8a]">{fmtTime(b.created_at)}</p>
         </div>
       </div>
 
@@ -237,12 +237,12 @@ function ComparePanel({ a, b }: { a: SavedForecast; b: SavedForecast }) {
           const bBetter = m.higherIsBetter ? m.bNum > m.aNum : m.bNum < m.aNum;
           return (
             <div key={m.label} className="grid grid-cols-3 gap-3 items-center">
-              <p className="text-xs text-slate-500 font-medium">{m.label}</p>
-              <div className={`card-sm px-3 py-2 text-center border ${aBetter && m.aNum !== m.bNum ? "border-[#22C55E]/25 bg-[#22C55E]/[0.04]" : ""}`}>
-                <p className={`text-sm font-bold tabular-nums ${aBetter && m.aNum !== m.bNum ? "text-[#22C55E]" : "text-slate-300"}`}>{m.aVal}</p>
+              <p className="text-xs text-[#5a6059] font-medium">{m.label}</p>
+              <div className={`bg-[#f0f5f1] border rounded-xl px-3 py-2 text-center ${aBetter && m.aNum !== m.bNum ? "border-[#006d34]/25 bg-[#006d34]/[0.04]" : "border-[#bbcbba]/40"}`}>
+                <p className={`text-sm font-bold tabular-nums ${aBetter && m.aNum !== m.bNum ? "text-[#006d34]" : "text-[#181d1b]"}`}>{m.aVal}</p>
               </div>
-              <div className={`card-sm px-3 py-2 text-center border ${bBetter ? "border-[#22C55E]/25 bg-[#22C55E]/[0.04]" : ""}`}>
-                <p className={`text-sm font-bold tabular-nums ${bBetter ? "text-[#22C55E]" : "text-slate-300"}`}>{m.bVal}</p>
+              <div className={`bg-[#f0f5f1] border rounded-xl px-3 py-2 text-center ${bBetter ? "border-[#006d34]/25 bg-[#006d34]/[0.04]" : "border-[#bbcbba]/40"}`}>
+                <p className={`text-sm font-bold tabular-nums ${bBetter ? "text-[#006d34]" : "text-[#181d1b]"}`}>{m.bVal}</p>
               </div>
             </div>
           );
@@ -292,58 +292,60 @@ function ForecastCard({
       layout
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`card p-4 cursor-pointer transition-all duration-150 ${
-        selected ? "border-[#22C55E]/30 bg-[#22C55E]/[0.03]" : "hover:border-white/[0.08]"
-      } ${inCompare ? "border-[#22C55E]/40 bg-[#22C55E]/[0.05]" : ""}`}
+      className={`bg-white rounded-2xl border shadow-sm p-4 cursor-pointer transition-all duration-150 ${
+        selected ? "border-[#006d34]/30 bg-[#006d34]/[0.03]" : "border-[#bbcbba]/40 hover:border-[#006d34]/20 hover:bg-[#f0f5f1]/50"
+      } ${inCompare ? "border-[#006d34]/40 bg-[#006d34]/[0.04]" : ""}`}
       onClick={compareMode ? onToggleCompare : onSelect}
     >
       <div className="flex items-start justify-between gap-3">
         {/* Left: date + summary */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1.5">
-            <p className="text-xs font-semibold text-white">{fmt(forecast.created_at)}</p>
-            <span className="text-[10px] text-slate-600">{fmtTime(forecast.created_at)}</span>
+            <p className="text-xs font-semibold text-[#181d1b]">{fmt(forecast.created_at)}</p>
+            <span className="text-[10px] text-[#8a9a8a]">{fmtTime(forecast.created_at)}</span>
             {inCompare && (
-              <span className="text-[10px] font-bold text-[#22C55E] bg-[#22C55E]/10 border border-[#22C55E]/20 px-1.5 py-0.5 rounded">
+              <span className="text-[10px] font-bold text-[#006d34] bg-[#006d34]/10 border border-[#006d34]/20 px-1.5 py-0.5 rounded">
                 Selected
               </span>
             )}
           </div>
-          <p className="text-xs text-slate-500 leading-relaxed line-clamp-2">{forecast.summary}</p>
+          <p className="text-xs text-[#5a6059] leading-relaxed line-clamp-2">{forecast.summary}</p>
         </div>
 
         {/* Right: health score */}
         <div className="flex-shrink-0 text-right">
           <p className={`text-xl font-bold tabular-nums ${
-            forecast.health_score >= 66 ? "text-green-400" : forecast.health_score >= 51 ? "text-yellow-400" : "text-red-400"
+            forecast.health_score >= 66 ? "text-green-700" : forecast.health_score >= 51 ? "text-yellow-700" : "text-red-600"
           }`}>{forecast.health_score}</p>
           <p className={`text-[10px] font-semibold uppercase tracking-wider ${
-            forecast.health_score >= 66 ? "text-green-400" : forecast.health_score >= 51 ? "text-yellow-400" : "text-red-400"
+            forecast.health_score >= 66 ? "text-green-700" : forecast.health_score >= 51 ? "text-yellow-700" : "text-red-600"
           }`}>{label}</p>
         </div>
       </div>
 
       {/* Bottom stats + health bar */}
       <div className="mt-3 space-y-2">
-        <progress
-          value={barPct}
-          max={100}
-          className={`health-bar ${forecast.health_score >= 66 ? "health-bar-green" : forecast.health_score >= 51 ? "health-bar-yellow" : "health-bar-red"}`}
-          aria-label={`Inventory health: ${barPct}%`}
-        />
-        <div className="flex items-center gap-4 text-[10px] text-slate-600">
+        <div className="w-full h-1.5 rounded-full bg-[#eaefeb] overflow-hidden">
+          <div
+            className={`h-full rounded-full transition-all duration-700 ${
+              forecast.health_score >= 66 ? "bg-green-500" : forecast.health_score >= 51 ? "bg-yellow-500" : "bg-red-500"
+            }`}
+            style={{ width: `${barPct}%` }}
+          />
+        </div>
+        <div className="flex items-center gap-4 text-[10px] text-[#8a9a8a]">
           <span className="flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-slate-600 inline-block" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#bbcbba] inline-block" />
             {forecast.sku_count} SKUs
           </span>
           {forecast.critical_count > 0 && (
-            <span className="flex items-center gap-1 text-red-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-red-400 inline-block" />
+            <span className="flex items-center gap-1 text-red-600">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 inline-block" />
               {forecast.critical_count} critical
             </span>
           )}
           {compareMode && (
-            <span className="ml-auto text-[#22C55E]">{inCompare ? "✓ Selected" : "Click to compare"}</span>
+            <span className="ml-auto text-[#006d34]">{inCompare ? "✓ Selected" : "Click to compare"}</span>
           )}
         </div>
       </div>
@@ -364,23 +366,23 @@ function ForecastDetail({ forecast }: { forecast: SavedForecast }) {
       exit={{ opacity: 0, height: 0 }}
       className="overflow-hidden"
     >
-      <div className="card p-5 mb-3 border-[#22C55E]/10">
+      <div className="bg-[#f0f5f1] rounded-2xl border border-[#bbcbba]/40 p-5 mb-3">
         {/* KPI row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
           {[
             {
               label: "Health Score", val: `${a.healthScore}/100`,
-              cls: a.healthScore >= 66 ? "text-green-400" : a.healthScore >= 51 ? "text-yellow-400" : "text-red-400",
+              cls: a.healthScore >= 66 ? "text-green-700" : a.healthScore >= 51 ? "text-yellow-700" : "text-red-600",
             },
-            { label: "Revenue at Risk", val: a.revenueAtRisk || "—", cls: "text-red-400" },
+            { label: "Revenue at Risk", val: a.revenueAtRisk || "—", cls: "text-red-600" },
             {
               label: "Critical SKUs", val: String(a.criticalCount),
-              cls: a.criticalCount > 0 ? "text-red-400" : "text-green-400",
+              cls: a.criticalCount > 0 ? "text-red-600" : "text-green-700",
             },
-            { label: "Forecast Confidence", val: `${a.forecastConfidence ?? "—"}%`, cls: "text-[#22C55E]" },
+            { label: "Forecast Confidence", val: `${a.forecastConfidence ?? "—"}%`, cls: "text-[#006d34]" },
           ].map(k => (
-            <div key={k.label} className="card-sm p-3">
-              <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">{k.label}</p>
+            <div key={k.label} className="bg-white border border-[#bbcbba]/40 rounded-xl p-3">
+              <p className="text-[10px] text-[#5a6059] uppercase tracking-wider mb-1">{k.label}</p>
               <p className={`text-base font-bold tabular-nums ${k.cls}`}>{k.val}</p>
             </div>
           ))}
@@ -389,21 +391,21 @@ function ForecastDetail({ forecast }: { forecast: SavedForecast }) {
         {/* Top products at risk */}
         {a.products?.filter(p => p.stockoutRisk === "critical" || p.stockoutRisk === "high").length > 0 && (
           <div className="mb-4">
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Products needing action</p>
+            <p className="text-[10px] font-bold text-[#5a6059] uppercase tracking-wider mb-2">Products needing action</p>
             <div className="space-y-1.5">
               {a.products.filter(p => p.stockoutRisk === "critical" || p.stockoutRisk === "high").slice(0, 5).map(p => (
-                <div key={p.sku || p.productName} className="flex items-center justify-between gap-3 px-3 py-2 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                <div key={p.sku || p.productName} className="flex items-center justify-between gap-3 px-3 py-2 rounded-lg bg-white border border-[#bbcbba]/40">
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className={`w-2 h-2 rounded-full flex-shrink-0 ${p.stockoutRisk === "critical" ? "bg-red-400" : "bg-orange-400"}`} />
-                    <span className="text-xs font-medium text-slate-200 truncate">{p.productName}</span>
-                    {p.sku && <span className="text-[10px] text-slate-600 font-mono hidden sm:block">{p.sku}</span>}
+                    <span className={`w-2 h-2 rounded-full flex-shrink-0 ${p.stockoutRisk === "critical" ? "bg-red-500" : "bg-orange-400"}`} />
+                    <span className="text-xs font-medium text-[#181d1b] truncate">{p.productName}</span>
+                    {p.sku && <span className="text-[10px] text-[#8a9a8a] font-mono hidden sm:block">{p.sku}</span>}
                   </div>
                   <div className="flex items-center gap-3 flex-shrink-0">
-                    <span className={`text-xs font-bold tabular-nums ${p.daysOfStockRemaining <= 7 ? "text-red-400" : "text-orange-400"}`}>
+                    <span className={`text-xs font-bold tabular-nums ${p.daysOfStockRemaining <= 7 ? "text-red-600" : "text-orange-600"}`}>
                       {p.daysOfStockRemaining}d left
                     </span>
                     {p.estimatedRevenueLoss && (
-                      <span className="text-xs text-red-400">{p.estimatedRevenueLoss}</span>
+                      <span className="text-xs text-red-600">{p.estimatedRevenueLoss}</span>
                     )}
                   </div>
                 </div>
@@ -415,11 +417,11 @@ function ForecastDetail({ forecast }: { forecast: SavedForecast }) {
         {/* Recommendations */}
         {a.topRecommendations?.length > 0 && (
           <div>
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Top recommendations</p>
+            <p className="text-[10px] font-bold text-[#5a6059] uppercase tracking-wider mb-2">Top recommendations</p>
             <ol className="space-y-1.5">
               {a.topRecommendations.slice(0, 3).map((rec, i) => (
-                <li key={i} className="flex items-start gap-2 text-xs text-slate-400">
-                  <span className="w-5 h-5 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/20 text-[#22C55E] text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
+                <li key={i} className="flex items-start gap-2 text-xs text-[#5a6059]">
+                  <span className="w-5 h-5 rounded-full bg-[#006d34]/10 border border-[#006d34]/20 text-[#006d34] text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
                   {rec}
                 </li>
               ))}
@@ -496,33 +498,33 @@ export default function HistoryClient() {
 
   if (!isLoaded || loading) {
     return (
-      <div className="min-h-screen bg-[#060C0D] flex items-center justify-center">
-        <div className="w-8 h-8 rounded-full border-2 border-[#22C55E]/30 border-t-[#22C55E] animate-spin" />
+      <div className="min-h-screen bg-[#f6faf6] flex items-center justify-center">
+        <div className="w-8 h-8 rounded-full border-2 border-[#006d34]/30 border-t-[#006d34] animate-spin" />
       </div>
     );
   }
 
   if (!isSignedIn) {
     return (
-      <div className="min-h-screen bg-[#060C0D] flex items-center justify-center text-center px-4">
+      <div className="min-h-screen bg-[#f6faf6] flex items-center justify-center text-center px-4">
         <div>
-          <p className="text-white font-semibold mb-2">Sign in to view your forecast history</p>
-          <Link href="/forecast" className="text-sm text-[#22C55E] hover:underline">Go to forecast →</Link>
+          <p className="text-[#181d1b] font-semibold mb-2">Sign in to view your forecast history</p>
+          <Link href="/forecast" className="text-sm text-[#006d34] hover:underline">Go to forecast →</Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#060C0D] flex">
+    <div className="min-h-screen bg-[#f6faf6] flex">
       <AppSidebar />
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top bar */}
-        <header className="h-16 flex items-center gap-3 px-5 border-b border-[#22C55E]/[0.08] bg-[#060C0D]/80 backdrop-blur-md sticky top-0 z-20 flex-shrink-0">
+        <header className="h-14 flex items-center gap-3 px-5 border-b border-[#bbcbba]/30 bg-white/70 backdrop-blur-xl sticky top-0 z-20 flex-shrink-0 shadow-sm">
           <div className="min-w-0">
-            <p className="text-[15px] font-semibold text-white leading-tight">Forecast History</p>
-            <p className="text-[11px] text-[#475569] leading-tight">{forecasts.length} forecast{forecasts.length !== 1 ? "s" : ""} saved</p>
+            <p className="text-[15px] font-semibold text-[#181d1b] leading-tight">Forecast History</p>
+            <p className="text-[11px] text-[#5a6059] leading-tight">{forecasts.length} forecast{forecasts.length !== 1 ? "s" : ""} saved</p>
           </div>
           <div className="ml-auto flex items-center gap-2.5">
             <button
@@ -530,13 +532,13 @@ export default function HistoryClient() {
               onClick={() => { setCompareMode(m => !m); setCompareIds([]); setCompareDetails([]); }}
               className={`text-xs font-semibold px-3.5 py-1.5 rounded-lg border transition-all ${
                 compareMode
-                  ? "bg-[#22C55E]/10 border-[#22C55E]/30 text-[#22C55E]"
-                  : "border-white/[0.08] text-slate-400 hover:text-white hover:border-white/[0.15]"
+                  ? "bg-[#006d34]/10 border-[#006d34]/30 text-[#006d34]"
+                  : "border-[#bbcbba]/60 text-[#5a6059] hover:text-[#181d1b] hover:border-[#006d34]/30"
               }`}
             >
               {compareMode ? "✓ Compare mode on" : "Compare forecasts"}
             </button>
-            <Link href="/forecast" className="text-xs font-semibold bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] px-3.5 py-1.5 rounded-lg transition-colors shadow-lg shadow-[#22C55E]/20">
+            <Link href="/forecast" className="text-xs font-semibold bg-emerald-brand text-white px-3.5 py-1.5 rounded-lg transition-all shadow-md hover:opacity-90">
               + New Forecast
             </Link>
           </div>
@@ -546,134 +548,134 @@ export default function HistoryClient() {
           <div className="max-w-[960px] mx-auto px-4 sm:px-6 py-8">
 
             {error && (
-          <div className="card p-4 mb-5 border-red-500/20 bg-red-500/[0.05]">
-            <p className="text-sm text-red-400">{error}</p>
-          </div>
-        )}
-
-        {forecasts.length === 0 ? (
-          /* Empty state */
-          <div className="card p-12 text-center">
-            <div className="w-14 h-14 rounded-2xl bg-[#22C55E]/10 border border-[#22C55E]/15 flex items-center justify-center mx-auto mb-4">
-              <svg className="w-7 h-7 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-              </svg>
-            </div>
-            <p className="text-white font-semibold mb-1">No forecasts yet</p>
-            <p className="text-slate-500 text-sm mb-4">Upload your first CSV to start tracking your inventory health over time.</p>
-            <Link href="/forecast" className="inline-flex items-center gap-2 bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] font-bold px-5 py-2.5 rounded-xl transition-all text-sm">
-              Run your first forecast →
-            </Link>
-          </div>
-        ) : (
-          <>
-            {/* Summary KPI cards */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
-              {[
-                {
-                  label: "Total Forecasts",
-                  val: String(forecasts.length),
-                  sub: "all time",
-                  valCls: "text-[#22C55E]",
-                  iconCls: "bg-[#22C55E]/10 text-[#22C55E]",
-                  icon: <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />,
-                },
-                {
-                  label: "Latest Health",
-                  val: latest ? `${latest.health_score}/100` : "—",
-                  sub: latest ? healthLabel(latest.health_score) : "",
-                  valCls: latest ? (latest.health_score >= 66 ? "text-green-400" : latest.health_score >= 51 ? "text-yellow-400" : "text-red-400") : "text-slate-400",
-                  iconCls: "bg-green-500/10 text-green-400",
-                  icon: <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />,
-                },
-                {
-                  label: "Avg Health",
-                  val: `${avgHealth}/100`,
-                  sub: "across all forecasts",
-                  valCls: avgHealth >= 66 ? "text-green-400" : avgHealth >= 51 ? "text-yellow-400" : "text-red-400",
-                  iconCls: "bg-[#22C55E]/10 text-[#22C55E]",
-                  icon: <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />,
-                },
-                {
-                  label: "Best Score",
-                  val: best ? `${best.health_score}/100` : "—",
-                  sub: best ? fmt(best.created_at) : "",
-                  valCls: "text-green-400",
-                  iconCls: "bg-green-500/10 text-green-400",
-                  icon: <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0" />,
-                },
-              ].map(k => (
-                <div key={k.label} className="card p-4 flex flex-col gap-2.5">
-                  <div className="flex items-center justify-between">
-                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{k.label}</p>
-                    <div className={`w-6 h-6 rounded-lg flex items-center justify-center ${k.iconCls}`}>
-                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-                        {k.icon}
-                      </svg>
-                    </div>
-                  </div>
-                  <div>
-                    <p className={`text-xl font-bold tabular-nums ${k.valCls}`}>{k.val}</p>
-                    {k.sub && <p className="text-[10px] text-slate-600 mt-0.5">{k.sub}</p>}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Trend chart */}
-            <div className="card p-5 mb-5">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h2 className="text-sm font-bold text-white">Inventory Health Trend</h2>
-                  <p className="text-xs text-slate-500 mt-0.5">How your inventory health has changed over time</p>
-                </div>
-                <span className="text-[10px] font-semibold text-slate-600 bg-white/[0.03] border border-white/[0.06] px-2 py-1 rounded-lg">
-                  Last {forecasts.length} runs
-                </span>
-              </div>
-              <TrendChart forecasts={forecasts} />
-            </div>
-
-            {/* Compare panel */}
-            <AnimatePresence>
-              {compareMode && compareDetails.length === 2 && (
-                <ComparePanel a={compareDetails[0]} b={compareDetails[1]} />
-              )}
-            </AnimatePresence>
-            {compareMode && compareIds.length < 2 && (
-              <div className="flex items-center gap-2 text-xs text-[#22C55E] bg-[#22C55E]/[0.05] border border-[#22C55E]/15 px-4 py-2.5 rounded-xl mb-4">
-                <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
-                Select {2 - compareIds.length} more forecast{2 - compareIds.length !== 1 ? "s" : ""} from the list below to compare
+              <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-5">
+                <p className="text-sm text-red-700">{error}</p>
               </div>
             )}
 
-            {/* History list */}
-            <div className="space-y-2.5">
-              {compareMode && (
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Click forecasts to select for comparison</p>
-              )}
-              {forecasts.map(f => (
-                <div key={f.id}>
-                  <ForecastCard
-                    forecast={f}
-                    selected={selectedId === f.id}
-                    compareMode={compareMode}
-                    inCompare={compareIds.includes(f.id)}
-                    onToggleCompare={() => toggleCompare(f.id)}
-                    onSelect={() => handleSelect(f.id)}
-                  />
-                  <AnimatePresence>
-                    {!compareMode && selectedId === f.id && (
-                      detailLoading
-                        ? <div className="flex justify-center py-6"><div className="w-5 h-5 rounded-full border-2 border-[#22C55E]/30 border-t-[#22C55E] animate-spin" /></div>
-                        : selectedDetail && <ForecastDetail forecast={selectedDetail} />
-                    )}
-                  </AnimatePresence>
+            {forecasts.length === 0 ? (
+              /* Empty state */
+              <div className="bg-white rounded-2xl border border-[#bbcbba]/40 shadow-sm p-12 text-center">
+                <div className="w-14 h-14 rounded-2xl bg-[#006d34]/[0.08] border border-[#006d34]/15 flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-7 h-7 text-[#006d34]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                  </svg>
                 </div>
-              ))}
-            </div>
-          </>
-        )}
+                <p className="text-[#181d1b] font-semibold mb-1">No forecasts yet</p>
+                <p className="text-[#5a6059] text-sm mb-4">Upload your first CSV to start tracking your inventory health over time.</p>
+                <Link href="/forecast" className="inline-flex items-center gap-2 bg-emerald-brand text-white font-bold px-5 py-2.5 rounded-xl transition-all text-sm hover:opacity-90">
+                  Run your first forecast →
+                </Link>
+              </div>
+            ) : (
+              <>
+                {/* Summary KPI cards */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+                  {[
+                    {
+                      label: "Total Forecasts",
+                      val: String(forecasts.length),
+                      sub: "all time",
+                      valCls: "text-[#006d34]",
+                      iconCls: "bg-[#006d34]/10 text-[#006d34]",
+                      icon: <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />,
+                    },
+                    {
+                      label: "Latest Health",
+                      val: latest ? `${latest.health_score}/100` : "—",
+                      sub: latest ? healthLabel(latest.health_score) : "",
+                      valCls: latest ? (latest.health_score >= 66 ? "text-green-700" : latest.health_score >= 51 ? "text-yellow-700" : "text-red-600") : "text-[#8a9a8a]",
+                      iconCls: "bg-green-500/10 text-green-600",
+                      icon: <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />,
+                    },
+                    {
+                      label: "Avg Health",
+                      val: `${avgHealth}/100`,
+                      sub: "across all forecasts",
+                      valCls: avgHealth >= 66 ? "text-green-700" : avgHealth >= 51 ? "text-yellow-700" : "text-red-600",
+                      iconCls: "bg-[#006d34]/10 text-[#006d34]",
+                      icon: <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />,
+                    },
+                    {
+                      label: "Best Score",
+                      val: best ? `${best.health_score}/100` : "—",
+                      sub: best ? fmt(best.created_at) : "",
+                      valCls: "text-green-700",
+                      iconCls: "bg-green-500/10 text-green-600",
+                      icon: <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0" />,
+                    },
+                  ].map(k => (
+                    <div key={k.label} className="bg-white rounded-xl border border-[#bbcbba]/40 shadow-sm p-4 flex flex-col gap-2.5">
+                      <div className="flex items-center justify-between">
+                        <p className="text-[10px] font-bold text-[#5a6059] uppercase tracking-wider">{k.label}</p>
+                        <div className={`w-6 h-6 rounded-lg flex items-center justify-center ${k.iconCls}`}>
+                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                            {k.icon}
+                          </svg>
+                        </div>
+                      </div>
+                      <div>
+                        <p className={`text-xl font-bold tabular-nums ${k.valCls}`}>{k.val}</p>
+                        {k.sub && <p className="text-[10px] text-[#8a9a8a] mt-0.5">{k.sub}</p>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Trend chart */}
+                <div className="bg-white rounded-2xl border border-[#bbcbba]/40 shadow-sm p-5 mb-5">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h2 className="text-sm font-bold text-[#181d1b]">How your inventory health has changed over time</h2>
+                      <p className="text-xs text-[#5a6059] mt-0.5">Health score trend across all forecast runs</p>
+                    </div>
+                    <span className="text-[10px] font-semibold text-[#5a6059] bg-[#eaefeb] border border-[#bbcbba]/40 px-2.5 py-1 rounded-lg">
+                      Last {forecasts.length} runs
+                    </span>
+                  </div>
+                  <TrendChart forecasts={forecasts} />
+                </div>
+
+                {/* Compare panel */}
+                <AnimatePresence>
+                  {compareMode && compareDetails.length === 2 && (
+                    <ComparePanel a={compareDetails[0]} b={compareDetails[1]} />
+                  )}
+                </AnimatePresence>
+                {compareMode && compareIds.length < 2 && (
+                  <div className="flex items-center gap-2 text-xs text-[#006d34] bg-[#006d34]/[0.05] border border-[#006d34]/15 px-4 py-2.5 rounded-xl mb-4">
+                    <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+                    Select {2 - compareIds.length} more forecast{2 - compareIds.length !== 1 ? "s" : ""} from the list below to compare
+                  </div>
+                )}
+
+                {/* History list */}
+                <div className="space-y-2.5">
+                  {compareMode && (
+                    <p className="text-[10px] font-bold text-[#5a6059] uppercase tracking-wider mb-2">Click forecasts to select for comparison</p>
+                  )}
+                  {forecasts.map(f => (
+                    <div key={f.id}>
+                      <ForecastCard
+                        forecast={f}
+                        selected={selectedId === f.id}
+                        compareMode={compareMode}
+                        inCompare={compareIds.includes(f.id)}
+                        onToggleCompare={() => toggleCompare(f.id)}
+                        onSelect={() => handleSelect(f.id)}
+                      />
+                      <AnimatePresence>
+                        {!compareMode && selectedId === f.id && (
+                          detailLoading
+                            ? <div className="flex justify-center py-6"><div className="w-5 h-5 rounded-full border-2 border-[#006d34]/30 border-t-[#006d34] animate-spin" /></div>
+                            : selectedDetail && <ForecastDetail forecast={selectedDetail} />
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
       </div>
         </main>
       </div>
