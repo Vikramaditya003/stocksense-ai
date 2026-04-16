@@ -1,8 +1,76 @@
 "use client";
 
-import { SignUp } from "@clerk/nextjs";
+import { SignUp, useSignUp } from "@clerk/nextjs";
 import Link from "next/link";
 import { LogoMark } from "@/components/StocksenseLogo";
+import { useState, useEffect } from "react";
+
+function getStrength(pw: string): { score: number; label: string; color: string; tip: string } {
+  if (!pw) return { score: 0, label: "", color: "", tip: "" };
+
+  let score = 0;
+  if (pw.length >= 8)  score++;
+  if (pw.length >= 12) score++;
+  if (/[A-Z]/.test(pw)) score++;
+  if (/[0-9]/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+  if (score <= 1) return { score: 1, label: "Too weak", color: "bg-red-500",    tip: "Add more characters or a number" };
+  if (score === 2) return { score: 2, label: "Weak",     color: "bg-orange-400", tip: "Try mixing letters and numbers" };
+  if (score === 3) return { score: 3, label: "Fair",     color: "bg-yellow-400", tip: "Add a capital letter or symbol" };
+  if (score === 4) return { score: 4, label: "Good",     color: "bg-emerald-400", tip: "Almost there!" };
+  return              { score: 5, label: "Strong",   color: "bg-emerald-500", tip: "Great password!" };
+}
+
+function PasswordHint() {
+  const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    // Listen for password input changes inside the Clerk form
+    const interval = setInterval(() => {
+      const input = document.querySelector<HTMLInputElement>("input[type='password']");
+      if (input && input.value !== password) {
+        setPassword(input.value);
+      }
+    }, 150);
+    return () => clearInterval(interval);
+  }, [password]);
+
+  if (!password) {
+    return (
+      <p className="text-[11px] text-emerald-400/50 text-center mt-1">
+        Use 8+ characters — a mix of letters and numbers works well
+      </p>
+    );
+  }
+
+  const { score, label, color, tip } = getStrength(password);
+  const bars = [1, 2, 3, 4, 5];
+
+  return (
+    <div className="mt-2 px-1">
+      <div className="flex gap-1 mb-1">
+        {bars.map((b) => (
+          <div
+            key={b}
+            className={`h-1 flex-1 rounded-full transition-all duration-300 ${
+              b <= score ? color : "bg-emerald-900/40"
+            }`}
+          />
+        ))}
+      </div>
+      <div className="flex items-center justify-between">
+        <span className={`text-[11px] font-semibold ${
+          score <= 1 ? "text-red-400" :
+          score === 2 ? "text-orange-400" :
+          score === 3 ? "text-yellow-400" :
+          "text-emerald-400"
+        }`}>{label}</span>
+        <span className="text-[11px] text-emerald-400/50">{tip}</span>
+      </div>
+    </div>
+  );
+}
 
 export default function SignUpPage() {
   return (
@@ -22,7 +90,7 @@ export default function SignUpPage() {
         </div>
       </Link>
 
-      <div className="relative z-10 w-full flex justify-center">
+      <div className="relative z-10 w-full max-w-sm mx-auto">
         <SignUp
           appearance={{
             variables: {
@@ -37,7 +105,7 @@ export default function SignUpPage() {
               fontSize: "14px",
             },
             elements: {
-              rootBox: "w-full max-w-sm mx-auto",
+              rootBox: "w-full",
               card: "!bg-emerald-950/80 !backdrop-blur-xl !shadow-2xl !shadow-black/60 !border !border-emerald-800/40 !rounded-2xl",
               headerTitle: "!text-white !font-bold !tracking-tight",
               headerSubtitle: "!text-emerald-100/70",
@@ -61,6 +129,10 @@ export default function SignUpPage() {
             },
           }}
         />
+        {/* Password strength meter — sits just below the Clerk card */}
+        <div className="bg-emerald-950/60 border border-emerald-800/30 rounded-b-2xl -mt-3 pt-4 pb-3 px-4 border-t-0">
+          <PasswordHint />
+        </div>
       </div>
 
       <p className="mt-6 text-xs text-emerald-100/30 text-center relative z-10">
