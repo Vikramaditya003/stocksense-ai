@@ -474,7 +474,11 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
         {!collapsed && user && (
           <div className="min-w-0 flex-1">
             <p className="text-[13px] font-semibold text-white truncate">
-              {user.firstName ?? user.username ?? "User"}
+              {user.fullName ??
+               user.firstName ??
+               user.username ??
+               user.primaryEmailAddress?.emailAddress?.split("@")[0] ??
+               "User"}
             </p>
             <p className="text-[11px] text-emerald-100/40 truncate">
               {user.primaryEmailAddress?.emailAddress ?? ""}
