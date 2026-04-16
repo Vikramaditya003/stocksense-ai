@@ -1,10 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { LogoMark } from "@/components/StocksenseLogo";
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Pro Plan — Coming Soon · Forestock",
-};
+import { useState } from "react";
+import { useUser } from "@clerk/nextjs";
 
 const FEATURES = [
   "Unlimited products — no 5-SKU cap",
@@ -15,6 +14,72 @@ const FEATURES = [
   "1-click purchase order generation",
   "Priority email support",
 ];
+
+function NotifyButton() {
+  const { isSignedIn, user } = useUser();
+  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
+
+  async function handleNotify() {
+    if (!isSignedIn) {
+      window.location.href = "/sign-in?redirect_url=/upgrade";
+      return;
+    }
+    setStatus("loading");
+    try {
+      const res = await fetch("/api/waitlist", { method: "POST" });
+      const data = await res.json();
+      if (data.success) {
+        setStatus("done");
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  if (status === "done") {
+    return (
+      <div className="inline-flex items-center justify-center gap-2 bg-[#006d34]/10 border border-[#006d34]/30 text-[#006d34] font-semibold text-[14px] px-7 py-3 rounded-xl">
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+        You&apos;re on the list!
+        {user?.primaryEmailAddress?.emailAddress && (
+          <span className="text-[12px] font-normal text-[#5a6059]">
+            — {user.primaryEmailAddress.emailAddress}
+          </span>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleNotify}
+      disabled={status === "loading"}
+      className="inline-flex items-center justify-center gap-2 bg-emerald-brand hover:opacity-90 text-white font-semibold text-[14px] px-7 py-3 rounded-xl transition-all shadow-lg shadow-[#006d34]/20 disabled:opacity-60 disabled:cursor-not-allowed"
+    >
+      {status === "loading" ? (
+        <>
+          <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth={3} />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+          </svg>
+          Adding you…
+        </>
+      ) : (
+        <>
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+          </svg>
+          {isSignedIn ? "Notify me at launch" : "Sign in to get notified"}
+        </>
+      )}
+    </button>
+  );
+}
 
 export default function UpgradePage() {
   return (
@@ -53,21 +118,13 @@ export default function UpgradePage() {
               We&apos;re putting the finishing<br className="hidden sm:block" /> touches on Pro
             </h1>
             <p className="text-[16px] text-[#5a6059] max-w-[460px] mx-auto leading-relaxed">
-              Pro is almost ready. Drop us your email and we&apos;ll let you know the moment it goes live — with an early-bird discount.
+              Pro is almost ready. Click below and we&apos;ll notify you the moment it goes live — with an early-bird discount.
             </p>
           </div>
 
-          {/* Notify CTA */}
+          {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center mb-12">
-            <a
-              href="mailto:support@getforestock.com?subject=Notify me when Pro launches&body=Hi, please notify me when the Forestock Pro plan goes live. My email is: "
-              className="inline-flex items-center justify-center gap-2 bg-emerald-brand hover:opacity-90 text-white font-semibold text-[14px] px-7 py-3 rounded-xl transition-all shadow-lg shadow-[#006d34]/20"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-              </svg>
-              Notify me at launch
-            </a>
+            <NotifyButton />
             <Link
               href="/forecast"
               className="inline-flex items-center justify-center gap-2 border border-[#bbcbba]/60 hover:border-[#006d34]/30 text-[#5a6059] hover:text-[#181d1b] font-semibold text-[14px] px-7 py-3 rounded-xl transition-all bg-white"
