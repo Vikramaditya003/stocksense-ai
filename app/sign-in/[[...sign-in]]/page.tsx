@@ -2,6 +2,7 @@
 
 import { SignIn } from "@clerk/nextjs";
 import Link from "next/link";
+import { LogoMark } from "@/components/StocksenseLogo";
 
 export default function SignInPage() {
   return (
@@ -12,10 +13,8 @@ export default function SignInPage() {
 
       {/* Logo */}
       <Link href="/" className="flex items-center gap-3 mb-8 relative z-10">
-        <div className="bg-emerald-brand w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg">
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-          </svg>
+        <div className="bg-emerald-brand w-10 h-10 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
+          <LogoMark size={24} />
         </div>
         <div>
           <p className="text-[16px] font-bold text-white tracking-tight leading-none">Forestock</p>
