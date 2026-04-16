@@ -6,6 +6,118 @@ import { useState, useRef } from "react";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { LogoMark } from "@/components/StocksenseLogo";
 
+const RATINGS = ["😞", "😕", "😐", "😊", "😍"];
+
+function FeedbackModal({ onClose }: { onClose: () => void }) {
+  const [rating, setRating] = useState(-1);
+  const [text, setText] = useState("");
+  const [sent, setSent] = useState(false);
+
+  function handleSend() {
+    const subject = encodeURIComponent("Forestock Feedback");
+    const ratingLabel = rating >= 0 ? `${RATINGS[rating]} (${rating + 1}/5)` : "No rating";
+    const body = encodeURIComponent(
+      `Rating: ${ratingLabel}\n\nFeedback:\n${text || "(no additional comments)"}`
+    );
+    window.open(`mailto:support@getforestock.com?subject=${subject}&body=${body}`);
+    setSent(true);
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-[60] bg-black/25 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-2xl border border-[#bbcbba]/40 shadow-2xl shadow-black/10 p-6 w-full max-w-[360px]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {sent ? (
+          <div className="text-center py-4">
+            <div className="w-12 h-12 rounded-full bg-[#006d34]/10 flex items-center justify-center mx-auto mb-3">
+              <svg className="w-6 h-6 text-[#006d34]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <p className="text-[15px] font-semibold text-[#181d1b] mb-1">Thanks for your feedback!</p>
+            <p className="text-[13px] text-[#5a6059] mb-4">Your email client will open to send it.</p>
+            <button
+              type="button"
+              onClick={onClose}
+              className="text-[13px] font-medium text-[#006d34] hover:text-[#005a28] transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <p className="text-[15px] font-semibold text-[#181d1b]">Share your feedback</p>
+                <p className="text-[12px] text-[#8a9a8a] mt-0.5">Help us make Forestock better</p>
+              </div>
+              <button
+                type="button"
+                onClick={onClose}
+                className="text-[#8a9a8a] hover:text-[#181d1b] transition-colors p-1 -mr-1 -mt-1"
+                aria-label="Close"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <p className="text-[12px] text-[#5a6059] mb-2">How&apos;s your experience?</p>
+            <div className="flex gap-2 mb-4">
+              {RATINGS.map((emoji, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setRating(i)}
+                  className={`flex-1 text-[22px] py-2 rounded-xl border transition-all ${
+                    rating === i
+                      ? "border-[#006d34]/40 bg-[#006d34]/[0.07] scale-110"
+                      : "border-[#bbcbba]/40 hover:border-[#bbcbba] hover:bg-[#f0f5f1]"
+                  }`}
+                >
+                  {emoji}
+                </button>
+              ))}
+            </div>
+
+            <textarea
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="Tell us more (optional)…"
+              rows={3}
+              className="w-full text-[13px] text-[#181d1b] placeholder:text-[#8a9a8a] bg-[#f6faf6] border border-[#bbcbba]/40 rounded-xl px-3 py-2.5 outline-none focus:border-[#006d34]/40 resize-none mb-4 transition-colors"
+            />
+
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 text-[13px] font-medium text-[#5a6059] hover:text-[#181d1b] border border-[#bbcbba]/60 rounded-xl py-2.5 transition-all hover:bg-[#f0f5f1]"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSend}
+                disabled={rating < 0 && !text.trim()}
+                className="flex-1 text-[13px] font-semibold text-white bg-emerald-brand rounded-xl py-2.5 transition-all hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Send feedback
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 interface AppSidebarProps {
   alertCount?: number;
 }
@@ -98,6 +210,7 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [search, setSearch] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   function isActive(href: string) {
     const [base, query] = href.split("?");
@@ -250,17 +363,34 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
           {!collapsed && (
             <p className="text-[10px] font-bold text-emerald-500/40 uppercase tracking-widest px-3 pb-1">Support</p>
           )}
-          {BOTTOM_NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium text-emerald-100/50 hover:text-white hover:bg-emerald-900/30 transition-all"
-              title={collapsed ? item.label : undefined}
-            >
-              <span className="flex-shrink-0">{item.icon}</span>
-              {!collapsed && <span className="truncate">{item.label}</span>}
-            </Link>
-          ))}
+          {/* Blog */}
+          <Link
+            href="/blog"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium text-emerald-100/50 hover:text-white hover:bg-emerald-900/30 transition-all"
+            title={collapsed ? "Blog" : undefined}
+          >
+            <span className="flex-shrink-0">{BOTTOM_NAV[0].icon}</span>
+            {!collapsed && <span className="truncate">Blog</span>}
+          </Link>
+          {/* Give Feedback */}
+          <button
+            type="button"
+            onClick={() => setFeedbackOpen(true)}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium text-emerald-100/50 hover:text-white hover:bg-emerald-900/30 transition-all"
+            title={collapsed ? "Give Feedback" : undefined}
+          >
+            <span className="flex-shrink-0">{BOTTOM_NAV[1].icon}</span>
+            {!collapsed && <span className="truncate">Give Feedback</span>}
+          </button>
+          {/* Help */}
+          <a
+            href="mailto:support@getforestock.com"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium text-emerald-100/50 hover:text-white hover:bg-emerald-900/30 transition-all"
+            title={collapsed ? "Help" : undefined}
+          >
+            <span className="flex-shrink-0">{BOTTOM_NAV[2].icon}</span>
+            {!collapsed && <span className="truncate">Help</span>}
+          </a>
         </div>
       </nav>
 
@@ -336,6 +466,7 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
           </div>
         )}
       </div>
+      {feedbackOpen && <FeedbackModal onClose={() => setFeedbackOpen(false)} />}
     </aside>
   );
 }
