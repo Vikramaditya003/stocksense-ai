@@ -31,7 +31,7 @@ function ForecastNavAuth({ onReset, showReset }: { onReset: () => void; showRese
           <Link href="/history" className="text-xs font-medium text-[#5a6059] hover:text-[#181d1b] transition-colors">
             History
           </Link>
-          <Link href="/#pricing" className="text-xs font-semibold text-[#5a6059] hover:text-[#181d1b] transition-colors">
+          <Link href="/upgrade" className="text-xs font-semibold text-[#5a6059] hover:text-[#181d1b] transition-colors">
             Upgrade to Pro
           </Link>
           <UserButton
@@ -416,7 +416,7 @@ function UpgradeModal({ feature, onClose }: { feature: string; onClose: () => vo
                 disabled={paying}
                 className="block w-full text-center bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] font-bold py-3 rounded-xl transition-all text-sm shadow-lg shadow-[#22C55E]/20 hover:-translate-y-0.5 disabled:opacity-60"
               >
-                {paying ? "Opening payment..." : "Upgrade to Pro — ₹999/mo"}
+                {paying ? "Opening payment..." : "Upgrade to Pro — ₹749/mo"}
               </button>
               {payError && <p className="text-xs text-red-400 text-center mt-2">Payment failed. Try again.</p>}
               <button onClick={onClose} className="block w-full text-center text-slate-600 hover:text-slate-400 text-xs mt-3 transition-colors">
@@ -1054,7 +1054,7 @@ export default function ForecastClient() {
         // Plan limit hit — show upgrade modal instead of generic error screen
         if (json.planLimitReached) {
           setStep("idle");
-          setUpgradeModal("Unlimited SKU forecasting");
+          setUpgradeModal("Unlimited forecast runs");
           return;
         }
         throw new Error(json.error || "Forecast failed.");
@@ -1325,7 +1325,7 @@ export default function ForecastClient() {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {[
                   { label: "Avg. Time", value: "~30s", sub: "per forecast run" },
-                  { label: "Free Plan", value: "5 SKUs", sub: "no sign-up required" },
+                  { label: "Free Plan", value: "5 runs", sub: "no sign-up required" },
                   { label: "Formats", value: "CSV · XLSX", sub: "Shopify exports included" },
                 ].map((s) => (
                   <div key={s.label} className="bg-white rounded-xl border border-[#bbcbba]/40 p-4 shadow-sm">
@@ -1780,7 +1780,7 @@ export default function ForecastClient() {
               {/* Upsell */}
               <div className="rounded-2xl p-6 bg-emerald-950 text-center">
                 <p className="text-white font-semibold mb-1 text-sm">Unlock unlimited forecasts + ad-spend correlation + supplier alerts</p>
-                <p className="text-emerald-100/50 text-xs mb-4">Pro plan — ₹999/mo. 10× cheaper than Prediko. Cancel anytime.</p>
+                <p className="text-emerald-100/50 text-xs mb-4">Pro plan — ₹749/mo. 10× cheaper than Prediko. Cancel anytime.</p>
                 <Link
                   href="/#pricing"
                   className="inline-flex items-center gap-2 bg-emerald-brand text-white font-bold px-5 py-2.5 rounded-xl transition-all text-sm hover:opacity-90 hover:-translate-y-0.5"
