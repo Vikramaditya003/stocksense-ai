@@ -16,8 +16,8 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const email = String(body.email ?? "").trim().toLowerCase().slice(0, 320);
 
-    // Basic format check — not a full RFC validator, just enough to reject obvious garbage
-    if (!email.includes("@") || !email.includes(".") || email.length < 5) {
+    // Reject obvious garbage — requires local@domain.tld format
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
       return NextResponse.json({ success: false, error: "Invalid email." }, { status: 400 });
     }
 

@@ -161,12 +161,13 @@ export default function VsStockMonitor() {
         <div className="space-y-3">
           {[
             "You just need a basic alert when something hits zero (no forecasting needed)",
-            "You have very few SKUs (&lt;10) and track them manually most of the time",
+            "You have very few SKUs (<10) and track them manually most of the time",
             "You're on a tight budget and the free tier of Stock Monitor covers you",
           ].map(t => (
-            <div key={t} className="flex items-start gap-3 text-sm text-slate-400 bg-white/[0.02] border border-white/[0.05] rounded-xl px-4 py-3"
-              dangerouslySetInnerHTML={{ __html: `<span class="text-yellow-400/70 mt-0.5 flex-shrink-0">—</span><span class="ml-2">${t}</span>` }}
-            />
+            <div key={t} className="flex items-start gap-3 text-sm text-slate-400 bg-white/[0.02] border border-white/[0.05] rounded-xl px-4 py-3">
+              <span className="text-yellow-400/70 mt-0.5 flex-shrink-0">—</span>
+              <span className="ml-2">{t}</span>
+            </div>
           ))}
         </div>
         <p className="text-sm text-slate-500 mt-4">
