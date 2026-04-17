@@ -999,7 +999,7 @@ export default function DashboardClient() {
       ) : (
         <div className="overflow-x-auto">
           <table className="data-table">
-            <thead className="sticky top-16 z-10">
+            <thead className="sticky top-14 z-[15]">
               <tr>
                 <th className="!pl-4">Product</th>
                 <th>Risk</th>
