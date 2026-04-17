@@ -22,6 +22,7 @@ function AuthButtons() {
           <Link href="/dashboard">Dashboard</Link>
         </Button>
         <UserButton
+          showName
           appearance={{
             variables: {
               colorBackground: "#ffffff",
@@ -35,6 +36,8 @@ function AuthButtons() {
             },
             elements: {
               avatarBox: "w-8 h-8",
+              userButtonBox: "flex-row-reverse gap-2",
+              userButtonOuterIdentifier: "!text-[#181d1b] !font-medium !text-[13px]",
               userButtonPopoverCard: "!bg-white !border !border-[#bbcbba]/40 !shadow-xl !shadow-black/10 !rounded-xl",
               userButtonPopoverMain: "!bg-white",
               userButtonPopoverHeader: "!bg-white !border-b !border-[#bbcbba]/40",

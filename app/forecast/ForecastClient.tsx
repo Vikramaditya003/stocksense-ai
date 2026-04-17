@@ -909,6 +909,7 @@ function StepIndicator({ step }: { step: ForecastStep }) {
 // ─── Main page ────────────────────────────────────────────────────────────
 
 export default function ForecastClient() {
+  const { isSignedIn: userIsSignedIn } = useUser();
   const [inputMode, setInputMode] = useState<InputMode>("csv");
   const [step, setStep] = useState<ForecastStep>("idle");
   const [analysis, setAnalysis] = useState<ForecastAnalysis | null>(null);
@@ -1292,16 +1293,17 @@ export default function ForecastClient() {
                         <p className="mt-1.5 text-[11px] text-[#8a9a8a] italic">Avg. duration from order to warehouse receipt.</p>
                       </div>
 
-                      {/* Ad spend */}
-                      <div>
+                      {/* Ad spend — Pro only */}
+                      <div className={!userIsSignedIn ? "opacity-50 pointer-events-none select-none" : ""}>
                         <label htmlFor="ad-spend" className="block text-[10px] font-bold text-[#5a6059] uppercase tracking-widest mb-2 flex items-center gap-2">
                           Upcoming Ad Spend
                           <span className="text-[9px] font-bold text-white bg-emerald-brand px-1.5 py-0.5 rounded-full tracking-wider">PRO</span>
                         </label>
                         <input
                           id="ad-spend" type="text" value={adSpend} onChange={(e) => setAdSpend(e.target.value)}
-                          placeholder="e.g. ₹50,000 Meta campaign starting Apr 1"
-                          className="w-full bg-white rounded-xl border border-[#bbcbba]/60 focus:border-[#006d34]/40 outline-none px-4 py-3 text-sm text-[#181d1b] placeholder:text-[#bbcbba] transition-colors"
+                          disabled={!userIsSignedIn}
+                          placeholder={userIsSignedIn ? "e.g. ₹50,000 Meta campaign starting Apr 1" : "Sign in to use this feature"}
+                          className="w-full bg-white rounded-xl border border-[#bbcbba]/60 focus:border-[#006d34]/40 outline-none px-4 py-3 text-sm text-[#181d1b] placeholder:text-[#bbcbba] transition-colors disabled:bg-[#f6faf6] disabled:cursor-not-allowed"
                         />
                         <p className="mt-1.5 text-[11px] text-[#8a9a8a] italic">Adjusts forecast based on planned marketing spend.</p>
                       </div>
