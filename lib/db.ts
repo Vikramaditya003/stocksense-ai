@@ -39,6 +39,16 @@ export async function saveForecast(clerkUserId: string, analysis: ForecastAnalys
   return data as { id: string };
 }
 
+// Count total forecasts run by a user (for free-tier run limit)
+export async function getForecastCount(clerkUserId: string): Promise<number> {
+  const { count, error } = await db
+    .from("forecasts")
+    .select("id", { count: "exact", head: true })
+    .eq("clerk_user_id", clerkUserId);
+  if (error) throw error;
+  return count ?? 0;
+}
+
 // Get forecast history for a user (most recent first)
 export async function getUserForecasts(clerkUserId: string, limit = 10) {
   const { data, error } = await db

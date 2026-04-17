@@ -2,7 +2,7 @@ import Groq from "groq-sdk";
 import { NextRequest, NextResponse } from "next/server";
 import { requireEnv, isRateLimited, isUserRateLimited, isCrossOriginBlocked, getClientIp, sanitizeError, logError, logWarn } from "@/lib/security";
 import { auth } from "@clerk/nextjs/server";
-import { saveForecast, getUserPlan } from "@/lib/db";
+import { saveForecast, getUserPlan, getForecastCount } from "@/lib/db";
 import { detectCurrencyFromCsv, formatMoney, currencySymbol } from "@/lib/currency";
 
 // Lazy client — created on first request so build-time doesn't fail
@@ -175,18 +175,18 @@ export async function POST(req: NextRequest) {
     }
 
     // ── Server-side plan enforcement ─────────────────────────────────────────
-    // Count CSV rows to enforce the free plan SKU limit server-side.
-    // Client-side slicing alone is bypassable — this is the authoritative check.
-    const FREE_SKU_LIMIT = 5;
-    const csvLines = trimmed.split(/\r?\n/).filter((l) => l.trim().length > 0);
-    const rowCount = Math.max(csvLines.length - 1, 0); // exclude header
-    if (rowCount > FREE_SKU_LIMIT) {
+    // Free plan: 5 full forecast runs. After that, require Pro.
+    const FREE_RUN_LIMIT = 5;
+    if (userId) {
       const plan = await getUserPlan(userId);
       if (plan === "free") {
-        return NextResponse.json(
-          { success: false, error: `Free plan supports up to ${FREE_SKU_LIMIT} products. Upgrade to Pro to analyze your full catalog.`, planLimitReached: true },
-          { status: 403 }
-        );
+        const runCount = await getForecastCount(userId);
+        if (runCount >= FREE_RUN_LIMIT) {
+          return NextResponse.json(
+            { success: false, error: `Free plan includes ${FREE_RUN_LIMIT} forecasts. Upgrade to Pro for unlimited access.`, planLimitReached: true },
+            { status: 403 }
+          );
+        }
       }
     }
 

@@ -1253,23 +1253,6 @@ export default function ForecastClient() {
                       </div>
                     )}
 
-                    {/* Over-limit warning */}
-                    {isOverLimit && (
-                      <div className="mt-5 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3.5">
-                        <svg className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>
-                        <div className="flex-1">
-                          <p className="text-sm font-semibold text-amber-700">Free plan: first {FREE_PRODUCT_LIMIT} products only</p>
-                          <p className="text-xs text-[#5a6059] mt-0.5">
-                            Your CSV has {productCountInCsv} products. The {productCountInCsv - FREE_PRODUCT_LIMIT} we&apos;re skipping could have{" "}
-                            {currency === "INR"
-                              ? `₹${((productCountInCsv - FREE_PRODUCT_LIMIT) * 2000).toLocaleString("en-IN")}`
-                              : `$${((productCountInCsv - FREE_PRODUCT_LIMIT) * 25).toLocaleString("en-US")}`}+ at risk. &nbsp;
-                            <button onClick={() => setUpgradeModal("Unlimited Products")} className="text-[#006d34] hover:underline font-medium">Upgrade to Pro</button>
-                            {" "}to see all.
-                          </p>
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </div>
 
@@ -1669,7 +1652,7 @@ export default function ForecastClient() {
 
                 {/* Mobile card list — shown only on small screens */}
                 <div className="sm:hidden divide-y divide-[#eaefeb]">
-                  {sortedProducts.slice(0, FREE_PRODUCT_LIMIT).map((product, i) => {
+                  {sortedProducts.map((product, i) => {
                     const riskColors: Record<string, string> = {
                       critical: "text-red-600 bg-red-50 border-red-200",
                       high:     "text-orange-600 bg-orange-50 border-orange-200",
@@ -1732,67 +1715,12 @@ export default function ForecastClient() {
                       </tr>
                     </thead>
                     <tbody>
-                      {sortedProducts.slice(0, FREE_PRODUCT_LIMIT).map((product, i) => (
-                        <ProductRow key={product.sku || product.productName} product={product} index={i} leadTime={parseInt(leadTime) || 14} isFreeTier={isFreeTier} onUpgrade={(f) => setUpgradeModal(f)} currency={analysis?.currency ?? currency} />
+                      {sortedProducts.map((product, i) => (
+                        <ProductRow key={product.sku || product.productName} product={product} index={i} leadTime={parseInt(leadTime) || 14} isFreeTier={false} onUpgrade={(f) => setUpgradeModal(f)} currency={analysis?.currency ?? currency} />
                       ))}
                     </tbody>
                   </table>
                 </div>
-
-                {/* Product gate — hidden SKUs */}
-                {sortedProducts.length > FREE_PRODUCT_LIMIT && (
-                  <div className="relative">
-                    {/* Blurred ghost rows */}
-                    <div className="pointer-events-none select-none opacity-30 blur-sm">
-                      {sortedProducts.slice(FREE_PRODUCT_LIMIT, FREE_PRODUCT_LIMIT + 3).map((product) => (
-                        <div key={product.productName} className="flex items-center justify-between px-5 py-3.5 border-t border-white/[0.03]">
-                          <div>
-                            <p className="text-sm font-medium text-slate-200">{product.productName}</p>
-                            <p className="text-xs text-slate-600 mt-0.5">{product.currentStock} units</p>
-                          </div>
-                          <span className={riskBadgeClass(product.stockoutRisk)}>{product.stockoutRisk}</span>
-                        </div>
-                      ))}
-                    </div>
-                    {/* Overlay CTA */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-t from-white via-white/80 to-transparent">
-                      <div className="text-center px-6 py-4">
-                        {(() => {
-                          const hiddenCount = sortedProducts.length - FREE_PRODUCT_LIMIT;
-                          const hiddenProducts = sortedProducts.slice(FREE_PRODUCT_LIMIT);
-                          const hiddenRar = hiddenProducts.reduce((sum, p) => sum + (p.rarAmount ?? 0), 0);
-                          // Fallback: ₹2,000 / $25 conservative estimate per hidden SKU when no price data
-                          const fallbackRar = hiddenCount * (currency === "INR" ? 2000 : 25);
-                          const effectiveRar = hiddenRar > 0 ? hiddenRar : fallbackRar;
-                          const rarStr = currency === "INR"
-                            ? `₹${effectiveRar.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`
-                            : `$${effectiveRar.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
-                          return (
-                            <>
-                              <p className="text-sm font-semibold text-white mb-1">
-                                {hiddenCount} product{hiddenCount > 1 ? "s" : ""} locked
-                              </p>
-                              <p className="text-xs text-slate-400 mb-3">
-                                The {hiddenCount} SKU{hiddenCount > 1 ? "s" : ""} we&apos;re not showing have{" "}
-                                <span className="text-red-400 font-semibold">{rarStr}+ at risk</span>.{" "}
-                                Upgrade to see all of them.
-                              </p>
-                            </>
-                          );
-                        })()}
-                        <button
-                          onClick={() => setUpgradeModal("Unlimited Products")}
-                          className="inline-flex items-center gap-2 bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] font-bold text-xs px-4 py-2 rounded-lg transition-all shadow-lg shadow-[#22C55E]/20"
-                        >
-                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                          </svg>
-                          Unlock all {sortedProducts.length} products
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                )}
               </div>
 
               {/* Recommendations + PO Generator */}
