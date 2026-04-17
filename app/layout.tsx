@@ -96,11 +96,6 @@ export default function RootLayout({
       "operatingSystem": "Web",
       "url": SITE_URL,
       "description": "AI-powered inventory forecasting for Shopify merchants. Get exact stockout dates, reorder quantities, and revenue-at-risk analysis in 30 seconds.",
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.8",
-        "reviewCount": "47",
-      },
       "offers": [
         {
           "@type": "Offer",
