@@ -108,7 +108,7 @@ export default function SignUpPage() {
             },
             elements: {
               rootBox: "w-full",
-              card: "!bg-emerald-950/80 !backdrop-blur-xl !shadow-2xl !shadow-black/60 !border !border-emerald-800/40 !rounded-2xl",
+              card: "!bg-emerald-950/80 !backdrop-blur-xl !shadow-2xl !shadow-black/60 !border !border-emerald-800/40 !rounded-t-2xl !rounded-b-none !border-b-0",
               headerTitle: "!text-white !font-bold !tracking-tight",
               headerSubtitle: "!text-emerald-100/70",
               socialButtonsBlockButton: "!bg-emerald-900/60 !border !border-emerald-700/30 hover:!border-emerald-500/40 hover:!bg-emerald-900 !text-emerald-100 !rounded-xl !transition-all",
@@ -131,9 +131,11 @@ export default function SignUpPage() {
             },
           }}
         />
-        {/* Password strength meter — sits just below the Clerk card */}
-        <div className="bg-emerald-950/60 border border-emerald-800/30 rounded-b-2xl -mt-3 pt-4 pb-3 px-4 border-t-0">
-          <PasswordHint />
+        {/* Password strength meter — seamlessly extends the Clerk card */}
+        <div className="bg-emerald-950/80 backdrop-blur-xl border border-emerald-800/40 border-t-0 rounded-b-2xl shadow-2xl shadow-black/60 px-5 pt-3 pb-4">
+          <div className="border-t border-emerald-800/30 pt-3">
+            <PasswordHint />
+          </div>
         </div>
       </div>
 
