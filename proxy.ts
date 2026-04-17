@@ -9,6 +9,8 @@ const clerkReady =
   (clerkKey.startsWith("pk_test_") || clerkKey.startsWith("pk_live_")) &&
   clerkKey.length > 30;
 
+const isAuthPage = createRouteMatcher(["/sign-in(.*)", "/sign-up(.*)"]);
+
 // Routes that require authentication only (any signed-in user)
 // /api/forecast(.*) covers both /api/forecast (run) and /api/forecasts (history)
 const isProtectedRoute = createRouteMatcher([
@@ -30,6 +32,12 @@ const isAdminRoute = createRouteMatcher([
 
 export default clerkReady
   ? clerkMiddleware(async (auth, req) => {
+      // ── Redirect signed-in users away from auth pages ──────────────────────
+      const { userId } = await auth();
+      if (userId && isAuthPage(req)) {
+        return NextResponse.redirect(new URL("/dashboard", req.url));
+      }
+
       // ── Admin routes — must be authenticated AND have admin role ────────────
       if (isAdminRoute(req)) {
         // auth.protect() redirects guests to sign-in (pages) or returns 401 (API)
