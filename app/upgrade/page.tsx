@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 
 const FEATURES = [
-  "Unlimited products — no 5-SKU cap",
+  "Unlimited forecast runs — no 5-run cap",
   "60 & 90-day demand forecasts",
   "AI ad-spend correlation",
   "Smart reorder quantities",
@@ -15,69 +15,104 @@ const FEATURES = [
   "Priority email support",
 ];
 
-function NotifyButton() {
-  const { isSignedIn, user } = useUser();
-  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
+async function startRazorpayCheckout(onSuccess: () => void, onError: () => void) {
+  try {
+    const res = await fetch("/api/payment/create-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ plan: "pro" }),
+    });
+    const data = await res.json();
+    if (!data.success) { onError(); return; }
 
-  async function handleNotify() {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const rzp = new (window as any).Razorpay({
+        key: data.keyId,
+        amount: data.amount,
+        currency: data.currency,
+        name: "Forestock",
+        description: data.planName,
+        order_id: data.orderId,
+        theme: { color: "#006d34" },
+        handler: async (response: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) => {
+          const verify = await fetch("/api/payment/verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...response, plan: "pro" }),
+          });
+          const vdata = await verify.json();
+          if (vdata.success) { onSuccess(); } else { onError(); }
+        },
+        modal: { ondismiss: () => onError() },
+      });
+      rzp.open();
+    };
+    script.onerror = () => onError();
+    document.body.appendChild(script);
+  } catch {
+    onError();
+  }
+}
+
+function UpgradeButton() {
+  const { isSignedIn } = useUser();
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  function handleClick() {
     if (!isSignedIn) {
       window.location.href = "/sign-in?redirect_url=/upgrade";
       return;
     }
     setStatus("loading");
-    try {
-      const res = await fetch("/api/waitlist", { method: "POST" });
-      const data = await res.json();
-      if (data.success) {
-        setStatus("done");
-      } else {
-        setStatus("error");
-      }
-    } catch {
-      setStatus("error");
-    }
+    startRazorpayCheckout(
+      () => { setStatus("success"); setTimeout(() => window.location.href = "/dashboard", 1500); },
+      () => setStatus("error"),
+    );
   }
 
-  if (status === "done") {
+  if (status === "success") {
     return (
       <div className="inline-flex items-center justify-center gap-2 bg-[#006d34]/10 border border-[#006d34]/30 text-[#006d34] font-semibold text-[14px] px-7 py-3 rounded-xl">
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
         </svg>
-        You&apos;re on the list!
-        {user?.primaryEmailAddress?.emailAddress && (
-          <span className="text-[12px] font-normal text-[#5a6059]">
-            — {user.primaryEmailAddress.emailAddress}
-          </span>
-        )}
+        Payment confirmed — redirecting…
       </div>
     );
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleNotify}
-      disabled={status === "loading"}
-      className="inline-flex items-center justify-center gap-2 bg-emerald-brand hover:opacity-90 text-white font-semibold text-[14px] px-7 py-3 rounded-xl transition-all shadow-lg shadow-[#006d34]/20 disabled:opacity-60 disabled:cursor-not-allowed"
-    >
-      {status === "loading" ? (
-        <>
-          <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth={3} />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-          </svg>
-          Adding you…
-        </>
-      ) : (
-        <>
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-          </svg>
-          {isSignedIn ? "Notify me at launch" : "Sign in to get notified"}
-        </>
+    <div className="flex flex-col items-center gap-2">
+      <button
+        type="button"
+        onClick={handleClick}
+        disabled={status === "loading"}
+        className="inline-flex items-center justify-center gap-2 bg-[#006d34] hover:bg-[#005a28] text-white font-semibold text-[15px] px-8 py-3.5 rounded-xl transition-all shadow-lg shadow-[#006d34]/25 disabled:opacity-60 disabled:cursor-not-allowed"
+      >
+        {status === "loading" ? (
+          <>
+            <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth={3} />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+            </svg>
+            Opening payment…
+          </>
+        ) : (
+          <>
+            Upgrade to Pro — ₹749/mo
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            </svg>
+          </>
+        )}
+      </button>
+      {status === "error" && (
+        <p className="text-[12px] text-red-500">Payment failed. Please try again.</p>
       )}
-    </button>
+    </div>
   );
 }
 
@@ -108,28 +143,28 @@ export default function UpgradePage() {
           <div className="flex justify-center mb-8">
             <span className="inline-flex items-center gap-2 bg-[#006d34]/[0.08] border border-[#006d34]/25 text-[#006d34] text-[11px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest">
               <span className="w-1.5 h-1.5 rounded-full bg-[#006d34] animate-pulse" />
-              Pro plan · Launching very soon
+              Pro plan · Live now
             </span>
           </div>
 
           {/* Headline */}
           <div className="text-center mb-10">
             <h1 className="text-[36px] sm:text-[48px] font-bold text-[#181d1b] tracking-[-0.03em] leading-tight mb-4">
-              We&apos;re putting the finishing<br className="hidden sm:block" /> touches on Pro
+              Unlock unlimited<br className="hidden sm:block" /> forecasts
             </h1>
             <p className="text-[16px] text-[#5a6059] max-w-[460px] mx-auto leading-relaxed">
-              Pro is almost ready. Click below and we&apos;ll notify you the moment it goes live — with an early-bird discount.
+              ₹749/month. Cancel anytime. Instant access after payment.
             </p>
           </div>
 
           {/* CTA buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-12">
-            <NotifyButton />
+          <div className="flex flex-col items-center gap-3 mb-12">
+            <UpgradeButton />
             <Link
               href="/forecast"
-              className="inline-flex items-center justify-center gap-2 border border-[#bbcbba]/60 hover:border-[#006d34]/30 text-[#5a6059] hover:text-[#181d1b] font-semibold text-[14px] px-7 py-3 rounded-xl transition-all bg-white"
+              className="text-[13px] text-[#8a9a8a] hover:text-[#5a6059] transition-colors"
             >
-              Use free plan for now
+              Continue with free plan →
             </Link>
           </div>
 
@@ -138,7 +173,7 @@ export default function UpgradePage() {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <p className="text-[11px] font-bold text-[#006d34] uppercase tracking-widest mb-1">Forestock Pro</p>
-                <p className="text-[18px] font-semibold text-[#181d1b] tracking-tight">What you&apos;ll get</p>
+                <p className="text-[18px] font-semibold text-[#181d1b] tracking-tight">Everything in Pro</p>
               </div>
               <div className="text-right">
                 <p className="text-[28px] font-bold text-[#181d1b] tracking-tight leading-none">$9<span className="text-[14px] font-normal text-[#8a9a8a]">/mo</span></p>
@@ -174,7 +209,7 @@ export default function UpgradePage() {
                 </span>
                 <span className="flex items-center gap-1">
                   <svg className="w-3 h-3 text-[#006d34]/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                  Early-bird discount at launch
+                  Instant access after payment
                 </span>
               </div>
             </div>
