@@ -67,7 +67,7 @@ export default function Home() {
                 href="/forecast"
                 className="btn-primary btn-gradient inline-flex items-center gap-2 text-[15px] font-semibold text-white px-7 py-3 rounded-[6px] whitespace-nowrap"
               >
-                Run free forecast
+                See My Reorder Plan — Free
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                 </svg>

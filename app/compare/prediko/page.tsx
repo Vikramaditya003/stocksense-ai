@@ -37,7 +37,7 @@ const rows: { feature: string; us: React.ReactNode; them: React.ReactNode; note?
   { feature: "Health score dashboard", us: check, them: cross },
   { feature: "Delta comparison (vs last forecast)", us: check, them: cross },
   { feature: "Safe products collapse", us: check, them: cross, note: "Forestock hides safe SKUs so you focus on what matters" },
-  { feature: "Starting price", us: <span className="font-bold text-[#22C55E]">₹999/mo</span>, them: <span className="font-bold text-slate-300">$49/mo (~₹4,100)</span> },
+  { feature: "Starting price", us: <span className="font-bold text-[#22C55E]">₹749/mo</span>, them: <span className="font-bold text-slate-300">$49/mo (~₹4,100)</span> },
   { feature: "Shopify App Store listing", us: partial, them: check, note: "Coming soon for Forestock" },
   { feature: "WooCommerce / other platforms", us: partial, them: cross, note: "Both currently Shopify-focused; CSV import works for any platform" },
 ];
@@ -131,7 +131,7 @@ export default function VsPrediko() {
             },
             {
               title: "Budget is a real constraint",
-              body: "Prediko's paid plans start at $49/month (~₹4,100). Forestock Pro is ₹999/month — the same AI-powered stockout predictions for a fraction of the cost.",
+              body: "Prediko's paid plans start at $49/month (~₹4,100). Forestock Pro is ₹749/month — the same AI-powered stockout predictions for a fraction of the cost.",
             },
             {
               title: "You want to see the rupee impact",
