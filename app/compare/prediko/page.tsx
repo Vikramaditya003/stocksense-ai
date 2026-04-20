@@ -92,28 +92,30 @@ export default function VsPrediko() {
       {/* Comparison table */}
       <section className="max-w-[860px] mx-auto px-4 mb-20">
         <h2 className="text-[22px] font-bold text-white mb-6 tracking-tight">Feature comparison</h2>
-        <div className="card overflow-hidden">
+        <div className="card overflow-x-auto">
+          <div className="min-w-[420px]">
           {/* Header */}
-          <div className="grid grid-cols-[1fr_120px_120px] border-b border-white/[0.06] bg-white/[0.02]">
-            <div className="px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-widest">Feature</div>
-            <div className="px-4 py-3.5 text-center">
+          <div className="grid grid-cols-[1fr_90px_90px] sm:grid-cols-[1fr_120px_120px] border-b border-white/[0.06] bg-white/[0.02]">
+            <div className="px-4 sm:px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-widest">Feature</div>
+            <div className="px-3 sm:px-4 py-3.5 text-center">
               <span className="text-[12px] font-bold text-[#22C55E]">Forestock</span>
             </div>
-            <div className="px-4 py-3.5 text-center">
+            <div className="px-3 sm:px-4 py-3.5 text-center">
               <span className="text-[12px] font-bold text-slate-400">Prediko</span>
             </div>
           </div>
           {rows.map((r, i) => (
             <div key={r.feature}
-              className={`grid grid-cols-[1fr_120px_120px] border-b border-white/[0.04] last:border-0 ${i % 2 === 0 ? "" : "bg-white/[0.01]"}`}>
-              <div className="px-5 py-3.5">
+              className={`grid grid-cols-[1fr_90px_90px] sm:grid-cols-[1fr_120px_120px] border-b border-white/[0.04] last:border-0 ${i % 2 === 0 ? "" : "bg-white/[0.01]"}`}>
+              <div className="px-4 sm:px-5 py-3.5">
                 <p className="text-sm text-slate-300">{r.feature}</p>
                 {r.note && <p className="text-[11px] text-slate-600 mt-0.5 leading-snug">{r.note}</p>}
               </div>
-              <div className="px-4 py-3.5 flex items-center justify-center">{r.us}</div>
-              <div className="px-4 py-3.5 flex items-center justify-center">{r.them}</div>
+              <div className="px-3 sm:px-4 py-3.5 flex items-center justify-center">{r.us}</div>
+              <div className="px-3 sm:px-4 py-3.5 flex items-center justify-center">{r.them}</div>
             </div>
           ))}
+          </div>
         </div>
         <p className="text-[11px] text-slate-700 mt-3">
           ✓ verified · ~ partial / plan-dependent · ✗ not available · Last updated April 2026.
