@@ -164,7 +164,7 @@ export default function HowItWorks() {
             <p className="text-[13px] text-[#5a6059]">Switch before your next peak season. Start free, no credit card.</p>
           </div>
           <Link
-            href="/forecast"
+            href="/sign-up?redirect_url=/forecast"
             className="btn-ghost flex-shrink-0 inline-flex items-center gap-2 text-[13px] font-semibold text-[#5a6059] border border-[#bbcbba]/60 hover:border-[#bbcbba] hover:text-[#181d1b] px-5 py-2.5 rounded-[6px]"
           >
             Switch now

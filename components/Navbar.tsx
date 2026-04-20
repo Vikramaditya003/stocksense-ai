@@ -113,7 +113,7 @@ export default function Navbar() {
               <span className="font-semibold text-amber-700">Shopify Stocky</span>
             </span>
             shuts down August 2026 —{" "}
-            <Link href="/forecast" className="font-semibold text-[#006d34] underline underline-offset-2 hover:text-[#005a28] transition-colors">
+            <Link href="/sign-up?redirect_url=/forecast" className="font-semibold text-[#006d34] underline underline-offset-2 hover:text-[#005a28] transition-colors">
               migrate free →
             </Link>
           </p>
