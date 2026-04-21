@@ -231,15 +231,50 @@ Analyze this inventory and sales data. Calculate specific stockout dates, reorde
 CSV data:
 ${trimmed.substring(0, 40000)}`;
 
-    const completion = await getGroq().chat.completions.create({
-      model: "llama-3.3-70b-versatile",
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: userMessage },
-      ],
-      max_tokens: 4096,
-      temperature: 0.1,
-    });
+    // Abort if Groq takes >25s — Vercel Hobby functions timeout at 10s (Pro at 15s),
+    // but this gives a clean error instead of a silent gateway timeout.
+    const controller = new AbortController();
+    const groqTimeout = setTimeout(() => controller.abort(), 25_000);
+
+    let completion;
+    try {
+      completion = await getGroq().chat.completions.create(
+        {
+          model: "llama-3.3-70b-versatile",
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: userMessage },
+          ],
+          max_tokens: 4096,
+          temperature: 0.1,
+        },
+        { signal: controller.signal }
+      );
+    } catch (groqErr) {
+      clearTimeout(groqTimeout);
+      const status = (groqErr as { status?: number })?.status;
+      if (status === 429) {
+        return NextResponse.json(
+          { success: false, error: "AI engine is busy right now. Please wait 30 seconds and try again." },
+          { status: 503 }
+        );
+      }
+      if (status === 503 || status === 502) {
+        return NextResponse.json(
+          { success: false, error: "AI service is temporarily unavailable. Please try again in a moment." },
+          { status: 503 }
+        );
+      }
+      if ((groqErr as { name?: string })?.name === "AbortError") {
+        return NextResponse.json(
+          { success: false, error: "Forecast took too long. Try with a smaller CSV or fewer products." },
+          { status: 504 }
+        );
+      }
+      throw groqErr;
+    } finally {
+      clearTimeout(groqTimeout);
+    }
 
     const text = completion.choices[0]?.message?.content ?? "";
     const jsonMatch = text.match(/\{[\s\S]*\}/);

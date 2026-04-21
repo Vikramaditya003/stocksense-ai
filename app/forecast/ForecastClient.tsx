@@ -1049,7 +1049,12 @@ export default function ForecastClient() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ salesData: data, adSpendData: adSpend.trim() || undefined, leadTimeDays: parseInt(leadTime) || 14, perProductLeadTimes, currency }),
       });
-      const json = await res.json();
+      let json: { success: boolean; error?: string; planLimitReached?: boolean; analysis?: ForecastAnalysis; savedId?: string };
+      try {
+        json = await res.json();
+      } catch {
+        throw new Error("Service temporarily unavailable. Please try again in a moment.");
+      }
       if (!json.success) {
         // Plan limit hit — show upgrade modal instead of generic error screen
         if (json.planLimitReached) {

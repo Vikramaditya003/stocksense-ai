@@ -252,6 +252,25 @@ export function sanitizeError(err: unknown): string {
     return "Service temporarily unavailable. Please try again in a moment.";
   }
 
+  // Groq / upstream AI errors — never expose provider details
+  if (
+    message.toLowerCase().includes("rate limit") ||
+    message.toLowerCase().includes("rate_limit") ||
+    message.includes("tokens per") ||
+    message.includes("requests per")
+  ) {
+    return "AI engine is busy. Please wait 30 seconds and try again.";
+  }
+
+  if (
+    message.includes("503") ||
+    message.includes("502") ||
+    message.includes("upstream") ||
+    message.toLowerCase().includes("overloaded")
+  ) {
+    return "AI service is temporarily unavailable. Please try again in a moment.";
+  }
+
   return message;
 }
 
