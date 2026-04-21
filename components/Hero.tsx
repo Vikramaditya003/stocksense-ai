@@ -294,12 +294,12 @@ export default function Hero() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                 </svg>
               </Link>
-              <a
-                href="#how-it-works"
+              <Link
+                href="/forecast?demo=true"
                 className="btn-ghost inline-flex items-center gap-2 text-[15px] text-[#5a6059] hover:text-[#181d1b] px-7 py-3 border border-[#bbcbba]/60 hover:border-[#bbcbba] rounded-[6px]"
               >
-                See how it works
-              </a>
+                Try sample data
+              </Link>
             </div>
 
             <p className="text-[12px] text-[#8a9a8a] tracking-tight">

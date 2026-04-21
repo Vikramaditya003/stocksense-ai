@@ -11,7 +11,7 @@ const CLERK_READY =
   _clerkKey.length > 30;
 
 const freeFeatures = [
-  "5 products per forecast",
+  "5 forecast runs",
   "30-day demand forecast",
   "Stockout countdown",
   "Inventory health score",

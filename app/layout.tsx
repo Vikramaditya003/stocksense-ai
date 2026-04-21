@@ -102,7 +102,7 @@ export default function RootLayout({
           "name": "Free",
           "price": "0",
           "priceCurrency": "USD",
-          "description": "5 products per forecast, 30-day demand forecast",
+          "description": "5 forecast runs, 30-day demand forecast",
         },
         {
           "@type": "Offer",
