@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { getUserForecasts } from "@/lib/db";
-import { logError, isHistoryRateLimited, getClientIp } from "@/lib/security";
+import { logError, isHistoryRateLimited, isCrossOriginBlocked, getClientIp } from "@/lib/security";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
+  if (isCrossOriginBlocked(req)) {
+    return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+  }
   const ip = getClientIp(req);
   if (await isHistoryRateLimited(ip)) {
     return NextResponse.json({ error: "Too many requests." }, { status: 429 });

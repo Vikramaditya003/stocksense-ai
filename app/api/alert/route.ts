@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { auth, currentUser } from "@clerk/nextjs/server";
-import { isStrictRateLimited, getClientIp, sanitizeError, logError } from "@/lib/security";
+import { isStrictRateLimited, isCrossOriginBlocked, getClientIp, sanitizeError, logError } from "@/lib/security";
 
 const resendKey = process.env.RESEND_API_KEY ?? "";
 const resendReady = resendKey.startsWith("re_") && resendKey.length > 20;
@@ -10,6 +10,9 @@ const resendReady = resendKey.startsWith("re_") && resendKey.length > 20;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 export async function POST(req: NextRequest) {
+  if (isCrossOriginBlocked(req)) {
+    return NextResponse.json({ success: false, error: "Forbidden." }, { status: 403 });
+  }
   // Rate limit — 3 alert signups per minute per IP
   const ip = getClientIp(req);
   if (await isStrictRateLimited(ip)) {

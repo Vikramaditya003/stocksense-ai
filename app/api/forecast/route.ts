@@ -215,8 +215,14 @@ export async function POST(req: NextRequest) {
     const hasPerProductLeadTimes = perProductLeadTimes && typeof perProductLeadTimes === "object" && Object.keys(perProductLeadTimes).length > 0;
     const leadTimeNote = hasPerProductLeadTimes
       ? `Per-product lead times (use these instead of the global default where available):\n${
-          Object.entries(perProductLeadTimes as Record<string, number>)
-            .map(([p, d]) => `  - ${p}: ${d} days`)
+          Object.entries(perProductLeadTimes as Record<string, unknown>)
+            .slice(0, 100)
+            .map(([p, d]) => {
+              // Strip everything except printable ASCII, no newlines — prevents prompt injection
+              const safeName = String(p).replace(/[^\x20-\x7E]/g, "").replace(/[\n\r`]/g, "").slice(0, 100);
+              const safeDays = Math.min(Math.max(Math.round(Number(d) || 14), 1), 180);
+              return `  - ${safeName}: ${safeDays} days`;
+            })
             .join("\n")
         }`
       : `Global lead time: ${leadTime} days (applies to all products)`;

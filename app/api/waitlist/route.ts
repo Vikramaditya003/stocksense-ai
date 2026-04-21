@@ -2,13 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { Resend } from "resend";
 import { addToWaitlist } from "@/lib/db";
-import { isStrictRateLimited, getClientIp, sanitizeError, logError } from "@/lib/security";
+import { isStrictRateLimited, isCrossOriginBlocked, getClientIp, sanitizeError, logError } from "@/lib/security";
 
 const resendKey = process.env.RESEND_API_KEY ?? "";
 const resendReady = resendKey.startsWith("re_") && resendKey.length > 20;
 const NOTIFY_RECIPIENT = process.env.HERO_EMAIL_RECIPIENT ?? "support@getforestock.com";
 
 export async function POST(req: NextRequest) {
+  if (isCrossOriginBlocked(req)) {
+    return NextResponse.json({ success: false, error: "Forbidden." }, { status: 403 });
+  }
   const ip = getClientIp(req);
   if (await isStrictRateLimited(ip)) {
     return NextResponse.json({ success: false, error: "Too many requests." }, { status: 429 });

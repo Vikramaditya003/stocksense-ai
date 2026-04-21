@@ -89,6 +89,7 @@ const forecastStore = new Map<string, RateLimitEntry>();
 const strictStore   = new Map<string, RateLimitEntry>();
 const historyStore  = new Map<string, RateLimitEntry>();
 const userStore     = new Map<string, RateLimitEntry>();
+const adminStore    = new Map<string, RateLimitEntry>();
 
 function checkLimitSync(
   store: Map<string, RateLimitEntry>,
@@ -177,7 +178,7 @@ export async function isAdminRateLimited(ip: string): Promise<boolean> {
   const upstash = getUpstash();
   const hit = upstash
     ? !(await upstash.admin.limit(ip)).success
-    : checkLimitSync(strictStore, `admin:${ip}`, 30, 60_000);
+    : checkLimitSync(adminStore, `admin:${ip}`, 30, 60_000);
   if (hit) logger.warn("rate_limit.admin", "Admin rate limit exceeded", { ip, path: "/api/admin" });
   return hit;
 }
