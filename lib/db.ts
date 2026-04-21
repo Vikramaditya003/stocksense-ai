@@ -4,6 +4,12 @@ import type { ForecastAnalysis } from "./types";
 
 export type UserPlan = "free" | "growth" | "pro" | "business";
 
+function assertUserId(id: unknown): asserts id is string {
+  if (!id || typeof id !== "string" || id.trim() === "") {
+    throw new Error("DB guard: userId is required and must be a non-empty string.");
+  }
+}
+
 export interface SavedForecast {
   id: string;
   clerk_user_id: string;
@@ -22,6 +28,7 @@ const db = supabaseAdmin as any;
 
 // Save a forecast result for a logged-in user
 export async function saveForecast(clerkUserId: string, analysis: ForecastAnalysis) {
+  assertUserId(clerkUserId);
   const { data, error } = await db
     .from("forecasts")
     .insert({
@@ -41,6 +48,7 @@ export async function saveForecast(clerkUserId: string, analysis: ForecastAnalys
 
 // Count total forecasts run by a user (for free-tier run limit)
 export async function getForecastCount(clerkUserId: string): Promise<number> {
+  assertUserId(clerkUserId);
   const { count, error } = await db
     .from("forecasts")
     .select("id", { count: "exact", head: true })
@@ -51,6 +59,7 @@ export async function getForecastCount(clerkUserId: string): Promise<number> {
 
 // Get forecast history for a user (most recent first)
 export async function getUserForecasts(clerkUserId: string, limit = 10) {
+  assertUserId(clerkUserId);
   const { data, error } = await db
     .from("forecasts")
     .select("id, created_at, sku_count, health_score, critical_count, summary")
@@ -64,6 +73,7 @@ export async function getUserForecasts(clerkUserId: string, limit = 10) {
 
 // Get a single forecast by ID (checks ownership)
 export async function getForecast(id: string, clerkUserId: string) {
+  assertUserId(clerkUserId);
   const { data, error } = await db
     .from("forecasts")
     .select("*")
@@ -77,6 +87,7 @@ export async function getForecast(id: string, clerkUserId: string) {
 
 // Activate or update a user's subscription plan after successful payment
 export async function updateUserPlan(clerkUserId: string, plan: UserPlan, paymentId: string): Promise<void> {
+  assertUserId(clerkUserId);
   const { error } = await db
     .from("user_plans")
     .upsert(
@@ -94,6 +105,7 @@ export async function updateUserPlan(clerkUserId: string, plan: UserPlan, paymen
 
 // Get or create user plan record
 export async function getUserPlan(clerkUserId: string): Promise<UserPlan> {
+  assertUserId(clerkUserId);
   const { data } = await db
     .from("user_plans")
     .select("plan")
@@ -112,6 +124,7 @@ export async function getUserPlan(clerkUserId: string): Promise<UserPlan> {
 // );
 
 export async function addToWaitlist(clerkUserId: string, email: string): Promise<void> {
+  assertUserId(clerkUserId);
   const { error } = await db
     .from("pro_waitlist")
     .upsert({ clerk_user_id: clerkUserId, email }, { onConflict: "clerk_user_id" });
