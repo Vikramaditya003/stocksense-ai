@@ -44,6 +44,11 @@ export type LogEvent =
   | "suspicious.traffic"
   | "suspicious.payload"
   | "suspicious.input"
+  // Webhooks
+  | "webhook.dodo"
+  | "webhook.dodo.invalid_sig"
+  | "webhook.dodo.no_user"
+  | "webhook.dodo.activated"
   // Generic
   | "api.error"
   | "api.info";

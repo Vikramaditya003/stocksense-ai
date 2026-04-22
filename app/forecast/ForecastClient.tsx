@@ -1064,7 +1064,7 @@ export default function ForecastClient() {
         }
         throw new Error(json.error || "Forecast failed.");
       }
-      setAnalysis(json.analysis);
+      setAnalysis(json.analysis ?? null);
       setStep("done");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong.");
