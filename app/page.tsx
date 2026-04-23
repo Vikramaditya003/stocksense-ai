@@ -6,6 +6,8 @@ import Features from "@/components/Features";
 import Comparison from "@/components/Comparison";
 import Pricing from "@/components/Pricing";
 import FAQ from "@/components/FAQ";
+import SocialProof from "@/components/SocialProof";
+import Testimonials from "@/components/Testimonials";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 import ExitIntentModal from "@/components/ExitIntentModal";
 import { LogoMark } from "@/components/StocksenseLogo";
@@ -34,6 +36,9 @@ export default function Home() {
       {/* 1 — dark */}
       <Hero />
 
+      {/* 1b — credibility bar */}
+      <SocialProof />
+
       {/* 2 — light */}
       <HowItWorks />
 
@@ -48,6 +53,9 @@ export default function Home() {
 
       {/* 7 — light */}
       <FAQ />
+
+      {/* 8 — testimonials */}
+      <Testimonials />
 
       {/* ── Final CTA ── */}
       <section className="py-24 bg-[#f0f5f1] border-t border-[#bbcbba]/40">
