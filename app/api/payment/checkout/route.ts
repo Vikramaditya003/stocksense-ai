@@ -5,7 +5,7 @@ import { isStrictRateLimited, isCrossOriginBlocked, getClientIp, logError } from
 
 const apiKey = process.env.DODO_PAYMENTS_API_KEY ?? "";
 const dodoReady = apiKey.length > 10;
-const isDev = process.env.NODE_ENV === "development";
+const isTestMode = process.env.DODO_TEST_MODE === "true" || process.env.NODE_ENV === "development";
 const PRODUCT_ID_PRO = process.env.DODO_PRODUCT_ID_PRO ?? "";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://getforestock.com";
 
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
 
     const client = new DodoPayments({
       bearerToken: apiKey,
-      environment: isDev ? "test_mode" : "live_mode",
+      environment: isTestMode ? "test_mode" : "live_mode",
     });
 
     // Use checkout sessions — supports both one-time and subscription products
