@@ -17,8 +17,10 @@ const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
   "/history(.*)",
   "/api/forecast(.*)",
-  "/api/payment(.*)",
   "/api/alert(.*)",
+  // /api/payment is NOT here — the route handler does its own auth() check,
+  // and putting it here caused middleware to return 401 before the handler runs
+  // when the Clerk session cookie was slightly stale.
 ]);
 
 // Routes that require admin role in addition to authentication.
