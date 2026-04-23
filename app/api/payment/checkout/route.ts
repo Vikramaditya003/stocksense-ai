@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import DodoPayments from "dodopayments";
 import { auth, currentUser } from "@clerk/nextjs/server";
-import { isStrictRateLimited, isCrossOriginBlocked, getClientIp, sanitizeError, logError } from "@/lib/security";
+import { isStrictRateLimited, isCrossOriginBlocked, getClientIp, logError } from "@/lib/security";
 
 const apiKey = process.env.DODO_PAYMENTS_API_KEY ?? "";
 const dodoReady = apiKey.length > 10;
@@ -48,18 +48,28 @@ export async function POST(req: NextRequest) {
       environment: isDev ? "test_mode" : "live_mode",
     });
 
-    const payment = await client.payments.create({
-      payment_link: true,
-      customer: { email, name },
-      billing: { country: "IN" },
+    // Use checkout sessions — supports both one-time and subscription products
+    const session = await client.checkoutSessions.create({
       product_cart: [{ product_id: PRODUCT_ID_PRO, quantity: 1 }],
-      metadata: { clerk_user_id: userId },
+      customer: { email, name },
       return_url: `${SITE_URL}/upgrade/success`,
+      metadata: { clerk_user_id: userId },
     });
 
-    return NextResponse.json({ success: true, checkout_url: payment.payment_link });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const checkoutUrl = (session as any).checkout_url ?? (session as any).url ?? (session as any).payment_link;
+
+    if (!checkoutUrl) {
+      // Log full response in dev so we can see what field Dodo actually returns
+      console.error("[payment/checkout] Dodo session response:", JSON.stringify(session));
+      return NextResponse.json({ success: false, error: "Could not get checkout URL. Check server logs." }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true, checkout_url: checkoutUrl });
   } catch (error) {
     logError("payment/checkout", error);
-    return NextResponse.json({ success: false, error: sanitizeError(error) }, { status: 500 });
+    // Temporarily expose raw error so we can diagnose the Dodo issue
+    const raw = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ success: false, error: raw }, { status: 500 });
   }
 }
