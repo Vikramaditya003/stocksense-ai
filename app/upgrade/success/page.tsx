@@ -8,7 +8,7 @@ import { Suspense } from "react";
 function SuccessContent() {
   const params = useSearchParams();
   const status = params.get("status");
-  const failed = status && status !== "succeeded";
+  const failed = status === "failed" || status === "cancelled";
 
   return (
     <div className="min-h-screen bg-[#f6faf6] flex flex-col">
