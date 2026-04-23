@@ -177,9 +177,11 @@ export async function POST(req: NextRequest) {
     // ── Server-side plan enforcement ─────────────────────────────────────────
     // Free plan: 5 full forecast runs. After that, require Pro.
     const FREE_RUN_LIMIT = 5;
+    let userIsPro = false;
     if (userId) {
       const plan = await getUserPlan(userId);
-      if (plan === "free") {
+      userIsPro = plan === "pro";
+      if (!userIsPro) {
         const runCount = await getForecastCount(userId);
         if (runCount >= FREE_RUN_LIMIT) {
           return NextResponse.json(
@@ -207,7 +209,7 @@ export async function POST(req: NextRequest) {
     const csvPrices = extractPricesFromCsv(trimmed);
     const hasPriceData = csvPrices.size > 0;
 
-    const adSpend = adSpendData
+    const adSpend = (adSpendData && userIsPro)
       ? String(adSpendData).replace(/<[^>]*>/g, "").substring(0, 500)
       : "";
 

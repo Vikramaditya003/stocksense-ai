@@ -932,6 +932,7 @@ export default function ForecastClient() {
     return !!localStorage.getItem("forestock_signup_dismissed");
   });
   const [showFeedback, setShowFeedback] = useState(false);
+  const [userPlan, setUserPlan] = useState<"free" | "pro">("free");
 
   const fileRef = useRef<HTMLInputElement>(null);
   const demoRan = useRef(false);
@@ -955,6 +956,11 @@ export default function ForecastClient() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!userIsSignedIn) return;
+    fetch("/api/user/plan").then(r => r.json()).then(d => { if (d.plan === "pro") setUserPlan("pro"); }).catch(() => {});
+  }, [userIsSignedIn]);
 
   // Show feedback popup once when forecast results arrive, but only if user
   // hasn't already submitted feedback (localStorage gate is inside FeedbackPopup).
@@ -1282,18 +1288,25 @@ export default function ForecastClient() {
                       </div>
 
                       {/* Ad spend — Pro only */}
-                      <div className={!userIsSignedIn ? "opacity-50 pointer-events-none select-none" : ""}>
+                      <div className={userPlan !== "pro" ? "opacity-60 pointer-events-none select-none" : ""}>
                         <label htmlFor="ad-spend" className="block text-[10px] font-bold text-[#5a6059] uppercase tracking-widest mb-2 flex items-center gap-2">
                           Upcoming Ad Spend
                           <span className="text-[9px] font-bold text-white bg-emerald-brand px-1.5 py-0.5 rounded-full tracking-wider">PRO</span>
                         </label>
                         <input
                           id="ad-spend" type="text" value={adSpend} onChange={(e) => setAdSpend(e.target.value)}
-                          disabled={!userIsSignedIn}
-                          placeholder={userIsSignedIn ? "e.g. ₹50,000 Meta campaign starting Apr 1" : "Sign in to use this feature"}
+                          disabled={userPlan !== "pro"}
+                          placeholder={userPlan === "pro" ? "e.g. ₹50,000 Meta campaign starting Apr 1" : "Upgrade to Pro to use this feature"}
                           className="w-full bg-white rounded-xl border border-[#bbcbba]/60 focus:border-[#006d34]/40 outline-none px-4 py-3 text-sm text-[#181d1b] placeholder:text-[#bbcbba] transition-colors disabled:bg-[#f6faf6] disabled:cursor-not-allowed"
                         />
-                        <p className="mt-1.5 text-[11px] text-[#8a9a8a] italic">Adjusts forecast based on planned marketing spend.</p>
+                        {userPlan !== "pro" && (
+                          <p className="mt-1.5 text-[11px] text-[#006d34] italic">
+                            <Link href="/upgrade" className="underline font-semibold">Upgrade to Pro</Link> to unlock ad-spend correlation.
+                          </p>
+                        )}
+                        {userPlan === "pro" && (
+                          <p className="mt-1.5 text-[11px] text-[#8a9a8a] italic">Adjusts forecast based on planned marketing spend.</p>
+                        )}
                       </div>
                     </div>
 
