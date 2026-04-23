@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { LogoMark } from "@/components/StocksenseLogo";
 
@@ -227,6 +227,11 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
   const [search, setSearch] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [userPlan, setUserPlan] = useState<"free" | "pro">("free");
+
+  useEffect(() => {
+    fetch("/api/user/plan").then(r => r.json()).then(d => { if (d.plan === "pro") setUserPlan("pro"); }).catch(() => {});
+  }, []);
 
   function isActive(href: string) {
     const [base, query] = href.split("?");
@@ -410,8 +415,8 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
         </div>
       </nav>
 
-      {/* ── Upgrade CTA ── */}
-      {!collapsed && (
+      {/* ── Upgrade CTA — hidden for Pro users ── */}
+      {!collapsed && userPlan !== "pro" && (
         <div className="px-3 pb-3 flex-shrink-0">
           <Link
             href="/upgrade"
