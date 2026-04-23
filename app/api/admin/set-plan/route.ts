@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true, clerk_user_id, plan });
   } catch (err) {
     logError("admin/set-plan", err);
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    const msg = err instanceof Error ? err.message : JSON.stringify(err);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
