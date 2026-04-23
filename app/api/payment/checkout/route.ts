@@ -68,8 +68,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true, checkout_url: checkoutUrl });
   } catch (error) {
     logError("payment/checkout", error);
-    // Temporarily expose raw error so we can diagnose the Dodo issue
-    const raw = error instanceof Error ? error.message : String(error);
-    return NextResponse.json({ success: false, error: raw }, { status: 500 });
+    return NextResponse.json({ success: false, error: "Payment initiation failed. Please try again." }, { status: 500 });
   }
 }

@@ -36,6 +36,9 @@ function ForecastNavAuth({ onReset, showReset, userPlan }: { onReset: () => void
               Upgrade to Pro
             </Link>
           )}
+          {userPlan === "pro" && (
+            <span className="text-[10px] font-bold bg-[#006d34] text-white px-2 py-0.5 rounded-full tracking-wide">PRO</span>
+          )}
           <UserButton
             appearance={{
               variables: {
