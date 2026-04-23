@@ -343,9 +343,14 @@ export default function DashboardClient() {
   const [filterTab, setFilterTab] = useState<FilterTab>("all");
   const [expandedSku, setExpandedSku] = useState<string | null>(null);
   const [safeSectionOpen, setSafeSectionOpen] = useState(false);
+  const [userPlan, setUserPlan] = useState<"free" | "pro">("free");
 
   // Sync search from URL ?q= param
   useEffect(() => { setSearch(qParam); }, [qParam]);
+
+  useEffect(() => {
+    fetch("/api/user/plan").then(r => r.json()).then(d => { if (d.plan === "pro") setUserPlan("pro"); }).catch(() => {});
+  }, []);
 
   const loadDetail = useCallback(async (id: string, date: string) => {
     const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -821,26 +826,43 @@ export default function DashboardClient() {
             )}
           </div>
 
-          {/* Upsell CTA */}
-          <div className="rounded-xl bg-emerald-900 p-5 relative overflow-hidden">
-            <div className="relative z-10">
-              <div className="flex items-center gap-1.5 mb-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <p className="text-[11px] font-black text-emerald-400 uppercase tracking-widest">Pro · Live now</p>
+          {/* Pro active state */}
+          {userPlan === "pro" && (
+            <div className="rounded-xl bg-emerald-900/40 border border-emerald-800/30 p-4 flex items-center gap-3">
+              <span className="w-7 h-7 rounded-full bg-emerald-600/20 flex items-center justify-center flex-shrink-0">
+                <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </span>
+              <div>
+                <p className="text-[12px] font-bold text-emerald-400">Forestock Pro · Active</p>
+                <p className="text-[11px] text-emerald-100/40">Unlimited SKUs · 90-day forecasts</p>
               </div>
-              <p className="text-[13px] text-white font-semibold mb-0.5">90-day forecasts · Unlimited SKUs</p>
-              <p className="text-[11px] text-emerald-100/50 mb-4">Upgrade to Pro and never stock out again.</p>
-              <a
-                href="/upgrade"
-                className="bg-emerald-brand block w-full text-center text-[12px] font-bold text-white py-2.5 rounded-xl transition-all"
-              >
-                Get Pro — $9/mo →
-              </a>
             </div>
-            <svg className="absolute -right-4 -bottom-4 w-24 h-24 text-emerald-800 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-            </svg>
-          </div>
+          )}
+
+          {/* Upsell CTA — hidden for Pro users */}
+          {userPlan !== "pro" && (
+            <div className="rounded-xl bg-emerald-900 p-5 relative overflow-hidden">
+              <div className="relative z-10">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <p className="text-[11px] font-black text-emerald-400 uppercase tracking-widest">Pro · Live now</p>
+                </div>
+                <p className="text-[13px] text-white font-semibold mb-0.5">90-day forecasts · Unlimited SKUs</p>
+                <p className="text-[11px] text-emerald-100/50 mb-4">Upgrade to Pro and never stock out again.</p>
+                <a
+                  href="/upgrade"
+                  className="bg-emerald-brand block w-full text-center text-[12px] font-bold text-white py-2.5 rounded-xl transition-all"
+                >
+                  Get Pro — ₹749/mo →
+                </a>
+              </div>
+              <svg className="absolute -right-4 -bottom-4 w-24 h-24 text-emerald-800 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+              </svg>
+            </div>
+          )}
         </div>
       </div>
 

@@ -57,10 +57,10 @@ function SuccessContent() {
                 A confirmation email is on its way. If you don&apos;t see it, check your spam folder.
               </p>
               <Link
-                href="/forecast"
+                href="/dashboard"
                 className="inline-flex items-center gap-2 bg-emerald-brand hover:opacity-90 text-white font-semibold text-[14px] px-7 py-3 rounded-xl transition-all shadow-lg shadow-[#006d34]/20"
               >
-                Go to forecast
+                Go to dashboard
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                 </svg>
