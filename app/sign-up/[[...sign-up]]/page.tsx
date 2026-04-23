@@ -24,49 +24,53 @@ function getStrength(pw: string): { score: number; label: string; color: string;
 
 function PasswordHint() {
   const [password, setPassword] = useState("");
+  const [hasPasswordField, setHasPasswordField] = useState(false);
 
   useEffect(() => {
-    // Listen for password input changes inside the Clerk form
     const interval = setInterval(() => {
       const input = document.querySelector<HTMLInputElement>("input[type='password']");
-      if (input && input.value !== password) {
-        setPassword(input.value);
+      setHasPasswordField(!!input);
+      if (input) {
+        if (input.value !== password) setPassword(input.value);
+      } else {
+        setPassword("");
       }
     }, 150);
     return () => clearInterval(interval);
   }, [password]);
 
-  if (!password) {
-    return (
-      <p className="text-[11px] text-emerald-400/50 text-center mt-1">
-        Use 8+ characters — a mix of letters and numbers works well
-      </p>
-    );
-  }
+  if (!hasPasswordField) return null;
 
   const { score, label, color, tip } = getStrength(password);
   const bars = [1, 2, 3, 4, 5];
 
   return (
-    <div className="mt-2 px-1">
-      <div className="flex gap-1 mb-1">
-        {bars.map((b) => (
-          <div
-            key={b}
-            className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-              b <= score ? color : "bg-emerald-900/40"
-            }`}
-          />
-        ))}
-      </div>
-      <div className="flex items-center justify-between">
-        <span className={`text-[11px] font-semibold ${
-          score <= 1 ? "text-red-400" :
-          score === 2 ? "text-orange-400" :
-          score === 3 ? "text-yellow-400" :
-          "text-emerald-400"
-        }`}>{label}</span>
-        <span className="text-[11px] text-emerald-400/50">{tip}</span>
+    <div className="bg-emerald-950/80 backdrop-blur-xl border border-emerald-800/40 border-t-0 rounded-b-2xl shadow-2xl shadow-black/60 px-5 pt-3 pb-4">
+      <div className="border-t border-emerald-800/30 pt-3">
+        {!password ? (
+          <p className="text-[11px] text-emerald-400/50 text-center">
+            Use 8+ characters — a mix of letters and numbers works well
+          </p>
+        ) : (
+          <div className="px-1">
+            <div className="flex gap-1 mb-1">
+              {bars.map((b) => (
+                <div
+                  key={b}
+                  className={`h-1 flex-1 rounded-full transition-all duration-300 ${b <= score ? color : "bg-emerald-900/40"}`}
+                />
+              ))}
+            </div>
+            <div className="flex items-center justify-between">
+              <span className={`text-[11px] font-semibold ${
+                score <= 1 ? "text-red-400" :
+                score === 2 ? "text-orange-400" :
+                score === 3 ? "text-yellow-400" : "text-emerald-400"
+              }`}>{label}</span>
+              <span className="text-[11px] text-emerald-400/50">{tip}</span>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -108,7 +112,7 @@ export default function SignUpPage() {
             },
             elements: {
               rootBox: "w-full",
-              card: "!bg-emerald-950/80 !backdrop-blur-xl !shadow-2xl !shadow-black/60 !border !border-emerald-800/40 !rounded-t-2xl !rounded-b-none !border-b-0",
+              card: "!bg-emerald-950/80 !backdrop-blur-xl !shadow-2xl !shadow-black/60 !border !border-emerald-800/40 !rounded-2xl",
               headerTitle: "!text-white !font-bold !tracking-tight",
               headerSubtitle: "!text-emerald-100/70",
               socialButtonsBlockButton: "!bg-emerald-900/60 !border !border-emerald-700/30 hover:!border-emerald-500/40 hover:!bg-emerald-900 !text-emerald-100 !rounded-xl !transition-all",
@@ -131,12 +135,7 @@ export default function SignUpPage() {
             },
           }}
         />
-        {/* Password strength meter — seamlessly extends the Clerk card */}
-        <div className="bg-emerald-950/80 backdrop-blur-xl border border-emerald-800/40 border-t-0 rounded-b-2xl shadow-2xl shadow-black/60 px-5 pt-3 pb-4">
-          <div className="border-t border-emerald-800/30 pt-3">
-            <PasswordHint />
-          </div>
-        </div>
+        <PasswordHint />
       </div>
 
       <p className="mt-6 text-xs text-emerald-100/30 text-center relative z-10">
