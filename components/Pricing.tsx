@@ -2,13 +2,6 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
-
-const _clerkKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ?? "";
-const CLERK_READY =
-  (_clerkKey.startsWith("pk_test_") || _clerkKey.startsWith("pk_live_")) &&
-  _clerkKey.length > 30;
 
 const freeFeatures = [
   "5 forecast runs",
@@ -48,50 +41,6 @@ function Cross() {
   );
 }
 
-function NotifyButton() {
-  const { isSignedIn, isLoaded } = useUser();
-  const router = useRouter();
-  const [state, setState] = useState<"idle" | "loading" | "done">("idle");
-
-  const handleClick = async () => {
-    if (!CLERK_READY || !isLoaded) return;
-
-    if (!isSignedIn) {
-      router.push("/sign-up?redirect_url=" + encodeURIComponent("/#pricing"));
-      return;
-    }
-
-    if (state === "done") return;
-
-    setState("loading");
-    try {
-      const res = await fetch("/api/waitlist", { method: "POST" });
-      const json = await res.json();
-      setState(json.success ? "done" : "idle");
-    } catch {
-      setState("idle");
-    }
-  };
-
-  if (state === "done") {
-    return (
-      <div className="w-full text-center text-[13px] font-semibold py-2.5 px-4 rounded-[6px] mb-2 bg-[#006d34]/10 border border-[#006d34]/25 text-[#006d34]">
-        ✓ You&apos;re on the list — we&apos;ll email you at launch
-      </div>
-    );
-  }
-
-  return (
-    <button
-      type="button"
-      onClick={handleClick}
-      disabled={state === "loading"}
-      className="btn-ghost block w-full text-center text-[13px] font-semibold py-2.5 px-4 rounded-[6px] mb-2 text-[#5a6059] border border-[#bbcbba]/60 hover:border-[#bbcbba] hover:text-[#181d1b] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-    >
-      {state === "loading" ? "Saving…" : "Join Waitlist →"}
-    </button>
-  );
-}
 
 export default function Pricing() {
   const [currency] = useState<"USD" | "INR">(() => {
@@ -166,7 +115,7 @@ export default function Pricing() {
               <div className="flex items-center gap-2 mb-1">
                 <p className="text-[13px] font-semibold text-[#181d1b]">Pro</p>
                 <span className="text-[10px] font-bold text-[#006d34] uppercase tracking-widest border border-[#006d34]/25 bg-[#006d34]/10 px-1.5 py-0.5 rounded-[4px]">
-                  Early Access
+                  Live
                 </span>
               </div>
               <p className="text-[13px] text-[#5a6059] mb-5">For stores that can&apos;t afford stockouts.</p>
@@ -174,11 +123,16 @@ export default function Pricing() {
                 <span className="text-[42px] font-bold text-[#181d1b] tracking-tight leading-none">{proPrice}</span>
                 <span className="text-[14px] text-[#5a6059] mb-2">/{proBilling.replace("per ", "")}</span>
               </div>
-              <p className="text-[12px] text-[#8a9a8a]">Lock in early-bird pricing — raises at launch</p>
+              <p className="text-[12px] text-[#8a9a8a]">Cancel anytime — no lock-in</p>
             </div>
 
             <div className="mb-7">
-              <NotifyButton />
+              <Link
+                href="/upgrade"
+                className="btn-primary btn-gradient block w-full text-center text-[13px] font-semibold py-2.5 px-4 rounded-[6px] text-white"
+              >
+                Get Pro →
+              </Link>
             </div>
 
             <div className="border-t border-[#bbcbba]/40 pt-6">

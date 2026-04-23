@@ -826,15 +826,15 @@ export default function DashboardClient() {
             <div className="relative z-10">
               <div className="flex items-center gap-1.5 mb-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <p className="text-[11px] font-black text-emerald-400 uppercase tracking-widest">Pro · Launching soon</p>
+                <p className="text-[11px] font-black text-emerald-400 uppercase tracking-widest">Pro · Live now</p>
               </div>
               <p className="text-[13px] text-white font-semibold mb-0.5">90-day forecasts · Unlimited SKUs</p>
-              <p className="text-[11px] text-emerald-100/50 mb-4">Get notified at launch — early-bird discount included.</p>
+              <p className="text-[11px] text-emerald-100/50 mb-4">Upgrade to Pro and never stock out again.</p>
               <a
-                href="mailto:support@getforestock.com?subject=Notify me when Pro launches&body=Hi, please notify me when the Forestock Pro plan goes live."
+                href="/upgrade"
                 className="bg-emerald-brand block w-full text-center text-[12px] font-bold text-white py-2.5 rounded-xl transition-all"
               >
-                Notify me when live →
+                Get Pro — $9/mo →
               </a>
             </div>
             <svg className="absolute -right-4 -bottom-4 w-24 h-24 text-emerald-800 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
