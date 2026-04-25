@@ -10,6 +10,7 @@ import SocialProof from "@/components/SocialProof";
 import Testimonials from "@/components/Testimonials";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 import ExitIntentModal from "@/components/ExitIntentModal";
+import FadeIn from "@/components/FadeIn";
 import { LogoMark } from "@/components/StocksenseLogo";
 import Link from "next/link";
 
@@ -60,6 +61,7 @@ export default function Home() {
       {/* ── Final CTA ── */}
       <section className="py-24 bg-[#f0f5f1] border-t border-[#bbcbba]/40">
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
+          <FadeIn>
           <div className="rounded-[10px] border border-[#bbcbba]/60 bg-white px-8 py-10 sm:px-12 sm:py-14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8 card-depth">
             <div>
               <h2 className="text-[40px] sm:text-[52px] font-bold leading-[0.93] tracking-[-0.03em] text-[#181d1b] mb-3">
@@ -82,6 +84,7 @@ export default function Home() {
               </Link>
             </div>
           </div>
+          </FadeIn>
         </div>
       </section>
 

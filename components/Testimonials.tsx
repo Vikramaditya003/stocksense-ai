@@ -1,3 +1,5 @@
+import FadeIn from "@/components/FadeIn";
+
 const problems = [
   {
     icon: "📦",
@@ -31,7 +33,7 @@ export default function Testimonials() {
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
 
         {/* Header */}
-        <div className="mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <FadeIn className="mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
             <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#006d34] uppercase tracking-[0.15em] mb-3">
               <span className="w-1 h-1 rounded-full bg-[#006d34]" />
@@ -44,40 +46,39 @@ export default function Testimonials() {
           <p className="text-[13px] text-[#8a9a8a] max-w-[240px] sm:text-right leading-relaxed">
             The three inventory problems that cost Shopify merchants the most — and how Forestock solves them.
           </p>
-        </div>
+        </FadeIn>
 
         {/* Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-          {problems.map((p) => (
-            <div
-              key={p.title}
-              className="bg-white rounded-2xl border border-[#bbcbba]/40 p-6 flex flex-col justify-between shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
-            >
-              <div>
-                <span className="text-2xl mb-4 block">{p.icon}</span>
-                <p className="text-[15px] font-semibold text-[#181d1b] mb-2">{p.title}</p>
-                <p className="text-[13px] text-[#3c4a3d] leading-relaxed">{p.body}</p>
-              </div>
-
-              <div className="flex items-center gap-3 mt-6 pt-5 border-t border-[#bbcbba]/30">
-                <div className={`px-3 py-1.5 rounded-lg ${p.color}`}>
-                  <span className="text-[14px] font-bold text-white tabular-nums">{p.stat}</span>
+          {problems.map((p, i) => (
+            <FadeIn key={p.title} delay={(i + 1) as 1 | 2 | 3}>
+              <div className="bg-white rounded-2xl border border-[#bbcbba]/40 p-6 flex flex-col justify-between shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 h-full">
+                <div>
+                  <span className="text-2xl mb-4 block">{p.icon}</span>
+                  <p className="text-[15px] font-semibold text-[#181d1b] mb-2">{p.title}</p>
+                  <p className="text-[13px] text-[#3c4a3d] leading-relaxed">{p.body}</p>
                 </div>
-                <span className="text-[11px] text-[#8a9a8a]">{p.statLabel}</span>
+
+                <div className="flex items-center gap-3 mt-6 pt-5 border-t border-[#bbcbba]/30">
+                  <div className={`px-3 py-1.5 rounded-lg ${p.color}`}>
+                    <span className="text-[14px] font-bold text-white tabular-nums">{p.stat}</span>
+                  </div>
+                  <span className="text-[11px] text-[#8a9a8a]">{p.statLabel}</span>
+                </div>
               </div>
-            </div>
+            </FadeIn>
           ))}
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-10 flex items-center justify-center gap-3">
+        <FadeIn className="mt-10 flex items-center justify-center gap-3">
           <p className="text-[13px] text-[#5a6059]">
             Early access open ·{" "}
             <a href="/forecast" className="text-[#006d34] font-semibold hover:underline">
               Try free — no account needed →
             </a>
           </p>
-        </div>
+        </FadeIn>
 
       </div>
     </section>

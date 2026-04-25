@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import FadeIn from "@/components/FadeIn";
 
 const freeFeatures = [
   "5 forecast runs",
@@ -57,7 +58,7 @@ export default function Pricing() {
       <div className="max-w-[860px] mx-auto px-4 sm:px-6 relative z-10">
 
         {/* Header */}
-        <div className="mb-14">
+        <FadeIn className="mb-14">
           <span className="inline-flex items-center text-[10px] font-bold text-[#006d34] uppercase tracking-[0.18em] bg-[#006d34]/[0.07] border border-[#006d34]/20 px-3 py-1 rounded-full mb-6">Pricing</span>
           <h2 className="text-[40px] sm:text-[52px] font-bold text-[#181d1b] tracking-[-0.03em] leading-tight mb-3">
             Get started for free
@@ -65,13 +66,14 @@ export default function Pricing() {
           <p className="text-[15px] text-[#5a6059] max-w-sm leading-relaxed">
             Start free. Upgrade when you need more. Cancel anytime.
           </p>
-        </div>
+        </FadeIn>
 
         {/* Cards — side by side, identical structure */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-10">
 
           {/* Starter */}
-          <div className="rounded-[10px] border border-[#bbcbba]/60 bg-white p-7 flex flex-col card-depth">
+          <FadeIn delay={1}>
+          <div className="rounded-[10px] border border-[#bbcbba]/60 bg-white p-7 flex flex-col card-depth h-full">
             <div className="mb-6">
               <p className="text-[13px] font-semibold text-[#181d1b] mb-1">Starter</p>
               <p className="text-[13px] text-[#5a6059] mb-5">Try it free. No credit card needed.</p>
@@ -108,9 +110,11 @@ export default function Pricing() {
               </ul>
             </div>
           </div>
+          </FadeIn>
 
           {/* Pro */}
-          <div className="rounded-[10px] border border-[#006d34]/30 bg-white p-7 flex flex-col relative card-pro-glow">
+          <FadeIn delay={2}>
+          <div className="rounded-[10px] border border-[#006d34]/30 bg-white p-7 flex flex-col relative card-pro-glow h-full">
             <div className="mb-6">
               <div className="flex items-center gap-2 mb-1">
                 <p className="text-[13px] font-semibold text-[#181d1b]">Pro</p>
@@ -147,10 +151,12 @@ export default function Pricing() {
               </ul>
             </div>
           </div>
+          </FadeIn>
 
         </div>
 
         {/* Trust strip */}
+        <FadeIn>
         <div className="flex flex-wrap items-center gap-6 text-[12px] text-[#5a6059]">
           {["No credit card for Free plan", "Cancel anytime", "Instant forecasts", "Shopify CSV compatible"].map(t => (
             <span key={t} className="flex items-center gap-1.5">
@@ -161,6 +167,7 @@ export default function Pricing() {
             </span>
           ))}
         </div>
+        </FadeIn>
       </div>
     </section>
   );

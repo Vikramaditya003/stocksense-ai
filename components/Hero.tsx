@@ -264,6 +264,10 @@ function ForecastWidget() {
 export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center pt-32 pb-16 overflow-hidden bg-[#f6faf6]">
+      {/* Ambient glow blobs */}
+      <div className="glow-blob w-[600px] h-[500px] top-[-100px] left-1/2 -translate-x-1/2 bg-[#006d34]/[0.05]" />
+      <div className="glow-blob w-[350px] h-[350px] top-[20%] right-[-80px] bg-emerald-400/[0.06]" />
+      <div className="glow-blob w-[280px] h-[280px] bottom-[10%] left-[-60px] bg-[#006d34]/[0.04]" />
       <div className="relative z-10 w-full max-w-[1100px] mx-auto px-4 sm:px-6">
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_460px] gap-10 xl:gap-16 items-center">
