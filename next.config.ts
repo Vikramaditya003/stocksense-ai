@@ -48,6 +48,12 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["framer-motion", "@clerk/nextjs", "lucide-react"],
   },
 
+  async redirects() {
+    return [
+      { source: "/pricing", destination: "/#pricing", permanent: true },
+    ];
+  },
+
   async headers() {
     return [
       {
