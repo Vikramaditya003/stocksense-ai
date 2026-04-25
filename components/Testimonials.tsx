@@ -1,26 +1,26 @@
-const testimonials = [
+const problems = [
   {
-    quote: "I used to run out of stock every peak season and not even know until orders started failing. Forestock flagged my top 3 products 3 weeks early. That alone paid for itself.",
-    name: "Rohan Mehta",
-    role: "Founder",
-    company: "FitGear India",
-    initials: "RM",
+    icon: "📦",
+    title: "Running out mid-season?",
+    body: "Most Shopify merchants discover a stockout when orders start failing — not before. Forestock flags your at-risk SKUs weeks early so you can reorder before the damage happens.",
+    stat: "3 weeks",
+    statLabel: "average early warning",
     color: "bg-emerald-700",
   },
   {
-    quote: "We were tying up ₹2L+ in slow-moving inventory. Forestock showed us exactly which SKUs had 90+ days of supply so we stopped reordering them. Cash flow improved immediately.",
-    name: "Priya Nair",
-    role: "Operations Head",
-    company: "Bloom Skincare",
-    initials: "PN",
+    icon: "💸",
+    title: "Cash locked in slow stock?",
+    body: "Overstock is just as costly as stockouts. Forestock shows which SKUs have 60+ days of supply sitting idle so you stop reordering what isn't moving and free up working capital.",
+    stat: "₹2L+",
+    statLabel: "avg. overstock freed",
     color: "bg-violet-700",
   },
   {
-    quote: "Shopify Stocky was shutting down and I was panicking. Switched to Forestock in 10 minutes — just uploaded my CSV. The reorder recommendations are more specific than anything Stocky ever gave me.",
-    name: "Arjun Sharma",
-    role: "Store Owner",
-    company: "UrbanThreads",
-    initials: "AS",
+    icon: "🔄",
+    title: "Migrating off Shopify Stocky?",
+    body: "Stocky is shutting down August 31, 2026. Forestock works from the same CSV export — upload it and get AI-powered forecasts Stocky never had, in under a minute.",
+    stat: "< 60s",
+    statLabel: "to first forecast",
     color: "bg-amber-700",
   },
 ];
@@ -35,58 +35,48 @@ export default function Testimonials() {
           <div>
             <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#006d34] uppercase tracking-[0.15em] mb-3">
               <span className="w-1 h-1 rounded-full bg-[#006d34]" />
-              What merchants say
+              Built for real problems
             </span>
             <h2 className="text-[36px] sm:text-[44px] font-bold leading-[1] tracking-[-0.03em] text-[#181d1b]">
-              Real results from<br className="hidden sm:block" /> real stores.
+              Sound familiar?<br className="hidden sm:block" /> Forestock fixes this.
             </h2>
           </div>
           <p className="text-[13px] text-[#8a9a8a] max-w-[240px] sm:text-right leading-relaxed">
-            Shopify merchants using Forestock to prevent stockouts and free up cash.
+            The three inventory problems that cost Shopify merchants the most — and how Forestock solves them.
           </p>
         </div>
 
         {/* Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-          {testimonials.map((t) => (
+          {problems.map((p) => (
             <div
-              key={t.name}
+              key={p.title}
               className="bg-white rounded-2xl border border-[#bbcbba]/40 p-6 flex flex-col justify-between shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
             >
-              {/* Quote marks */}
               <div>
-                <svg className="w-7 h-7 text-[#006d34]/20 mb-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                </svg>
-                <p className="text-[14px] text-[#3c4a3d] leading-relaxed">
-                  &ldquo;{t.quote}&rdquo;
-                </p>
+                <span className="text-2xl mb-4 block">{p.icon}</span>
+                <p className="text-[15px] font-semibold text-[#181d1b] mb-2">{p.title}</p>
+                <p className="text-[13px] text-[#3c4a3d] leading-relaxed">{p.body}</p>
               </div>
 
-              {/* Author */}
               <div className="flex items-center gap-3 mt-6 pt-5 border-t border-[#bbcbba]/30">
-                <div className={`w-9 h-9 rounded-full ${t.color} flex items-center justify-center flex-shrink-0`}>
-                  <span className="text-[12px] font-bold text-white">{t.initials}</span>
+                <div className={`px-3 py-1.5 rounded-lg ${p.color}`}>
+                  <span className="text-[14px] font-bold text-white tabular-nums">{p.stat}</span>
                 </div>
-                <div>
-                  <p className="text-[13px] font-semibold text-[#181d1b]">{t.name}</p>
-                  <p className="text-[11px] text-[#8a9a8a]">{t.role} · {t.company}</p>
-                </div>
+                <span className="text-[11px] text-[#8a9a8a]">{p.statLabel}</span>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Star rating row */}
+        {/* Bottom CTA */}
         <div className="mt-10 flex items-center justify-center gap-3">
-          <div className="flex items-center gap-0.5">
-            {[1,2,3,4,5].map(i => (
-              <svg key={i} className="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-            ))}
-          </div>
-          <p className="text-[12px] text-[#5a6059]">Loved by Shopify merchants across India</p>
+          <p className="text-[13px] text-[#5a6059]">
+            Early access open ·{" "}
+            <a href="/forecast" className="text-[#006d34] font-semibold hover:underline">
+              Try free — no account needed →
+            </a>
+          </p>
         </div>
 
       </div>
