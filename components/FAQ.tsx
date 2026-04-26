@@ -63,7 +63,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 
 export default function FAQ() {
   return (
-    <section className="py-28 bg-[#f6faf6]">
+    <section className="py-28 bg-[#f0f5f1]">
       <div className="max-w-[860px] mx-auto px-4 sm:px-6">
 
         <FadeIn className="mb-12">

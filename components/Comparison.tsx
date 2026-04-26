@@ -1,3 +1,5 @@
+import FadeIn from "@/components/FadeIn";
+
 const rows = [
   {
     them: '"Medium risk"',
@@ -23,11 +25,11 @@ const rows = [
 
 export default function Comparison() {
   return (
-    <section className="py-28 bg-[#eaefeb]">
+    <section className="py-28 bg-[#f6faf6]">
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
 
         {/* Header */}
-        <div className="mb-12">
+        <FadeIn className="mb-12">
           <span className="inline-flex items-center text-[10px] font-bold text-[#006d34] uppercase tracking-[0.18em] bg-[#006d34]/[0.07] border border-[#006d34]/20 px-3 py-1 rounded-full mb-6">
             Decisions, not dashboards
           </span>
@@ -35,7 +37,7 @@ export default function Comparison() {
             What other tools show<br />
             vs. what you actually need.
           </h2>
-        </div>
+        </FadeIn>
 
         {/* Table */}
         <div className="rounded-[10px] border border-[#bbcbba]/60 overflow-hidden card-depth">

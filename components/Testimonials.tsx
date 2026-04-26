@@ -29,7 +29,7 @@ const problems = [
 
 export default function Testimonials() {
   return (
-    <section className="py-24 bg-[#f0f5f1] border-t border-[#bbcbba]/40">
+    <section className="py-28 bg-[#f6faf6] border-t border-[#bbcbba]/40">
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
 
         {/* Header */}

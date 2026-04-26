@@ -2,7 +2,7 @@ import FadeIn from "@/components/FadeIn";
 
 export default function Features() {
   return (
-    <section id="features" className="py-24 bg-[#0d1a10]">
+    <section id="features" className="py-28 bg-[#0d1a10]">
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
 
         {/* ── Header ── */}
