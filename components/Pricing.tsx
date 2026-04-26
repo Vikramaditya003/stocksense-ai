@@ -54,7 +54,7 @@ export default function Pricing() {
   const proBilling  = currency === "INR" ? "billed monthly" : "per month";
 
   return (
-    <section id="pricing" className="py-28 bg-[#eaefeb] relative overflow-hidden">
+    <section id="pricing" className="py-28 bg-white relative overflow-hidden">
       <div className="max-w-[860px] mx-auto px-4 sm:px-6 relative z-10">
 
         {/* Header */}

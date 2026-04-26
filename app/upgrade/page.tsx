@@ -135,7 +135,7 @@ export default function UpgradePage() {
           <div className="card-glass-dark rounded-2xl p-8">
             <div className="text-center mb-7">
               <p className="text-[88px] font-black text-white tracking-[-0.04em] leading-none">$9</p>
-              <p className="text-[18px] font-bold text-outlined-green mt-1">per month</p>
+              <p className="text-[18px] font-semibold text-emerald-400/70 mt-1 tracking-wide">per month</p>
               <p className="text-[13px] text-white/35 mt-1.5">approx ₹749 · billed monthly</p>
             </div>
 

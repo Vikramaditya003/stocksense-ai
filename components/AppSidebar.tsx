@@ -427,6 +427,9 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
             </svg>
             Upgrade to Pro
           </Link>
+          <p className="text-[10px] text-emerald-400/40 text-center mt-1.5 leading-tight">
+            Unlimited forecasts · $9/mo
+          </p>
         </div>
       )}
 
