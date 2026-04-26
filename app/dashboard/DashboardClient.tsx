@@ -344,6 +344,7 @@ export default function DashboardClient() {
   const [expandedSku, setExpandedSku] = useState<string | null>(null);
   const [safeSectionOpen, setSafeSectionOpen] = useState(false);
   const [userPlan, setUserPlan] = useState<"free" | "pro">("free");
+  const [upgradeBannerDismissed, setUpgradeBannerDismissed] = useState(false);
 
   // Sync search from URL ?q= param
   useEffect(() => { setSearch(qParam); }, [qParam]);
@@ -1347,6 +1348,33 @@ export default function DashboardClient() {
             </div>
           </div>
         </header>
+
+        {/* Upgrade banner — free users only */}
+        {userPlan !== "pro" && !upgradeBannerDismissed && (
+          <div className="flex-shrink-0 bg-emerald-950 border-b border-emerald-800/40 px-4 py-2.5 flex items-center gap-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
+            <p className="text-[12px] text-emerald-100/70 flex-1 min-w-0">
+              <span className="font-semibold text-white">You&apos;re on the Free plan</span>
+              {" · "}Unlock 90-day forecasts, unlimited SKUs &amp; ad-spend correlation
+            </p>
+            <a
+              href="/upgrade"
+              className="flex-shrink-0 bg-emerald-brand text-white text-[11px] font-bold px-3 py-1.5 rounded-lg hover:opacity-90 transition-all whitespace-nowrap"
+            >
+              Get Pro — $9/mo →
+            </a>
+            <button
+              type="button"
+              onClick={() => setUpgradeBannerDismissed(true)}
+              className="flex-shrink-0 text-emerald-400/40 hover:text-emerald-400 transition-colors"
+              aria-label="Dismiss"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        )}
 
         {/* Page content */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 pb-24 md:pb-6">
