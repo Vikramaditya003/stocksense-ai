@@ -149,7 +149,7 @@ export default function Navbar() {
             <a
               key={link.label}
               href={link.href}
-              className="text-[15px] text-[#5a6059] hover:text-[#181d1b] px-4 py-2 rounded-xl hover:bg-[#eaefeb] transition-all duration-150 tracking-tight"
+              className="nav-underline text-[15px] text-[#5a6059] hover:text-[#181d1b] px-4 py-2 transition-colors duration-150 tracking-tight"
             >
               {link.label}
             </a>

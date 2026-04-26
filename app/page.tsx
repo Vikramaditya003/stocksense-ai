@@ -59,16 +59,16 @@ export default function Home() {
       <Testimonials />
 
       {/* ── Final CTA ── */}
-      <section className="py-24 bg-[#f0f5f1] border-t border-[#bbcbba]/40">
+      <section className="py-28 bg-[#0d1a10] border-t border-white/[0.06]">
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
           <FadeIn>
-          <div className="rounded-[10px] border border-[#bbcbba]/60 bg-white px-8 py-10 sm:px-12 sm:py-14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8 card-depth">
+          <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] px-8 py-12 sm:px-14 sm:py-16 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-10">
             <div>
-              <h2 className="text-[40px] sm:text-[52px] font-bold leading-[0.93] tracking-[-0.03em] text-[#181d1b] mb-3">
-                Stop losing revenue<br />
-                to stockouts.
+              <h2 className="text-[44px] sm:text-[58px] font-bold leading-[0.93] tracking-[-0.03em] mb-4">
+                <span className="text-white">Stop losing revenue</span><br />
+                <span className="text-outlined-green">to stockouts.</span>
               </h2>
-              <p className="text-[13px] text-[#8a9a8a]">
+              <p className="text-[13px] text-white/40">
                 No credit card · Results in 30 seconds · Cancel anytime
               </p>
             </div>
@@ -89,7 +89,7 @@ export default function Home() {
       </section>
 
       {/* ── Footer ── */}
-      <footer className="bg-[#f6faf6] pt-16 pb-10 border-t border-[#bbcbba]/40">
+      <footer className="bg-[#0d1a10] pt-16 pb-10 border-t border-white/[0.06]">
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
 
           {/* Top: logo + columns */}
@@ -99,20 +99,20 @@ export default function Home() {
               <div className="flex items-center gap-2.5 mb-4">
                 <LogoMark size={36} />
                 <span className="text-[16px] font-bold tracking-tight">
-                  <span className="text-[#181d1b]">Fore</span><span className="text-[#006d34]">stock</span>
+                  <span className="text-white">Fore</span><span className="text-[#00d26a]">stock</span>
                 </span>
               </div>
-              <p className="text-[12px] text-[#5a6059] leading-relaxed mb-4">
+              <p className="text-[12px] text-white/45 leading-relaxed mb-4">
                 AI-powered inventory forecasting for Shopify merchants.
               </p>
-              <p className="text-[11px] text-[#8a9a8a]">
+              <p className="text-[11px] text-white/30">
                 &copy; {new Date().getFullYear()} Forestock.
               </p>
             </div>
 
             {/* Product */}
             <div>
-              <p className="text-[11px] font-bold text-[#8a9a8a] uppercase tracking-widest mb-4">Product</p>
+              <p className="text-[11px] font-bold text-white/30 uppercase tracking-widest mb-4">Product</p>
               <ul className="space-y-2.5">
                 {[
                   { label: "Home",         href: "/"             },
@@ -122,7 +122,7 @@ export default function Home() {
                   { label: "Forecast",     href: "/forecast"     },
                 ].map((l) => (
                   <li key={l.label}>
-                    <a href={l.href} className="text-[13px] text-[#5a6059] hover:text-[#181d1b] transition-colors">{l.label}</a>
+                    <a href={l.href} className="text-[13px] text-white/45 hover:text-white transition-colors">{l.label}</a>
                   </li>
                 ))}
               </ul>
@@ -130,23 +130,23 @@ export default function Home() {
 
             {/* Resources */}
             <div>
-              <p className="text-[11px] font-bold text-[#8a9a8a] uppercase tracking-widest mb-4">Resources</p>
+              <p className="text-[11px] font-bold text-white/30 uppercase tracking-widest mb-4">Resources</p>
               <ul className="space-y-2.5">
                 <li>
-                  <a href="/blog" className="text-[13px] text-[#5a6059] hover:text-[#181d1b] transition-colors">Blog</a>
+                  <a href="/blog" className="text-[13px] text-white/45 hover:text-white transition-colors">Blog</a>
                 </li>
                 <li>
-                  <a href="mailto:support@getforestock.com" className="text-[13px] text-[#5a6059] hover:text-[#181d1b] transition-colors">Contact Us</a>
+                  <a href="mailto:support@getforestock.com" className="text-[13px] text-white/45 hover:text-white transition-colors">Contact Us</a>
                 </li>
                 <li>
-                  <a href="mailto:support@getforestock.com" className="text-[12px] text-[#8a9a8a] hover:text-[#006d34] transition-colors font-mono">support@getforestock.com</a>
+                  <a href="mailto:support@getforestock.com" className="text-[12px] text-white/30 hover:text-[#00d26a] transition-colors font-mono">support@getforestock.com</a>
                 </li>
               </ul>
             </div>
 
             {/* Legal */}
             <div>
-              <p className="text-[11px] font-bold text-[#8a9a8a] uppercase tracking-widest mb-4">Legal</p>
+              <p className="text-[11px] font-bold text-white/30 uppercase tracking-widest mb-4">Legal</p>
               <ul className="space-y-2.5">
                 {[
                   { label: "Privacy Policy",   href: "/privacy"  },
@@ -155,7 +155,7 @@ export default function Home() {
                   { label: "Refund Policy",    href: "/refunds"  },
                 ].map((l) => (
                   <li key={l.label}>
-                    <a href={l.href} className="text-[13px] text-[#5a6059] hover:text-[#181d1b] transition-colors">{l.label}</a>
+                    <a href={l.href} className="text-[13px] text-white/45 hover:text-white transition-colors">{l.label}</a>
                   </li>
                 ))}
               </ul>
@@ -163,13 +163,13 @@ export default function Home() {
           </div>
 
           {/* Bottom */}
-          <div className="border-t border-[#bbcbba]/40 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p className="text-[11px] text-[#8a9a8a]">
+          <div className="border-t border-white/[0.08] pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p className="text-[11px] text-white/30">
               Forecasts are AI-generated estimates, not financial guarantees.
             </p>
             <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#006d34]" />
-              <span className="text-[11px] text-[#8a9a8a]">All systems operational</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#00d26a]" />
+              <span className="text-[11px] text-white/30">All systems operational</span>
             </div>
           </div>
         </div>

@@ -278,9 +278,9 @@ export default function Hero() {
               Shopify inventory forecasting
             </span>
 
-            <h1 className="text-[58px] sm:text-[72px] lg:text-[80px] xl:text-[88px] font-bold leading-[0.93] text-[#181d1b] mb-6">
-              Know before<br />
-              you stock out.
+            <h1 className="text-[58px] sm:text-[72px] lg:text-[80px] xl:text-[88px] font-bold leading-[0.93] mb-6">
+              <span className="text-[#181d1b]">Know before</span><br />
+              <span className="text-outlined-green">you stock out.</span>
             </h1>
 
             <p className="text-[17px] text-[#5a6059] leading-[1.65] max-w-[420px] mb-9">
@@ -333,8 +333,8 @@ export default function Hero() {
             { value: "$9/mo", label: "No per-SKU fees",    sub: "cancel anytime"           },
           ].map((s) => (
             <div key={s.label}>
-              <span className="text-[26px] font-bold text-[#181d1b] tracking-tight tabular-nums">{s.value}</span>
-              <p className="text-[12px] text-[#5a6059] mt-0.5">{s.label}</p>
+              <span className="text-[44px] sm:text-[52px] font-bold text-[#181d1b] tracking-tight tabular-nums leading-none">{s.value}</span>
+              <p className="text-[12px] text-[#5a6059] mt-1.5">{s.label}</p>
               <p className="text-[10px] text-[#8a9a8a] mt-0.5">{s.sub}</p>
             </div>
           ))}

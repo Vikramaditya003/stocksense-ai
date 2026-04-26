@@ -400,6 +400,48 @@ progress.health-bar-red::-moz-progress-bar         { background: #f87171; }
   filter: blur(80px);
 }
 
+/* ── Outlined text (signature move) ─────────────────────────── */
+.text-outlined-green {
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 2.5px #006d34;
+  color: transparent;
+}
+@media (max-width: 640px) {
+  .text-outlined-green { -webkit-text-stroke-width: 1.8px; }
+}
+
+/* ── Directional underline nav (Chiara Luzzana pattern) ───── */
+.nav-underline {
+  position: relative;
+}
+.nav-underline::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 1rem;
+  right: 1rem;
+  height: 1px;
+  background: #181d1b;
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 0.3s ease;
+}
+.nav-underline:hover::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+/* ── Dark section glass cards ────────────────────────────────── */
+.card-glass-dark {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+}
+.card-glass-dark:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
 /* ── FAQ accordion ─────────────────────────────────────────── */
 .faq-answer {
   display: grid;
