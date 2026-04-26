@@ -94,6 +94,20 @@ export default function SignUpPage() {
         </div>
       </Link>
 
+      {/* Social proof strip */}
+      <div className="relative z-10 flex items-center justify-center gap-8 mb-6">
+        {[
+          { val: "12,000+", label: "SKUs forecast" },
+          { val: "87%",     label: "accuracy"      },
+          { val: "30s",     label: "to insights"   },
+        ].map((s, i) => (
+          <div key={s.val} className={`text-center ${i < 2 ? "border-r border-emerald-800/50 pr-8" : ""}`}>
+            <p className="text-[22px] font-bold text-white tracking-tight leading-none">{s.val}</p>
+            <p className="text-[10px] text-emerald-400/55 uppercase tracking-widest mt-1">{s.label}</p>
+          </div>
+        ))}
+      </div>
+
       <div className="relative z-10 w-full max-w-sm mx-auto">
         <SignUp
           forceRedirectUrl="/dashboard"
