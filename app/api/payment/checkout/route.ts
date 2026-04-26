@@ -53,6 +53,7 @@ export async function POST(req: NextRequest) {
       product_cart: [{ product_id: PRODUCT_ID_PRO, quantity: 1 }],
       customer: { email, name },
       return_url: `${SITE_URL}/upgrade/success`,
+      cancel_url: `${SITE_URL}/upgrade/success?status=cancelled`,
       metadata: { clerk_user_id: userId },
     });
 
