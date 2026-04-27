@@ -59,7 +59,7 @@ function BuyButton() {
         type="button"
         onClick={handleBuy}
         disabled={status === "loading"}
-        className="w-full flex items-center justify-center gap-2.5 btn-gradient text-white font-bold text-[16px] px-8 py-4 rounded-xl transition-all shadow-2xl shadow-[#006d34]/25 disabled:opacity-60 disabled:cursor-not-allowed hover:-translate-y-0.5 hover:shadow-[#006d34]/40"
+        className="w-full flex items-center justify-center gap-2.5 btn-primary btn-gradient text-white font-bold text-[16px] px-8 py-4 rounded-xl transition-all shadow-2xl shadow-[#006d34]/25 disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {status === "loading" ? (
           <>
@@ -90,7 +90,7 @@ export default function UpgradePage() {
     <div className="min-h-screen bg-[#0d1a10] flex flex-col relative overflow-hidden">
       {/* Ambient glow */}
       <div className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[700px] h-[500px] rounded-full bg-[#006d34]/[0.12] blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-[-80px] right-[-80px] w-[400px] h-[400px] rounded-full bg-emerald-600/[0.07] blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[-80px] right-[-80px] w-[400px] h-[400px] rounded-full bg-[#006d34]/[0.07] blur-[100px] pointer-events-none" />
 
       {/* Nav */}
       <header className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06] max-w-[900px] mx-auto w-full relative z-10">
@@ -125,8 +125,8 @@ export default function UpgradePage() {
 
           {/* Badge */}
           <div className="text-center">
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-400 uppercase tracking-widest bg-emerald-400/10 border border-emerald-400/20 px-3 py-1.5 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#00d26a] uppercase tracking-widest bg-[#00d26a]/10 border border-[#00d26a]/20 px-3 py-1.5 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#00d26a] animate-pulse" />
               Pro plan · Live
             </span>
           </div>
@@ -144,12 +144,33 @@ export default function UpgradePage() {
             {/* Trust strip */}
             <div className="mt-5 pt-5 border-t border-white/[0.07] grid grid-cols-3 gap-2 text-center">
               {[
-                { icon: "🔒", label: "Secure checkout" },
-                { icon: "↩", label: "Cancel anytime" },
-                { icon: "⚡", label: "Instant access" },
+                {
+                  label: "Secure checkout",
+                  icon: (
+                    <svg className="w-4 h-4 text-[#00d26a]/60 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                    </svg>
+                  ),
+                },
+                {
+                  label: "Cancel anytime",
+                  icon: (
+                    <svg className="w-4 h-4 text-[#00d26a]/60 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                    </svg>
+                  ),
+                },
+                {
+                  label: "Instant access",
+                  icon: (
+                    <svg className="w-4 h-4 text-[#00d26a]/60 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                    </svg>
+                  ),
+                },
               ].map((t) => (
                 <div key={t.label}>
-                  <p className="text-base mb-0.5">{t.icon}</p>
+                  {t.icon}
                   <p className="text-[10px] text-white/35 leading-tight">{t.label}</p>
                 </div>
               ))}
@@ -162,8 +183,8 @@ export default function UpgradePage() {
             <ul className="space-y-3.5">
               {FEATURES.map((f) => (
                 <li key={f} className="flex items-center gap-3">
-                  <div className="w-5 h-5 rounded-full bg-emerald-400/15 border border-emerald-400/20 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-3 h-3 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                  <div className="w-5 h-5 rounded-full bg-[#00d26a]/15 border border-[#00d26a]/20 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-3 h-3 text-[#00d26a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
@@ -175,7 +196,7 @@ export default function UpgradePage() {
 
           <p className="text-center text-[12px] text-white/30">
             Questions?{" "}
-            <a href="mailto:support@getforestock.com" className="text-emerald-400/60 hover:text-emerald-400 transition-colors underline underline-offset-2">
+            <a href="mailto:support@getforestock.com" className="text-[#00d26a]/60 hover:text-[#00d26a] transition-colors underline underline-offset-2">
               support@getforestock.com
             </a>
           </p>
