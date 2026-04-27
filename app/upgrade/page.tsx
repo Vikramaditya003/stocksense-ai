@@ -33,7 +33,7 @@ function BuyButton() {
         window.location.href = "/sign-in?redirect_url=/upgrade";
         return;
       }
-      let data: { success: boolean; checkout_url?: string; error?: string };
+      let data: { success: boolean; checkout_url?: string; session_id?: string; error?: string };
       try {
         data = await res.json();
       } catch {
@@ -42,6 +42,9 @@ function BuyButton() {
         return;
       }
       if (data.success && data.checkout_url) {
+        if (data.session_id) {
+          localStorage.setItem("dodo_session_id", data.session_id);
+        }
         window.location.href = data.checkout_url;
       } else {
         setErrorMsg(data.error ?? "Something went wrong. Please try again.");
