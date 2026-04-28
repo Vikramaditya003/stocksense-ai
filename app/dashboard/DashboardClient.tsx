@@ -176,12 +176,13 @@ function TrendChart({ forecasts }: { forecasts: Omit<SavedForecast, "analysis" |
 }
 
 // ─── Upload Panel (slide-in) ──────────────────────────────────────────────────
-function UploadPanel({ onClose, onResult }: { onClose: () => void; onResult: (a: ForecastAnalysis) => void }) {
+function UploadPanel({ onClose, onResult, userPlan }: { onClose: () => void; onResult: (a: ForecastAnalysis) => void; userPlan: "free" | "pro" }) {
   const [csvText, setCsvText] = useState("");
   const [fileName, setFileName] = useState<string | null>(null);
   const [leadTime, setLeadTime] = useState("14");
   const [currency, setCurrency] = useState<string>("USD");
   const [autoDetected, setAutoDetected] = useState(false);
+  const [adSpend, setAdSpend] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [drag, setDrag] = useState(false);
@@ -210,7 +211,12 @@ function UploadPanel({ onClose, onResult }: { onClose: () => void; onResult: (a:
       const res = await fetch("/api/forecast", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ salesData: csvText.trim(), leadTimeDays: parseInt(leadTime) || 14, currency }),
+        body: JSON.stringify({
+          salesData: csvText.trim(),
+          leadTimeDays: parseInt(leadTime) || 14,
+          currency,
+          ...(userPlan === "pro" && adSpend.trim() ? { adSpendData: adSpend.trim() } : {}),
+        }),
       });
       const json = await res.json();
       if (!json.success) throw new Error(json.error || "Forecast failed.");
@@ -291,6 +297,33 @@ function UploadPanel({ onClose, onResult }: { onClose: () => void; onResult: (a:
             </select>
           </div>
         </div>
+
+        {/* Ad spend — Pro only */}
+        {userPlan === "pro" ? (
+          <div>
+            <label htmlFor="panel-adspend" className="flex items-center gap-1.5 text-xs font-medium text-[#5a6059] uppercase tracking-wider mb-1.5">
+              Ad Spend / Upcoming Promotions
+              <span className="text-[9px] font-bold text-[#006d34] bg-[#006d34]/[0.08] border border-[#006d34]/20 px-1.5 py-0.5 rounded-full uppercase tracking-wider normal-case">Pro</span>
+            </label>
+            <textarea
+              id="panel-adspend"
+              value={adSpend}
+              onChange={(e) => setAdSpend(e.target.value)}
+              rows={3}
+              placeholder="e.g. Running $500/day Meta ads on Yoga Mat next week. Flash sale on Resistance Bands Apr 30."
+              className="w-full bg-[#f0f5f1] border border-[#bbcbba]/40 focus:border-[#006d34]/40 rounded-lg px-3 py-2 text-sm text-[#181d1b] outline-none transition-colors resize-none placeholder:text-[#8a9a8a]"
+            />
+            <p className="text-[10px] text-[#8a9a8a] mt-1">AI uses this to adjust demand forecasts for promoted products.</p>
+          </div>
+        ) : (
+          <div className="bg-[#006d34]/[0.04] border border-[#006d34]/15 rounded-xl px-4 py-3 flex items-start gap-3">
+            <svg className="w-4 h-4 text-[#006d34] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+            <div>
+              <p className="text-xs font-semibold text-[#181d1b]">AI Ad-Spend Correlation</p>
+              <p className="text-[11px] text-[#5a6059] mt-0.5">Upgrade to Pro to factor in upcoming ad spend and promotions into your demand forecast.</p>
+            </div>
+          </div>
+        )}
 
         {error && (
           <div className="bg-red-50 border border-red-200 rounded-lg px-3 py-2.5 text-xs text-red-700">{error}</div>
@@ -798,6 +831,17 @@ export default function DashboardClient() {
             </div>
           )}
 
+          {/* Ad spend insight — Pro only, only when present */}
+          {userPlan === "pro" && activeAnalysis?.adSpendInsight && (
+            <div className="bg-[#006d34]/[0.04] border border-[#006d34]/20 rounded-xl p-4 flex items-start gap-3">
+              <svg className="w-4 h-4 text-[#006d34] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+              <div>
+                <p className="text-[10px] font-bold text-[#006d34] uppercase tracking-widest mb-1">Ad-Spend Impact</p>
+                <p className="text-xs text-[#5a6059] leading-relaxed">{activeAnalysis.adSpendInsight}</p>
+              </div>
+            </div>
+          )}
+
           {/* Past forecasts */}
           <div className="bg-white rounded-xl border border-[#bbcbba]/20 shadow-sm p-5 flex-1">
             <div className="flex items-center justify-between mb-3">
@@ -1253,7 +1297,7 @@ export default function DashboardClient() {
               className="fixed inset-0 bg-black/60 z-40"
               onClick={() => setUploadOpen(false)}
             />
-            <UploadPanel onClose={() => setUploadOpen(false)} onResult={handleNewForecast} />
+            <UploadPanel onClose={() => setUploadOpen(false)} onResult={handleNewForecast} userPlan={userPlan} />
           </>
         )}
       </AnimatePresence>

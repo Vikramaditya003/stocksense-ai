@@ -6,12 +6,11 @@ import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 
 const FEATURES = [
-  "Unlimited products — no 5-SKU cap",
+  "Unlimited forecasts — no 5-run cap",
   "60 & 90-day demand forecasts",
-  "AI ad-spend correlation",
-  "Smart reorder quantities",
+  "AI ad-spend & promotion correlation",
+  "Smart reorder quantities with lead time buffers",
   "Supplier lead time alerts",
-  "1-click purchase order generation",
   "Priority email support",
 ];
 
