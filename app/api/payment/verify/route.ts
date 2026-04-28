@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import DodoPayments from "dodopayments";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { updateUserPlan, getUserPlan } from "@/lib/db";
 import { logError } from "@/lib/security";
+import { Resend } from "resend";
+
+const resendKey = process.env.RESEND_API_KEY ?? "";
+const resendReady = resendKey.startsWith("re_") && resendKey.length > 20;
 
 const apiKey = process.env.DODO_PAYMENTS_API_KEY ?? "";
 const dodoReady = apiKey.length > 10;
@@ -56,6 +60,49 @@ export async function POST(req: NextRequest) {
     ) {
       const referenceId = session?.payment_id ?? session?.subscription_id ?? sessionId;
       await updateUserPlan(userId, "pro", referenceId);
+
+      // Send Pro confirmation email
+      if (resendReady) {
+        try {
+          const clerkUser = await currentUser();
+          const primaryEmailId = clerkUser?.primaryEmailAddressId;
+          const email = clerkUser?.emailAddresses.find((e) => e.id === primaryEmailId)?.emailAddress ?? "";
+          const firstName = clerkUser?.firstName ?? "";
+          if (email) {
+            const resend = new Resend(resendKey);
+            await resend.emails.send({
+              from: "Forestock <support@getforestock.com>",
+              to: email,
+              subject: "You're on Forestock Pro — here's what's unlocked",
+              text: [
+                `Hi${firstName ? ` ${firstName}` : ""},`,
+                "",
+                "Your Forestock Pro plan is now active. Here's everything you've unlocked:",
+                "",
+                "✓ Unlimited forecasts — no 5-run cap",
+                "✓ 60 & 90-day demand forecasts",
+                "✓ AI ad-spend & promotion correlation",
+                "✓ Smart reorder quantities with lead time buffers",
+                "✓ Supplier lead time alerts",
+                "✓ Priority email support",
+                "",
+                "→ Go to your dashboard: https://getforestock.com/dashboard",
+                "",
+                "To use ad-spend correlation: click 'New Forecast', upload your CSV,",
+                "and fill in the 'Ad Spend / Upcoming Promotions' field that's now visible.",
+                "",
+                "Questions? Reply to this email — we respond within 24 hours.",
+                "",
+                "— The Forestock team",
+                "support@getforestock.com",
+              ].join("\n"),
+            });
+          }
+        } catch {
+          // Don't fail activation if email fails
+        }
+      }
+
       return NextResponse.json({ activated: true });
     }
 
