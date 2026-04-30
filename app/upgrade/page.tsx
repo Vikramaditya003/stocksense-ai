@@ -73,7 +73,7 @@ function BuyButton() {
           </>
         ) : (
           <>
-            {isSignedIn ? "Get Pro — $9 / mo" : "Sign in to get Pro"}
+            {isSignedIn ? "Get Pro — $10 / mo" : "Sign in to get Pro"}
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
             </svg>
@@ -133,9 +133,9 @@ export default function UpgradePage() {
           {/* Price card */}
           <div className="bg-white rounded-2xl border border-[#bbcbba]/40 shadow-sm p-8">
             <div className="text-center mb-7">
-              <p className="text-[80px] font-black text-[#181d1b] tracking-[-0.04em] leading-none">$9</p>
+              <p className="text-[80px] font-black text-[#181d1b] tracking-[-0.04em] leading-none">$10</p>
               <p className="text-[16px] font-semibold text-[#006d34] mt-1">per month</p>
-              <p className="text-[12px] text-[#8a9a8a] mt-1.5">approx ₹749 · billed monthly</p>
+              <p className="text-[12px] text-[#8a9a8a] mt-1.5">billed monthly · cancel anytime</p>
             </div>
 
             <BuyButton />

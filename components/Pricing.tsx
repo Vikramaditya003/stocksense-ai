@@ -50,8 +50,8 @@ export default function Pricing() {
     return lang === "en-IN" || lang.startsWith("hi") ? "INR" : "USD";
   });
 
-  const proPrice    = currency === "INR" ? "₹749"  : "$9";
-  const proBilling  = currency === "INR" ? "billed monthly" : "per month";
+  const proPrice    = "$10";
+  const proBilling  = "per month";
 
   return (
     <section id="pricing" className="py-28 bg-white relative overflow-hidden">

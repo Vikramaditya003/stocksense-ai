@@ -341,7 +341,7 @@ function UploadPanel({ onClose, onResult, userPlan }: { onClose: () => void; onR
               href="/upgrade"
               className="inline-flex items-center gap-1.5 text-[11px] font-bold text-white bg-[#006d34] px-3 py-1.5 rounded-lg hover:opacity-90 transition-opacity"
             >
-              Upgrade to Pro — $9/mo
+              Upgrade to Pro — $10/mo
               <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
             </a>
           </div>
@@ -921,7 +921,7 @@ export default function DashboardClient() {
                   href="/upgrade"
                   className="bg-emerald-brand block w-full text-center text-[12px] font-bold text-white py-2.5 rounded-xl transition-all"
                 >
-                  Get Pro — ₹749/mo →
+                  Get Pro — $10/mo →
                 </a>
               </div>
               <svg className="absolute -right-4 -bottom-4 w-24 h-24 text-emerald-800 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
@@ -1441,7 +1441,7 @@ export default function DashboardClient() {
               href="/upgrade"
               className="flex-shrink-0 bg-emerald-brand text-white text-[11px] font-bold px-3 py-1.5 rounded-lg hover:opacity-90 transition-all whitespace-nowrap"
             >
-              Get Pro — $9/mo →
+              Get Pro — $10/mo →
             </a>
             <button
               type="button"

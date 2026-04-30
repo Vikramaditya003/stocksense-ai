@@ -330,7 +330,7 @@ export default function Hero() {
           {[
             { value: "87%",   label: "forecast accuracy",  sub: "on steady-selling SKUs†" },
             { value: "30s",   label: "to first insight",   sub: "no setup required"        },
-            { value: "$9/mo", label: "No per-SKU fees",    sub: "cancel anytime"           },
+            { value: "$10/mo", label: "No per-SKU fees",    sub: "cancel anytime"           },
           ].map((s) => (
             <div key={s.label}>
               <span className="text-[44px] sm:text-[52px] font-bold text-[#181d1b] tracking-tight tabular-nums leading-none">{s.value}</span>

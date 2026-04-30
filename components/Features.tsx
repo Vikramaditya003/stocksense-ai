@@ -150,7 +150,7 @@ export default function Features() {
                 {[
                   { value: "87%",   label: "Forecast accuracy"       },
                   { value: "30s",   label: "Time to first insight"   },
-                  { value: "$9",    label: "Per month, cancel anytime" },
+                  { value: "$10",    label: "Per month, cancel anytime" },
                   { value: "2 min", label: "Setup — just upload CSV" },
                 ].map((s) => (
                   <div key={s.label} className="px-6 py-5">

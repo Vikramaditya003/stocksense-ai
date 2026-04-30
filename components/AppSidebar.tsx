@@ -428,7 +428,7 @@ export default function AppSidebar({ alertCount = 0 }: AppSidebarProps) {
             Upgrade to Pro
           </Link>
           <p className="text-[10px] text-emerald-400/40 text-center mt-1.5 leading-tight">
-            Unlimited forecasts · $9/mo
+            Unlimited forecasts · $10/mo
           </p>
         </div>
       )}

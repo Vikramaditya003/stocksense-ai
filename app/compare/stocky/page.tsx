@@ -40,7 +40,7 @@ const rows: { feature: string; us: React.ReactNode; them: React.ReactNode; note?
   { feature: "Confidence score per product", us: check, them: cross },
   { feature: "Works without Shopify install", us: check, them: cross, note: "Forestock works from a CSV — no app permissions needed" },
   { feature: "Free tier", us: check, them: check, note: "Stocky was free; Forestock has a free tier with 5 forecast runs" },
-  { feature: "Price", us: <span className="font-bold text-[#22C55E]">₹749/mo Pro</span>, them: <span className="font-bold text-red-400/80">Shutting down</span> },
+  { feature: "Price", us: <span className="font-bold text-[#006d34]">$10/mo Pro</span>, them: <span className="font-bold text-red-400/80">Shutting down</span> },
 ];
 
 export default function VsStocky() {
@@ -219,7 +219,7 @@ export default function VsStocky() {
             },
             {
               q: "Is Forestock free like Stocky was?",
-              a: "Forestock has a free tier with 5 forecast runs — enough to test your full inventory. Pro (₹749/mo) gives you unlimited runs, 60 & 90-day forecasts, and ad-spend correlation.",
+              a: "Forestock has a free tier with 5 forecast runs — enough to test your full inventory. Pro ($10/mo) gives you unlimited runs, 60 & 90-day forecasts, and ad-spend correlation.",
             },
             {
               q: "What happens to my Stocky data after August 31?",

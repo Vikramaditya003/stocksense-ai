@@ -41,7 +41,7 @@ const rows: { feature: string; us: React.ReactNode; them: React.ReactNode; note?
   { feature: "Works from CSV (no install needed)", us: check, them: cross, note: "Stock Monitor requires full Shopify app install" },
   { feature: "Native Shopify alerts / notifications", us: partial, them: check, note: "Forestock Shopify app coming soon" },
   { feature: "Free tier", us: check, them: check },
-  { feature: "Pro starting price", us: <span className="font-bold text-[#22C55E]">₹999/mo</span>, them: <span className="font-bold text-slate-300">Free–$9/mo</span> },
+  { feature: "Pro starting price", us: <span className="font-bold text-[#006d34]">$10/mo</span>, them: <span className="font-bold text-slate-300">Free–$9/mo</span> },
 ];
 
 export default function VsStockMonitor() {

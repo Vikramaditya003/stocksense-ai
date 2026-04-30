@@ -384,10 +384,10 @@ function UpgradeModal({ feature, onClose }: { feature: string; onClose: () => vo
             ))}
           </ul>
           <div className="flex items-baseline gap-1.5 mb-1">
-            <span className="text-[28px] font-semibold text-white tracking-tight">$9</span>
+            <span className="text-[28px] font-semibold text-white tracking-tight">$10</span>
             <span className="text-slate-500 text-sm">/month · cancel anytime</span>
           </div>
-          <p className="text-xs text-slate-600 mb-4">Billed in INR · approx ₹749/mo</p>
+          <p className="text-xs text-slate-600 mb-4">billed monthly · cancel anytime</p>
           {paySuccess ? (
             <div className="flex flex-col items-center gap-2 py-2">
               <div className="w-10 h-10 rounded-full bg-[#22C55E]/10 border border-[#22C55E]/20 flex items-center justify-center">
@@ -421,7 +421,7 @@ function UpgradeModal({ feature, onClose }: { feature: string; onClose: () => vo
                 disabled={paying}
                 className="block w-full text-center bg-[#22C55E] hover:bg-[#16A34A] text-[#060C0D] font-bold py-3 rounded-xl transition-all text-sm shadow-lg shadow-[#22C55E]/20 hover:-translate-y-0.5 disabled:opacity-60"
               >
-                {paying ? "Opening payment..." : "Upgrade to Pro — ₹749/mo"}
+                {paying ? "Opening payment..." : "Upgrade to Pro — $10/mo"}
               </button>
               {payError && <p className="text-xs text-red-400 text-center mt-2">Payment failed. Try again.</p>}
               <button onClick={onClose} className="block w-full text-center text-slate-600 hover:text-slate-400 text-xs mt-3 transition-colors">
@@ -1804,7 +1804,7 @@ export default function ForecastClient() {
               {userPlan !== "pro" && (
                 <div className="rounded-2xl p-6 bg-emerald-950 text-center">
                   <p className="text-white font-semibold mb-1 text-sm">Unlock unlimited forecasts + ad-spend correlation + supplier alerts</p>
-                  <p className="text-emerald-100/50 text-xs mb-4">Pro plan — ₹749/mo. 10× cheaper than Prediko. Cancel anytime.</p>
+                  <p className="text-emerald-100/50 text-xs mb-4">Pro plan — $10/mo. 5× cheaper than Prediko. Cancel anytime.</p>
                   <Link
                     href="/#pricing"
                     className="inline-flex items-center gap-2 bg-emerald-brand text-white font-bold px-5 py-2.5 rounded-xl transition-all text-sm hover:opacity-90 hover:-translate-y-0.5"
