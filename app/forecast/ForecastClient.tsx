@@ -1094,10 +1094,7 @@ export default function ForecastClient() {
 
   const productCountInCsv = csvText ? countUniqueProducts(csvText) : 0;
   const isOverLimit = productCountInCsv > FREE_PRODUCT_LIMIT;
-  // Free tier = Clerk not configured yet, or user not signed in
-  // isFreeTier is derived inside ForecastNavAuth for auth state;
-  // here we default to true (gated) until auth confirms sign-in
-  const isFreeTier = !CLERK_READY;
+  const isFreeTier = userPlan !== "pro";
 
   const sortedProducts = analysis?.products ? [...analysis.products].sort((a, b) => {
     let cmp = 0;
@@ -1739,7 +1736,7 @@ export default function ForecastClient() {
                     </thead>
                     <tbody>
                       {sortedProducts.map((product, i) => (
-                        <ProductRow key={product.sku || product.productName} product={product} index={i} leadTime={parseInt(leadTime) || 14} isFreeTier={false} onUpgrade={(f) => setUpgradeModal(f)} currency={analysis?.currency ?? currency} />
+                        <ProductRow key={product.sku || product.productName} product={product} index={i} leadTime={parseInt(leadTime) || 14} isFreeTier={isFreeTier} onUpgrade={(f) => setUpgradeModal(f)} currency={analysis?.currency ?? currency} />
                       ))}
                     </tbody>
                   </table>

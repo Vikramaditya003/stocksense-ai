@@ -253,7 +253,7 @@ ${trimmed.substring(0, 40000)}`;
             { role: "system", content: SYSTEM_PROMPT },
             { role: "user", content: userMessage },
           ],
-          max_tokens: 4096,
+          max_tokens: userIsPro ? 8192 : 4096,
           temperature: 0.1,
         },
         { signal: controller.signal }
@@ -319,6 +319,11 @@ ${trimmed.substring(0, 40000)}`;
       const VALID_LABELS = ["critical", "at-risk", "fair", "good", "excellent"];
       if (!VALID_LABELS.includes(analysis.healthLabel)) analysis.healthLabel = "fair";
     }
+    // Cap products for free users — Pro unlocks unlimited SKUs
+    if (!userIsPro && Array.isArray(analysis.products) && analysis.products.length > 5) {
+      analysis.products = analysis.products.slice(0, 5);
+    }
+
     // Sanitize array fields — each item is a plain string rendered directly to DOM
     if (Array.isArray(analysis.keyInsights)) {
       analysis.keyInsights = analysis.keyInsights
