@@ -14,7 +14,7 @@ const CLERK_READY =
   (_clerkKey.startsWith("pk_test_") || _clerkKey.startsWith("pk_live_")) &&
   _clerkKey.length > 30;
 
-function ForecastNavAuth({ onReset, showReset, userPlan }: { onReset: () => void; showReset: boolean; userPlan: "free" | "pro" }) {
+function ForecastNavAuth({ onReset, showReset, userPlan, forecastCount }: { onReset: () => void; showReset: boolean; userPlan: "free" | "pro"; forecastCount: number | null }) {
   const { isSignedIn, isLoaded } = useUser();
   return (
     <div className="flex items-center gap-3">
@@ -32,9 +32,20 @@ function ForecastNavAuth({ onReset, showReset, userPlan }: { onReset: () => void
             History
           </Link>
           {userPlan !== "pro" && (
-            <Link href="/upgrade" className="text-xs font-semibold text-[#5a6059] hover:text-[#181d1b] transition-colors">
-              Upgrade to Pro
-            </Link>
+            <div className="flex items-center gap-2">
+              {forecastCount !== null && (
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full tabular-nums ${
+                  forecastCount >= 5 ? "bg-red-100 text-red-600 border border-red-200" :
+                  forecastCount >= 4 ? "bg-amber-100 text-amber-700 border border-amber-200" :
+                  "bg-[#006d34]/[0.08] text-[#006d34] border border-[#006d34]/20"
+                }`}>
+                  {forecastCount}/5 used
+                </span>
+              )}
+              <Link href="/upgrade" className="text-xs font-semibold text-[#5a6059] hover:text-[#181d1b] transition-colors">
+                Upgrade to Pro
+              </Link>
+            </div>
           )}
           {userPlan === "pro" && (
             <span className="text-[10px] font-bold bg-[#006d34] text-white px-2 py-0.5 rounded-full tracking-wide">PRO</span>
@@ -938,6 +949,7 @@ export default function ForecastClient() {
   });
   const [showFeedback, setShowFeedback] = useState(false);
   const [userPlan, setUserPlan] = useState<"free" | "pro">("free");
+  const [forecastCount, setForecastCount] = useState<number | null>(null);
 
   const fileRef = useRef<HTMLInputElement>(null);
   const demoRan = useRef(false);
@@ -964,7 +976,10 @@ export default function ForecastClient() {
 
   useEffect(() => {
     if (!userIsSignedIn) return;
-    fetch("/api/user/plan").then(r => r.json()).then(d => { if (d.plan === "pro") setUserPlan("pro"); }).catch(() => {});
+    fetch("/api/user/plan").then(r => r.json()).then(d => {
+      if (d.plan === "pro") setUserPlan("pro");
+      if (typeof d.forecastCount === "number") setForecastCount(d.forecastCount);
+    }).catch(() => {});
   }, [userIsSignedIn]);
 
   // Show feedback popup once when forecast results arrive, but only if user
@@ -1077,6 +1092,7 @@ export default function ForecastClient() {
       }
       setAnalysis(json.analysis ?? null);
       setStep("done");
+      if (userPlan !== "pro") setForecastCount(c => c !== null ? Math.min(c + 1, 5) : null);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong.");
       setStep("error");
@@ -1132,7 +1148,7 @@ export default function ForecastClient() {
           <span className="text-[16px] font-semibold text-[#181d1b] tracking-tight">Fore<span className="text-[#006d34]">stock</span></span>
         </Link>
         {CLERK_READY ? (
-          <ForecastNavAuth onReset={reset} showReset={step === "done"} userPlan={userPlan} />
+          <ForecastNavAuth onReset={reset} showReset={step === "done"} userPlan={userPlan} forecastCount={forecastCount} />
         ) : (
           <div className="flex items-center gap-3">
             {step === "done" && (
