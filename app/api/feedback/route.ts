@@ -18,6 +18,9 @@ export async function POST(req: NextRequest) {
   }
 
   const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ success: false, error: "Sign in to submit feedback." }, { status: 401 });
+  }
 
   try {
     const body = await req.json();
