@@ -853,41 +853,71 @@ function POGenerator({ products }: { products: ProductForecast[] }) {
 
 // ─── Results sign-up prompt ───────────────────────────────────────────────
 
-function ResultsSignupPrompt({ onDismiss }: { onDismiss: () => void }) {
+function ResultsSignupPrompt() {
   const { isSignedIn, isLoaded } = useUser();
   if (!isLoaded || isSignedIn) return null;
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center gap-4 bg-[#006d34]/[0.04] border border-[#006d34]/20 rounded-2xl px-5 py-4 mb-5 relative">
-      <button
-        onClick={onDismiss}
-        className="absolute top-3 right-3 text-[#8a9a8a] hover:text-[#5a6059] transition-colors p-1"
-        aria-label="Dismiss"
-      >
-        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-
+    <div className="flex flex-col sm:flex-row sm:items-center gap-4 bg-[#006d34]/[0.06] border border-[#006d34]/25 rounded-2xl px-5 py-4 mb-5">
       <div className="w-10 h-10 rounded-xl bg-[#006d34]/[0.10] border border-[#006d34]/20 flex items-center justify-center flex-shrink-0">
         <svg className="w-5 h-5 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.614 0" />
         </svg>
       </div>
 
-      <div className="flex-1 min-w-0 pr-6 sm:pr-0">
+      <div className="flex-1 min-w-0">
         <p className="text-[14px] font-semibold text-[#181d1b] tracking-tight">
-          Get email alerts 7 days before each stockout
+          You&apos;ve used your 1 free guest run
         </p>
         <p className="text-[12px] text-[#5a6059] mt-0.5">
-          Sign up free to save this forecast, track history, and get automated reorder alerts.
+          Sign up free for 4 more runs, saved forecast history, and stockout email alerts.
         </p>
       </div>
 
       <SignUpButton mode="redirect">
         <button className="flex-shrink-0 text-[13px] font-semibold text-white bg-emerald-brand hover:opacity-90 px-4 py-2.5 rounded-xl transition-all shadow-lg whitespace-nowrap w-full sm:w-auto text-center">
-          Save forecast free →
+          Create free account →
         </button>
       </SignUpButton>
+    </div>
+  );
+}
+
+function SignupGateModal({ onDismiss }: { onDismiss: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-8 text-center">
+        <div className="w-14 h-14 rounded-2xl bg-[#006d34]/[0.08] border border-[#006d34]/20 flex items-center justify-center mx-auto mb-5">
+          <svg className="w-7 h-7 text-[#22C55E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+          </svg>
+        </div>
+
+        <h2 className="text-[20px] font-bold text-[#181d1b] tracking-tight mb-2">
+          You&apos;ve used your free guest run
+        </h2>
+        <p className="text-[13px] text-[#5a6059] leading-relaxed mb-6">
+          Sign up free to get <span className="font-semibold text-[#181d1b]">4 more forecast runs</span>, saved history, and email alerts 7 days before each stockout.
+        </p>
+
+        <SignUpButton mode="redirect">
+          <button className="block w-full text-center bg-[#006d34] hover:bg-[#005a2b] text-white font-bold py-3 rounded-xl transition-all text-sm shadow-lg shadow-[#006d34]/20 hover:-translate-y-0.5 mb-3">
+            Create free account →
+          </button>
+        </SignUpButton>
+
+        <SignInButton mode="redirect">
+          <button className="block w-full text-center text-[#5a6059] hover:text-[#181d1b] font-medium text-sm py-2 transition-colors">
+            Already have an account? Sign in
+          </button>
+        </SignInButton>
+
+        <button
+          onClick={onDismiss}
+          className="mt-3 text-[11px] text-[#8a9a8a] hover:text-[#5a6059] transition-colors"
+        >
+          Maybe later
+        </button>
+      </div>
     </div>
   );
 }
@@ -943,10 +973,11 @@ export default function ForecastClient() {
 
   const [detectedFormat, setDetectedFormat] = useState<"shopify-orders" | "standard" | null>(null);
 
-  const [signupPromptDismissed, setSignupPromptDismissed] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return !!localStorage.getItem("forestock_signup_dismissed");
+  const [anonRunCount, setAnonRunCount] = useState(() => {
+    if (typeof window === "undefined") return 0;
+    return parseInt(localStorage.getItem("forestock_anon_runs") ?? "0", 10);
   });
+  const [showSignupGate, setShowSignupGate] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const [userPlan, setUserPlan] = useState<"free" | "pro">("free");
   const [forecastCount, setForecastCount] = useState<number | null>(null);
@@ -1058,6 +1089,12 @@ export default function ForecastClient() {
     const data = (overrideData ?? csvText).trim();
     if (!data || data.length < 20) { setError("Please upload a CSV or paste your sales data first."); return; }
 
+    // Gate: anonymous users get 1 free run, then must sign up
+    if (!userIsSignedIn && anonRunCount >= 1) {
+      setShowSignupGate(true);
+      return;
+    }
+
     // Client-side validation before hitting the API
     const validationErrors = validateCsv(data);
     if (validationErrors.length) { setError(validationErrors[0]); return; }
@@ -1093,6 +1130,11 @@ export default function ForecastClient() {
       setAnalysis(json.analysis ?? null);
       setStep("done");
       if (userPlan !== "pro") setForecastCount(c => c !== null ? Math.min(c + 1, 5) : null);
+      if (!userIsSignedIn) {
+        const next = anonRunCount + 1;
+        setAnonRunCount(next);
+        if (typeof window !== "undefined") localStorage.setItem("forestock_anon_runs", String(next));
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong.");
       setStep("error");
@@ -1131,6 +1173,7 @@ export default function ForecastClient() {
       <AnimatePresence>
         {upgradeModal && <UpgradeModal feature={upgradeModal} onClose={() => setUpgradeModal(null)} />}
       </AnimatePresence>
+      {showSignupGate && <SignupGateModal onDismiss={() => setShowSignupGate(false)} />}
       {showFeedback && (
         <FeedbackPopup
           page="forecast"
@@ -1361,7 +1404,7 @@ export default function ForecastClient() {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {[
                   { label: "Avg. Time", value: "~30s", sub: "per forecast run" },
-                  { label: "Free Plan", value: "5 runs", sub: "no sign-up required" },
+                  { label: "Free Plan", value: "5 runs", sub: "1 free guest run" },
                   { label: "Formats", value: "CSV · XLSX", sub: "Shopify exports included" },
                 ].map((s) => (
                   <div key={s.label} className="bg-white rounded-xl border border-[#bbcbba]/40 p-4 shadow-sm">
@@ -1439,17 +1482,8 @@ export default function ForecastClient() {
                 </div>
               </div>
 
-              {/* Sign-up prompt — only shown to non-authed users, dismissible */}
-              {CLERK_READY && !signupPromptDismissed && (
-                <ResultsSignupPrompt
-                  onDismiss={() => {
-                    setSignupPromptDismissed(true);
-                    if (typeof window !== "undefined") {
-                      localStorage.setItem("forestock_signup_dismissed", "1");
-                    }
-                  }}
-                />
-              )}
+              {/* Sign-up prompt — shown to all non-authed users after their run */}
+              {CLERK_READY && <ResultsSignupPrompt />}
 
               {/* Critical alerts banner */}
               <CriticalAlerts products={sortedProducts} leadTime={parseInt(leadTime) || 14} currency={analysis?.currency ?? currency} />
