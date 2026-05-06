@@ -973,10 +973,6 @@ export default function ForecastClient() {
 
   const [detectedFormat, setDetectedFormat] = useState<"shopify-orders" | "standard" | null>(null);
 
-  const [anonRunCount, setAnonRunCount] = useState(() => {
-    if (typeof window === "undefined") return 0;
-    return parseInt(localStorage.getItem("forestock_anon_runs") ?? "0", 10);
-  });
   const [showSignupGate, setShowSignupGate] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const [userPlan, setUserPlan] = useState<"free" | "pro">("free");
@@ -1089,8 +1085,8 @@ export default function ForecastClient() {
     const data = (overrideData ?? csvText).trim();
     if (!data || data.length < 20) { setError("Please upload a CSV or paste your sales data first."); return; }
 
-    // Gate: anonymous users get 1 free run, then must sign up
-    if (!userIsSignedIn && anonRunCount >= 1) {
+    // Require sign-in to run any forecast
+    if (!userIsSignedIn) {
       setShowSignupGate(true);
       return;
     }
@@ -1112,13 +1108,18 @@ export default function ForecastClient() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ salesData: data, adSpendData: adSpend.trim() || undefined, leadTimeDays: parseInt(leadTime) || 14, perProductLeadTimes, currency }),
       });
-      let json: { success: boolean; error?: string; planLimitReached?: boolean; analysis?: ForecastAnalysis; savedId?: string };
+      let json: { success: boolean; error?: string; planLimitReached?: boolean; authRequired?: boolean; analysis?: ForecastAnalysis; savedId?: string };
       try {
         json = await res.json();
       } catch {
         throw new Error("Service temporarily unavailable. Please try again in a moment.");
       }
       if (!json.success) {
+        if (json.authRequired) {
+          setStep("idle");
+          setShowSignupGate(true);
+          return;
+        }
         // Plan limit hit — show upgrade modal instead of generic error screen
         if (json.planLimitReached) {
           setStep("idle");
@@ -1130,11 +1131,6 @@ export default function ForecastClient() {
       setAnalysis(json.analysis ?? null);
       setStep("done");
       if (userPlan !== "pro") setForecastCount(c => c !== null ? Math.min(c + 1, 5) : null);
-      if (!userIsSignedIn) {
-        const next = anonRunCount + 1;
-        setAnonRunCount(next);
-        if (typeof window !== "undefined") localStorage.setItem("forestock_anon_runs", String(next));
-      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong.");
       setStep("error");
@@ -1397,9 +1393,9 @@ export default function ForecastClient() {
                       </button>
                       {CLERK_READY && !userIsSignedIn && (
                         <p className="text-center text-[11px] text-[#8a9a8a]">
-                          Using your 1 free guest run ·{" "}
+                          Sign in required ·{" "}
                           <SignUpButton mode="redirect">
-                            <button type="button" className="text-[#006d34] font-semibold hover:underline">sign up for 5 runs</button>
+                            <button type="button" className="text-[#006d34] font-semibold hover:underline">create free account</button>
                           </SignUpButton>
                         </p>
                       )}
@@ -1427,7 +1423,7 @@ export default function ForecastClient() {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {[
                   { label: "Avg. Time", value: "~30s", sub: "per forecast run" },
-                  { label: "Free Plan", value: "5 runs", sub: "1 free guest run" },
+                  { label: "Free Plan", value: "5 runs", sub: "sign in to start" },
                   { label: "Formats", value: "CSV · XLSX", sub: "Shopify exports included" },
                 ].map((s) => (
                   <div key={s.label} className="bg-white rounded-xl border border-[#bbcbba]/40 p-4 shadow-sm">
@@ -1505,8 +1501,6 @@ export default function ForecastClient() {
                 </div>
               </div>
 
-              {/* Sign-up prompt — shown to all non-authed users after their run */}
-              {CLERK_READY && <ResultsSignupPrompt />}
 
               {/* Critical alerts banner */}
               <CriticalAlerts products={sortedProducts} leadTime={parseInt(leadTime) || 14} currency={analysis?.currency ?? currency} />

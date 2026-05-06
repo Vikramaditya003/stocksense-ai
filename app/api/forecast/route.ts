@@ -175,20 +175,25 @@ export async function POST(req: NextRequest) {
     }
 
     // ── Server-side plan enforcement ─────────────────────────────────────────
+    // Require sign-in to run any forecast
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, error: "Sign in to run forecasts.", authRequired: true },
+        { status: 401 }
+      );
+    }
+
     // Free plan: 5 full forecast runs. After that, require Pro.
     const FREE_RUN_LIMIT = 5;
-    let userIsPro = false;
-    if (userId) {
-      const plan = await getUserPlan(userId);
-      userIsPro = plan === "pro";
-      if (!userIsPro) {
-        const runCount = await getForecastCount(userId);
-        if (runCount >= FREE_RUN_LIMIT) {
-          return NextResponse.json(
-            { success: false, error: `Free plan includes ${FREE_RUN_LIMIT} forecasts. Upgrade to Pro for unlimited access.`, planLimitReached: true },
-            { status: 403 }
-          );
-        }
+    const plan = await getUserPlan(userId);
+    const userIsPro = plan === "pro";
+    if (!userIsPro) {
+      const runCount = await getForecastCount(userId);
+      if (runCount >= FREE_RUN_LIMIT) {
+        return NextResponse.json(
+          { success: false, error: `Free plan includes ${FREE_RUN_LIMIT} forecasts. Upgrade to Pro for unlimited access.`, planLimitReached: true },
+          { status: 403 }
+        );
       }
     }
 
