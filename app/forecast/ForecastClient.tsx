@@ -1236,6 +1236,21 @@ export default function ForecastClient() {
                 </button>
               </div>
 
+              {/* Sign-in nudge for anonymous users */}
+              {CLERK_READY && !userIsSignedIn && (
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#006d34]/[0.05] border border-[#006d34]/15 rounded-xl px-4 py-3 mb-6">
+                  <div>
+                    <p className="text-[13px] font-semibold text-[#181d1b]">Get 5 forecast runs free</p>
+                    <p className="text-[12px] text-[#5a6059]">Sign up to save history, get stockout email alerts, and run 5 full forecasts — free.</p>
+                  </div>
+                  <SignUpButton mode="redirect">
+                    <button type="button" className="flex-shrink-0 text-[12px] font-semibold text-white bg-emerald-brand px-4 py-2 rounded-xl transition-all hover:opacity-90 whitespace-nowrap shadow-sm">
+                      Sign up free →
+                    </button>
+                  </SignUpButton>
+                </div>
+              )}
+
               {/* Main bento grid */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
 
@@ -1380,6 +1395,14 @@ export default function ForecastClient() {
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z" /></svg>
                         Run AI Forecast
                       </button>
+                      {CLERK_READY && !userIsSignedIn && (
+                        <p className="text-center text-[11px] text-[#8a9a8a]">
+                          Using your 1 free guest run ·{" "}
+                          <SignUpButton mode="redirect">
+                            <button type="button" className="text-[#006d34] font-semibold hover:underline">sign up for 5 runs</button>
+                          </SignUpButton>
+                        </p>
+                      )}
                       <button
                         onClick={loadDemo}
                         className="w-full flex items-center justify-center gap-2 bg-white hover:bg-[#f0f5f1] border border-[#bbcbba]/60 text-[#5a6059] hover:text-[#181d1b] font-medium py-3 px-5 rounded-2xl transition-all text-sm"

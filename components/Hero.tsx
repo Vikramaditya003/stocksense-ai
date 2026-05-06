@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { SignUpButton } from "@clerk/nextjs";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface ParsedRow {
@@ -197,62 +198,20 @@ function ForecastWidget() {
 
           {/* CTA */}
           <div className="px-4 pt-3 pb-4 border-t border-[#bbcbba]/40">
+            <SignUpButton mode="redirect" fallbackRedirectUrl="/forecast">
+              <button type="button" className="btn-primary btn-gradient flex items-center justify-center gap-2 w-full text-[13px] font-semibold text-white py-2.5 rounded-[6px] mb-2.5">
+                Create free account to save this →
+              </button>
+            </SignUpButton>
             <Link
               href="/forecast"
-              className="btn-primary btn-gradient flex items-center justify-center gap-2 w-full text-[13px] font-semibold text-white py-2.5 rounded-[6px] mb-3"
+              className="flex items-center justify-center gap-1.5 w-full text-[12px] text-[#5a6059] hover:text-[#181d1b] py-1.5 transition-colors"
             >
-              Run full forecast on your CSV
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              Or run full CSV forecast without signing in
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
               </svg>
             </Link>
-
-            {/* Optional email capture */}
-            {emailState !== "done" ? (
-              <div className="flex flex-col gap-1.5">
-                <div className="flex gap-2">
-                  <label htmlFor="hero-email" className="sr-only">Email address for forecast alerts</label>
-                  <input
-                    id="hero-email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => { setEmail(e.target.value); setEmailState("idle"); }}
-                    placeholder="Email me this forecast"
-                    autoComplete="email"
-                    className="flex-1 bg-[#f6faf6] border border-[#bbcbba]/60 rounded-[6px] px-3 py-2 text-[12px] text-[#181d1b] placeholder-[#8a9a8a] focus:outline-none focus:border-[#006d34]/50 transition-colors font-mono"
-                  />
-                  <button
-                    type="button"
-                    disabled={emailState === "loading"}
-                    onClick={async () => {
-                      if (!email.includes("@")) return;
-                      setEmailState("loading");
-                      try {
-                        const res = await fetch("/api/hero-email", {
-                          method: "POST",
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({ email }),
-                        });
-                        const json = await res.json();
-                        setEmailState(json.success ? "done" : "error");
-                      } catch {
-                        setEmailState("error");
-                      }
-                    }}
-                    className="btn-ghost text-[12px] font-semibold text-[#5a6059] hover:text-[#181d1b] border border-[#bbcbba]/60 hover:border-[#bbcbba] px-3 py-2 rounded-[6px] transition-all whitespace-nowrap disabled:opacity-50"
-                  >
-                    {emailState === "loading" ? "Sending…" : "Send"}
-                  </button>
-                </div>
-                {emailState === "error" && (
-                  <p className="text-[11px] text-red-600">Couldn&apos;t send — try again or go to /forecast directly.</p>
-                )}
-              </div>
-            ) : (
-              <p className="text-[12px] text-[#006d34] text-center py-1">
-                ✓ Check your inbox — forecast + weekly alerts sent to {email}
-              </p>
-            )}
           </div>
         </div>
       )}
