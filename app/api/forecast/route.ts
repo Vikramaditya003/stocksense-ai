@@ -183,8 +183,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Free plan: 5 full forecast runs. After that, require Pro.
-    const FREE_RUN_LIMIT = 5;
+    // Free plan: 1 full forecast run. After that, require Pro.
+    const FREE_RUN_LIMIT = 1;
     const plan = await getUserPlan(userId);
     const userIsPro = plan === "pro";
     if (!userIsPro) {

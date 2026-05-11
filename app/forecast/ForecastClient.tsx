@@ -35,11 +35,10 @@ function ForecastNavAuth({ onReset, showReset, userPlan, forecastCount }: { onRe
             <div className="flex items-center gap-2">
               {forecastCount !== null && (
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full tabular-nums ${
-                  forecastCount >= 5 ? "bg-red-100 text-red-600 border border-red-200" :
-                  forecastCount >= 4 ? "bg-amber-100 text-amber-700 border border-amber-200" :
+                  forecastCount >= 1 ? "bg-red-100 text-red-600 border border-red-200" :
                   "bg-[#006d34]/[0.08] text-[#006d34] border border-[#006d34]/20"
                 }`}>
-                  {forecastCount}/5 used
+                  {forecastCount}/1 used
                 </span>
               )}
               <Link href="/upgrade" className="text-xs font-semibold text-[#5a6059] hover:text-[#181d1b] transition-colors">
@@ -869,7 +868,7 @@ function ResultsSignupPrompt() {
           You&apos;ve used your 1 free guest run
         </p>
         <p className="text-[12px] text-[#5a6059] mt-0.5">
-          Sign up free for 4 more runs, saved forecast history, and stockout email alerts.
+          Sign up free to unlock more runs, saved forecast history, and stockout email alerts.
         </p>
       </div>
 
@@ -1130,7 +1129,7 @@ export default function ForecastClient() {
       }
       setAnalysis(json.analysis ?? null);
       setStep("done");
-      if (userPlan !== "pro") setForecastCount(c => c !== null ? Math.min(c + 1, 5) : null);
+      if (userPlan !== "pro") setForecastCount(c => c !== null ? Math.min(c + 1, 1) : null);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong.");
       setStep("error");
