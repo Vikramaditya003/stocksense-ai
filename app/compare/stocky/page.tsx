@@ -3,10 +3,25 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import type { Metadata } from "next";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://getforestock.com";
+
 export const metadata: Metadata = {
   title: "Shopify Stocky Alternative — Forestock | Best Stocky Replacement 2026",
   description:
     "Shopify Stocky is shutting down August 31, 2026. Migrate to Forestock in 60 seconds — upload your Stocky CSV and get AI-powered demand forecasts instantly. Free to start.",
+  alternates: { canonical: `${SITE_URL}/compare/stocky` },
+  openGraph: {
+    title: "Shopify Stocky Alternative — Forestock | Best Stocky Replacement 2026",
+    description: "Shopify Stocky is shutting down August 31, 2026. Migrate to Forestock in 60 seconds — AI-powered demand forecasts instantly. Free to start.",
+    url: `${SITE_URL}/compare/stocky`,
+    siteName: "Forestock",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Shopify Stocky Alternative — Forestock",
+    description: "Shopify Stocky is shutting down. Migrate to Forestock in 60 seconds — AI-powered demand forecasts, free to start.",
+  },
 };
 
 const check = (

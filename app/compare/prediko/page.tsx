@@ -3,10 +3,25 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import type { Metadata } from "next";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://getforestock.com";
+
 export const metadata: Metadata = {
   title: "Forestock vs Prediko — Inventory Forecasting Comparison",
   description:
     "Compare Forestock vs Prediko for Shopify inventory forecasting. Same AI-powered stockout prevention, 4× cheaper. No setup fee, results in 30 seconds.",
+  alternates: { canonical: `${SITE_URL}/compare/prediko` },
+  openGraph: {
+    title: "Forestock vs Prediko — Inventory Forecasting Comparison",
+    description: "Compare Forestock vs Prediko for Shopify inventory forecasting. Same AI-powered stockout prevention, 4× cheaper. No setup fee, results in 30 seconds.",
+    url: `${SITE_URL}/compare/prediko`,
+    siteName: "Forestock",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Forestock vs Prediko — Inventory Forecasting",
+    description: "Same AI-powered stockout prevention as Prediko, 4× cheaper. No setup fee, results in 30 seconds.",
+  },
 };
 
 const check = (

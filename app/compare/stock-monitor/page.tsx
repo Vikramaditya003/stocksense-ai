@@ -4,10 +4,25 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import type { Metadata } from "next";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://getforestock.com";
+
 export const metadata: Metadata = {
   title: "Forestock vs Stock Monitor — Shopify Inventory Comparison",
   description:
     "Compare Forestock vs Stock Monitor for Shopify. AI-powered revenue forecasting, reorder dates, and rupee-level impact — not just out-of-stock alerts.",
+  alternates: { canonical: `${SITE_URL}/compare/stock-monitor` },
+  openGraph: {
+    title: "Forestock vs Stock Monitor — Shopify Inventory Comparison",
+    description: "Compare Forestock vs Stock Monitor for Shopify. AI-powered revenue forecasting, reorder dates, and revenue at risk — not just out-of-stock alerts.",
+    url: `${SITE_URL}/compare/stock-monitor`,
+    siteName: "Forestock",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Forestock vs Stock Monitor",
+    description: "Stock Monitor tells you when you ran out. Forestock tells you when you will — and what to order before it happens.",
+  },
 };
 
 const check = (
